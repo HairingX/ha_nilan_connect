@@ -98,4 +98,5 @@ refused before it is sent; a write the unit does not take is an error the user r
 - Home Assistant installs requirements under its package constraints
   (`homeassistant/package_constraints.txt`), which pin `pymodbus`, a dependency of the library;
   the tests run that version.
-- The brand images ship in `brand/`, which Home Assistant serves for custom integrations.
+- Nilan's brand images ship in `brand/`, which Home Assistant serves for custom integrations: the
+  ones Home Assistant's brands repository has for this domain (`custom_integrations/nilan_connect`).

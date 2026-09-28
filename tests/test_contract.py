@@ -4,6 +4,7 @@ the manifest and the Home Assistant it is tested with."""
 from __future__ import annotations
 
 import ast
+import hashlib
 import importlib.metadata
 import json
 from collections.abc import Iterator, Mapping
@@ -138,6 +139,26 @@ def test_the_library_is_imported_from_its_package_not_from_the_integration() -> 
     import nilan_connect
 
     assert INTEGRATION not in Path(nilan_connect.__file__).parents
+
+
+NILAN_BRAND = {
+    "icon.png": "631c858403b107e37affc69935f0dd4fec9984c0fc68e91738f31301334caaf5",
+    "icon@2x.png": "b2468dd9ff3b1695e67d1dd873a3c748ec2cf18b1c89f2ae6fe4ae0b2f557b89",
+    "logo.png": "20028d7244f1bc8ccb256b5541785f725928e5dd962c709dd18469ec0e9b644d",
+    "logo@2x.png": "8ec76cca729c4bdb6bed02a2ae0fad878f5a3a47a5de4df04345bd98ae5bb3fa",
+    "dark_logo.png": "c61815e2207fd50301314238fb1a994bf90a6df44670c481ac520adf06f87318",
+    "dark_logo@2x.png": "c15cacd1d6e765ca1e46ff64a1d028fd8ee11449add2542a9257ccf04967141e",
+}
+"""Nilan's brand images, as Home Assistant's brands repository has them for this domain
+(custom_integrations/nilan_connect)."""
+
+
+def test_the_brand_images_are_nilans_as_the_brands_repository_has_them() -> None:
+    found = {
+        path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in (INTEGRATION / "brand").iterdir()
+    }
+    assert found == NILAN_BRAND
 
 
 QUALITY_SCALE_RULES = frozenset({
