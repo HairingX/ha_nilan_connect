@@ -1,0 +1,36 @@
+name: Test build cleanup
+
+# Removes a branch's test builds, release and tag, once its pull request is closed or the branch
+# is deleted. HACS lists only the newest releases, so old test builds would push real releases
+# out of that list.
+on:
+  pull_request:
+    types: [closed]
+  delete:
+
+permissions: {}
+
+# The shell given explicitly, so GitHub runs every step with pipefail.
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  cleanup:
+    name: Remove the branch's test builds
+    if: github.event_name == 'pull_request' || github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BRANCH: ${{ github.event.pull_request.head.ref || github.event.ref }}
+    steps:
+      - name: Remove them
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/releases" --paginate \
+            --jq ".[] | select(.prerelease and (.body // \"\" | contains(\"test-build-branch: $BRANCH\"))) | .tag_name" |
+          while read -r old; do
+            echo "Removing $old"
+            gh release delete "$old" --repo "$GITHUB_REPOSITORY" --cleanup-tag --yes
+          done

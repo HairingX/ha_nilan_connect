@@ -1,0 +1,17 @@
+config:
+history:
+logbook:
+sun:
+
+# Enable VSCode debugging
+debugpy:
+## start and wait = true will force HA to stop and wait for a debugger attachment during boot to test initialization of plugins
+  #start: true
+  #wait: true
+  host: localhost
+  port: 6790
+
+logger:
+  default: info
+  logs:
+    custom_components.nilan_connect: debug

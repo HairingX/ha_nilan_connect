@@ -1,0 +1,63 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+change-template: '- #$NUMBER $TITLE @$AUTHOR'
+sort-direction: ascending
+categories:
+  - type: 'pre-exclude'
+    when:
+      label: 'skip-changelog'
+
+  # Each pull request is listed once, under the first of these its labels match.
+  - title: '🛠 Breaking Changes'
+    exclusive: true
+    when:
+      label: 'breaking-change'
+
+  - title: '🚀 Features'
+    exclusive: true
+    when:
+      labels:
+        - 'feature request'
+        - 'enhancement'
+
+  - title: '🐛 Bug Fixes'
+    exclusive: true
+    when:
+      labels:
+        - 'fix'
+        - 'bugfix'
+        - 'bug'
+
+  - title: '🧰 Maintenance'
+    exclusive: true
+    when:
+      label: 'chore'
+
+  - title: '📦 Dependencies'
+    exclusive: true
+    when:
+      label: 'dependencies'
+
+  # The next version: a minor bump for a breaking change or by label, a patch otherwise. A major
+  # is never taken from a label, as one placed wrongly must not release a new major version.
+  - type: 'version-resolver'
+    semver-increment: 'minor'
+    when:
+      labels:
+        - 'breaking-change'
+        - 'minor'
+  - type: 'version-resolver'
+    semver-increment: 'patch'
+template: |
+  ## Changes
+  $CHANGES
+autolabeler:
+  - label: 'bug'
+    branch:
+      - '/fix\/.+/'
+  - label: 'feature request'
+    branch:
+      - '/feature\/.+/'
+  - label: 'chore'
+    branch:
+      - '/chore\/.+/'

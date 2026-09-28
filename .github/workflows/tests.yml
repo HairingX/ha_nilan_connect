@@ -1,0 +1,54 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  # The Release and Test build workflows run these on the exact commit they publish.
+  workflow_call:
+    inputs:
+      ref:
+        description: The commit to test.
+        required: true
+        type: string
+      branch:
+        description: The branch the commit is on, when it is not main.
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.event_name }}-${{ inputs.ref || github.ref }}
+  cancel-in-progress: true
+
+# The shell given explicitly, so GitHub runs every step with pipefail.
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    name: Release scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install the test tools
+        run: python -m pip install -r requirements-test.txt
+
+      - name: Type check the release scripts (pyright strict)
+        run: pyright -p .github/scripts
+
+      - name: Test the release scripts
+        run: python -m pytest .github/scripts -q -o log_cli=false

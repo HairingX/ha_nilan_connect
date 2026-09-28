@@ -1,0 +1,53 @@
+name: Scorecards supply-chain security
+
+# OpenSSF Scorecard: checks the repository's own practices (pinned dependencies, token
+# permissions, branch protection) and publishes the result to code scanning.
+on:
+  # For the Branch-Protection check; only the default branch is supported.
+  branch_protection_rule:
+  schedule:
+    - cron: "26 17 * * 6"
+  push:
+    branches: [main]
+
+permissions: read-all
+
+# The shell given explicitly, so GitHub runs every step with pipefail.
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  analysis:
+    name: Scorecards analysis
+    runs-on: ubuntu-latest
+    permissions:
+      # Uploads the results to code scanning.
+      security-events: write
+      # Publishes the results, which the badge reads.
+      id-token: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Run analysis
+        # The action publishes no major-version tag.
+        uses: ossf/scorecard-action@v2.4.4
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: true
+
+      - name: Keep the results
+        uses: actions/upload-artifact@v7
+        with:
+          name: SARIF file
+          path: results.sarif
+          retention-days: 5
+
+      - name: Upload to code scanning
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: results.sarif

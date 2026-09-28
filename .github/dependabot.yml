@@ -1,0 +1,21 @@
+# Proposes updates to the pinned actions and test tools as pull requests, which the tests then
+# check before anything is merged.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+    ignore:
+      # Home Assistant's package constraints decide pymodbus, so it moves with the pinned Home
+      # Assistant release; the tests fail when the two disagree.
+      - dependency-name: pymodbus

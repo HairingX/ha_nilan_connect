@@ -1,0 +1,55 @@
+name: Validate
+
+# Home Assistant's own check of an integration (hassfest), and HACS's check of a repository it
+# can install from. Both take their rules from their newest versions, so they also run daily:
+# a new rule turns a build red before a user meets it.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+  # The Release and Test build workflows run these on the exact commit they publish.
+  workflow_call:
+    inputs:
+      ref:
+        description: The commit to validate.
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+# The shell given explicitly, so GitHub runs every step with pipefail.
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  hassfest:
+    name: Hassfest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Validate
+        uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    name: HACS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Validate
+        uses: hacs/action@main
+        with:
+          category: integration

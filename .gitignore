@@ -1,0 +1,13 @@
+__pycache__
+.venv
+.pytest_cache
+.coverage
+.idea
+.DS_Store
+.claude/worktrees/
+mysecrets.py
+
+# The development instance of Home Assistant: only its configuration.yaml is tracked.
+config/*
+!config/configuration.yaml
+docs/temp/

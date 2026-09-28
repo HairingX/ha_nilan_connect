@@ -1,0 +1,43 @@
+name: Bug report
+description: Something does not work as it should.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What happened, and what you expected instead. Danish is fine.
+    validations:
+      required: true
+  - type: input
+    id: integration_version
+    attributes:
+      label: Version of Nilan Connect
+      description: Settings > Devices & services > Nilan Connect.
+    validations:
+      required: true
+  - type: input
+    id: ha_version
+    attributes:
+      label: Version of Home Assistant
+      description: Settings > About.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: >-
+        Settings > Devices & services > Nilan Connect > the three dots > Download
+        diagnostics. Attach the file here.
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Debug log
+      description: >-
+        Settings > Devices & services > Nilan Connect > Enable debug logging, reproduce
+        the problem, then Disable debug logging; the log is downloaded. Attach it here, or paste
+        the lines about the problem.
+      render: text

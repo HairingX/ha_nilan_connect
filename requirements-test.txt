@@ -1,0 +1,5 @@
+# What the release scripts are tested and type checked with. Pinned, so a new release cannot turn a
+# build red by itself; Dependabot proposes each update as a pull request.
+pytest==9.1.1
+pyright==1.1.414
+packaging==26.3
