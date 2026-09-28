@@ -1,0 +1,127 @@
+{
+  "entity": {
+    "sensor": {
+      "alarm_1_code": {
+        "default": "mdi:alarm-light"
+      },
+      "alarm_1_info": {
+        "default": "mdi:alarm-light"
+      },
+      "alarm_2_code": {
+        "default": "mdi:alarm-light"
+      },
+      "alarm_2_info": {
+        "default": "mdi:alarm-light"
+      },
+      "alarm_3_code": {
+        "default": "mdi:alarm-light"
+      },
+      "alarm_3_info": {
+        "default": "mdi:alarm-light"
+      },
+      "fan_dutycycle_extract": {
+        "default": "mdi:fan"
+      },
+      "fan_dutycycle_supply": {
+        "default": "mdi:fan"
+      },
+      "fan_level_current": {
+        "default": "mdi:fan"
+      },
+      "filter_replace_time_ago": {
+        "default": "mdi:air-filter"
+      },
+      "filter_replace_time_remain": {
+        "default": "mdi:air-filter"
+      },
+      "humidity_high_level": {
+        "default": "mdi:water-percent"
+      },
+      "humidity_high_level_time": {
+        "default": "mdi:water-percent"
+      },
+      "efficiency": {
+        "default": "mdi:heat-wave"
+      }
+    },
+    "binary_sensor": {
+      "bypass_active": {
+        "default": "mdi:valve"
+      },
+      "defrost_active": {
+        "default": "mdi:snowflake-melt"
+      },
+      "filter_ok": {
+        "default": "mdi:air-filter"
+      },
+      "winter_mode_active": {
+        "default": "mdi:sun-snowflake-variant"
+      }
+    },
+    "button": {
+      "alarm_reset": {
+        "default": "mdi:alarm-light"
+      },
+      "filter_replace_reset": {
+        "default": "mdi:air-filter"
+      }
+    },
+    "number": {
+      "fan_level1_supply_preset": {
+        "default": "mdi:fan"
+      },
+      "fan_level1_extract_preset": {
+        "default": "mdi:fan"
+      },
+      "fan_level2_supply_preset": {
+        "default": "mdi:fan"
+      },
+      "fan_level2_extract_preset": {
+        "default": "mdi:fan"
+      },
+      "fan_level3_supply_preset": {
+        "default": "mdi:fan"
+      },
+      "fan_level3_extract_preset": {
+        "default": "mdi:fan"
+      },
+      "fan_level4_supply_preset": {
+        "default": "mdi:fan"
+      },
+      "fan_level4_extract_preset": {
+        "default": "mdi:fan"
+      },
+      "fan_level_high_co2": {
+        "default": "mdi:fan-chevron-up"
+      },
+      "fan_level_high_humidity": {
+        "default": "mdi:fan-chevron-up"
+      },
+      "fan_level_low_humidity": {
+        "default": "mdi:fan-chevron-down"
+      },
+      "defrost_break_time": {
+        "default": "mdi:snowflake-melt"
+      },
+      "defrost_max_time": {
+        "default": "mdi:snowflake-melt"
+      },
+      "temp_defrost_high_threshold": {
+        "default": "mdi:snowflake-melt"
+      },
+      "temp_defrost_low_threshold": {
+        "default": "mdi:snowflake-melt"
+      }
+    },
+    "select": {
+      "fan_level": {
+        "default": "mdi:fan"
+      }
+    },
+    "switch": {
+      "enable": {
+        "default": "mdi:power"
+      }
+    }
+  }
+}
