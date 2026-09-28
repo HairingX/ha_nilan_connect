@@ -91,8 +91,7 @@ and only Release builds it: the manifest in the zip says the release's version.
    override one worked out wrongly: canonical PEP 440, of the kind chosen.
 
 Release refuses a version with no pull request merged since the release before it - for a
-final release, the final release before it: a change pushed straight to `main` is nothing
-to release.
+final release, the final release before it.
 
 Release refuses any version not higher than every version tagged. It runs the tests and the
 hassfest and HACS validation on the commit it releases, builds the zip from that commit with the
@@ -133,10 +132,9 @@ libraries' branch of the same name, where they have one.
 
 ## Branches and pull requests
 
-- Process changes - CI, tests and test tools, the release, the release draft, these
-  conventions - go straight to `main`: they change nothing a user of the integration gets. A change
-  to what a user gets - the integration's code or documentation - goes through a branch and a pull
-  request, with its tests.
+- Every change goes through a branch and a pull request: `main` takes no push. A ruleset
+  enforces it; its only bypass is the owner's, and only for merging a pull request. A change
+  to what a user gets - the integration's code or documentation - comes with its tests.
 - Name every branch by the kind of change, as the release draft's labels follow the name:
   `feature/<what>` is labelled `feature request`, `fix/<what>` is labelled `bug`, and
   `chore/<what>` - CI, tooling, documentation - is labelled `chore`.
