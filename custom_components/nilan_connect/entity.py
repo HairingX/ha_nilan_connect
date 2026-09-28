@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from typing import Any
 
@@ -13,6 +14,8 @@ from nilan_connect import DataValue, InvalidValueError, Key, Quality, Status
 
 from .const import DOMAIN
 from .data import NilanData, value
+
+_LOGGER = logging.getLogger(__name__)
 
 _USABLE = frozenset({Quality.GOOD, Quality.NO_DATA, Quality.STALE})
 """Qualities an entity shows: a value, "unknown" for no reading, or the last good value.
@@ -122,6 +125,7 @@ class NilanEntity(Entity):
 
     async def _write[T](self, key: Key[T], new: T) -> None:
         """Write `new` to `key`, raising an error the user can read when it is not taken."""
+        _LOGGER.debug("Writing %s = %r", key, new)
         try:
             accepted = await self._client.write(key, new)
         except InvalidValueError as err:
@@ -130,6 +134,7 @@ class NilanEntity(Entity):
                 translation_key="invalid_value",
                 translation_placeholders={"value": str(new)},
             ) from err
+        _LOGGER.debug("Wrote %s = %r: %s", key, new, "taken" if accepted else "not taken")
         if not accepted:
             raise HomeAssistantError(
                 translation_domain=DOMAIN, translation_key="write_refused"
