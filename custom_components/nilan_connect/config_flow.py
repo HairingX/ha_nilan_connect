@@ -89,7 +89,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
                 if gateway.device_id not in configured
             }
             if not self._gateways:
-                return self.async_abort(reason="no_gateways")
+                return await self.async_step_no_gateways()
         else:
             gateway = self._gateways[user_input[CONF_GATEWAY_ID]]
             name = str(user_input[CONF_NAME]).strip()
@@ -122,6 +122,14 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="discover",
             data_schema=self.add_suggested_values_to_schema(schema, user_input),
             errors=errors,
+        )
+
+    async def async_step_no_gateways(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """No gateway answered discovery: look again, or enter the gateway's address."""
+        return self.async_show_menu(
+            step_id="no_gateways", menu_options=["discover", "manual"]
         )
 
     async def async_step_manual(

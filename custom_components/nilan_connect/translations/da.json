@@ -22,6 +22,14 @@
           "email": "E-mailen på den konto, gatewayen er parret med i Nilans app."
         }
       },
+      "no_gateways": {
+        "title": "Ingen gateway fundet",
+        "description": "Ingen gateway svarede på netværket. En gateway på et andet netværk eller VLAN hører ikke søgningen.",
+        "menu_options": {
+          "discover": "Søg igen",
+          "manual": "Indtast gatewayens adresse"
+        }
+      },
       "manual": {
         "title": "Nilan-gateway",
         "data": {
@@ -71,7 +79,6 @@
     },
     "abort": {
       "already_configured": "Denne gateway er allerede sat op.",
-      "no_gateways": "Ingen gateway svarede på netværket. Indtast gatewayens adresse i stedet.",
       "reconfigure_successful": "Forbindelsen blev ændret.",
       "reauth_successful": "E-mailen blev ændret."
     }

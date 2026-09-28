@@ -22,6 +22,14 @@
           "email": "The email of the account the gateway is paired with in Nilan's app."
         }
       },
+      "no_gateways": {
+        "title": "No gateway found",
+        "description": "No gateway answered on the network. A gateway on another network or VLAN does not hear discovery.",
+        "menu_options": {
+          "discover": "Look again",
+          "manual": "Enter the gateway's address"
+        }
+      },
       "manual": {
         "title": "Nilan gateway",
         "data": {
@@ -71,7 +79,6 @@
     },
     "abort": {
       "already_configured": "This gateway is already set up.",
-      "no_gateways": "No gateway answered on the network. Enter the gateway's address instead.",
       "reconfigure_successful": "The connection was changed.",
       "reauth_successful": "The email was changed."
     }

@@ -16,6 +16,8 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.nilan_connect.const import CONF_EMAIL, CONF_GATEWAY_ID, DOMAIN
 
+from custom_components.nilan_connect import config_flow
+
 from .conftest import EMAIL, GATEWAY_ID, HOST, NAME, entry_data, simulated_gateway
 
 
@@ -73,16 +75,27 @@ async def test_a_discovered_gateway_is_set_up_by_its_id_under_the_name_given(
     await hass.async_block_till_done()
 
 
-async def test_without_an_answering_gateway_the_address_must_be_entered(
-    hass: HomeAssistant, monkeypatch: pytest.MonkeyPatch
+async def test_without_an_answering_gateway_one_can_look_again_or_enter_the_address(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    async def nothing(**_: Any) -> list[DiscoveredDevice]:
-        return []
+    found: list[DiscoveredDevice] = []
+    broadcast = config_flow.discover  # the simulated network's
 
-    monkeypatch.setattr("custom_components.nilan_connect.config_flow.discover", nothing)
-    result = await start(hass, "discover")
-    assert result.get("type") is FlowResultType.ABORT
-    assert result.get("reason") == "no_gateways"
+    async def maybe(**kwargs: Any) -> list[DiscoveredDevice]:
+        return await broadcast(**kwargs) if found else []
+
+    monkeypatch.setattr("custom_components.nilan_connect.config_flow.discover", maybe)
+    menu = await start(hass, "discover")
+    assert menu.get("type") is FlowResultType.MENU
+    assert menu.get("step_id") == "no_gateways"
+    assert menu.get("menu_options") == ["discover", "manual"]
+    assert (await configure(hass, menu, {"next_step_id": "manual"})).get("step_id") == "manual"
+
+    menu = await start(hass, "discover")
+    found.append(DiscoveredDevice(GATEWAY_ID, HOST, gateway.address[1]))
+    again = await configure(hass, menu, {"next_step_id": "discover"})
+    assert again.get("type") is FlowResultType.FORM
+    assert again.get("step_id") == "discover"
 
 
 async def test_a_gateway_already_set_up_is_not_offered(
@@ -90,7 +103,7 @@ async def test_a_gateway_already_set_up_is_not_offered(
 ) -> None:
     config_entry.add_to_hass(hass)
     result = await start(hass, "discover")
-    assert result.get("reason") == "no_gateways"
+    assert result.get("step_id") == "no_gateways"
 
 
 async def test_a_gateway_set_up_meanwhile_moves_its_entry_to_where_it_answers(
