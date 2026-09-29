@@ -10,7 +10,16 @@ from homeassistant.core import callback
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import Entity, EntityDescription
-from nilan_connect import DataValue, InvalidValueError, Key, Quality, Status
+from nilan_connect import (
+    Certainty,
+    Client,
+    DataValue,
+    InvalidValueError,
+    Key,
+    Quality,
+    Status,
+    certainty,
+)
 
 from .const import DOMAIN
 from .data import NilanData, value
@@ -31,9 +40,20 @@ class NilanEntityDescription(EntityDescription):
     point: Key[Any]
 
 
+def shown(client: Client, key: Key[Any]) -> bool:
+    """Whether the unit has `key` at an address read on a unit or found published.
+
+    A point placed only by its manual's register order is left out.
+    """
+    if not client.has(key):
+        return False
+    (point,) = client.select([key])
+    return certainty(point) is not Certainty.INFERRED
+
+
 def describe[D: NilanEntityDescription](data: NilanData, descriptions: tuple[D, ...]) -> list[D]:
-    """The descriptions of the points this unit has."""
-    return [d for d in descriptions if data.client.has(d.point)]
+    """The descriptions of the points this unit shows."""
+    return [d for d in descriptions if shown(data.client, d.point)]
 
 
 def device_info(data: NilanData) -> DeviceInfo:
