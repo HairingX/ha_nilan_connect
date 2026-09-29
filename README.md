@@ -1,21 +1,26 @@
 # Nilan Connect
 
-A Home Assistant integration for Nilan ventilation units, through the Nilan gateway on your own
-network - no cloud.
-
-**Under development.** Nothing here is released yet.
+A Home Assistant integration for Nilan and Genvex ventilation units, through the Nilan gateway on
+your own network - no cloud.
 
 ## Supported units
 
 | Controller | Tested on a real unit |
 |---|---|
 | Nilan CTS400 | yes |
+| Genvex Optima 270 | its addresses were read on a unit; not tested with this integration |
+| Nilan CTS602, including Geo, and CTS602 Light | no |
+| Genvex Optima 250, 251, 260, 301, 312, 314 | no |
 
-Other controllers follow.
+A controller other than the CTS400 gets an entity for each value the CTS400 has too: temperatures,
+humidity, fan levels and speeds, the target temperature and the filter, where it has them. Values
+of its own - hot water, central heating, heat pump, its operating states - follow in a later
+release. A value whose address is known only from the order of its manual's registers gets no
+entity yet.
 
 ## Installation
 
-Through HACS, as a custom repository, once it is released.
+Through HACS, as a custom repository.
 
 ## Setup
 

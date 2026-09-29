@@ -129,7 +129,7 @@ async def test_the_unit_is_one_device_identified_by_its_name(
         ("sensor", "fan_dutycycle_extract", "26.0"),
         ("sensor", "fan_level_current", "1"),
         ("sensor", "filter_replace_time_ago", "139.0"),
-        ("sensor", "filter_replace_time_remain", "0"),
+        ("sensor", "filter_replace_time_remain", "0.0"),
         ("binary_sensor", "alarm_status", STATE_ON),
         ("binary_sensor", "bypass_active", STATE_ON),
         ("binary_sensor", "filter_ok", STATE_ON),

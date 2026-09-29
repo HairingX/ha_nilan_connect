@@ -13,7 +13,7 @@ from homeassistant.components.number import (
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from nilan_connect import Key, Point, PointKey
+from nilan_connect import Key, Point, PointKey, Unit
 
 from .data import NilanConfigEntry, NilanData
 from .entity import NilanEntityDescription, NilanPointEntity, describe
@@ -92,8 +92,20 @@ async def async_setup_entry(
     """Add a number for every described point the unit has."""
     data = entry.runtime_data
     async_add_entities(
-        NilanNumber(data, description) for description in describe(data, NUMBERS)
+        NilanNumber(data, description)
+        for description in describe(data, NUMBERS)
+        if has_range(data.client.select([description.point])[0])
     )
+
+
+def has_range(point: Point[Any]) -> bool:
+    """Whether a source gives the lowest and highest value `point` can be written with."""
+    limits = point.limits
+    return limits is not None and limits.min is not None and limits.max is not None
+
+
+DURATION_UNITS = frozenset({Unit.SECONDS, Unit.MINUTES, Unit.HOURS, Unit.DAYS})
+"""The units Home Assistant accepts for a duration."""
 
 
 def value_range(point: Point[Any]) -> tuple[float, float, float]:
@@ -115,6 +127,9 @@ class NilanNumber(NilanPointEntity, NumberEntity):
         self._attr_native_max_value = highest
         self._attr_native_step = step
         self._attr_native_unit_of_measurement = ha_unit(data.client, description.point)
+        if description.device_class is NumberDeviceClass.DURATION and point.unit not in DURATION_UNITS:
+            # A filter interval in months is no duration Home Assistant can convert.
+            self._attr_device_class = None
         super().__init__(data, description)
 
     def _show(self) -> None:

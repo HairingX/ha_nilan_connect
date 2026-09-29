@@ -6,7 +6,13 @@ from collections.abc import Mapping
 from types import MappingProxyType
 from typing import Any
 
-from homeassistant.const import UnitOfRatio, UnitOfTemperature, UnitOfTime
+from homeassistant.const import (
+    REVOLUTIONS_PER_MINUTE,
+    UnitOfPressure,
+    UnitOfRatio,
+    UnitOfTemperature,
+    UnitOfTime,
+)
 from nilan_connect import Client, Key, Unit
 
 HA_UNITS: Mapping[Unit, str] = MappingProxyType(
@@ -14,8 +20,12 @@ HA_UNITS: Mapping[Unit, str] = MappingProxyType(
         Unit.CELSIUS: UnitOfTemperature.CELSIUS,
         Unit.PERCENT: UnitOfRatio.PERCENTAGE,
         Unit.PPM: UnitOfRatio.PARTS_PER_MILLION,
+        Unit.SECONDS: UnitOfTime.SECONDS,
         Unit.MINUTES: UnitOfTime.MINUTES,
         Unit.DAYS: UnitOfTime.DAYS,
+        Unit.MONTHS: UnitOfTime.MONTHS,
+        Unit.RPM: REVOLUTIONS_PER_MINUTE,
+        Unit.BAR: UnitOfPressure.BAR,
     }
 )
 """Every unit a Nilan value has."""

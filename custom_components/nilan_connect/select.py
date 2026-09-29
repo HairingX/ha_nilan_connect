@@ -10,7 +10,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from nilan_connect import Client, Key, PointKey
 
 from .data import NilanConfigEntry, NilanData
-from .entity import NilanEntityDescription, NilanPointEntity, describe
+from .entity import NilanEntityDescription, NilanPointEntity, describe, shown
 
 # The client sends writes in order and folds a queued setting into a newer one, so actions
 # are passed to it as they come.
@@ -58,6 +58,9 @@ class NilanSelect(NilanPointEntity, SelectEntity):
 
     def __init__(self, data: NilanData, description: NilanSelectDescription) -> None:
         self._attr_options = levels(data.client, description.point)
+        if not shown(data.client, PointKey.ENABLE):
+            # Without a thermostat, this is where the fan level is set.
+            self._attr_entity_registry_visible_default = True
         super().__init__(data, description)
 
     def _show(self) -> None:

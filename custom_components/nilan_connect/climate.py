@@ -16,7 +16,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from nilan_connect import Key, PointKey
 
 from .data import NilanConfigEntry, NilanData
-from .entity import NilanEntity
+from .entity import NilanEntity, shown
 from .select import levels
 
 # The client sends writes in order and folds a queued setting into a newer one, so actions
@@ -46,7 +46,7 @@ async def async_setup_entry(
 ) -> None:
     """Add the thermostat, for a unit that can be turned on and off."""
     data = entry.runtime_data
-    if data.client.has(PointKey.ENABLE):
+    if shown(data.client, PointKey.ENABLE):
         async_add_entities([NilanClimate(data)])
 
 
@@ -64,16 +64,16 @@ class NilanClimate(NilanEntity, ClimateEntity):
 
     def __init__(self, data: NilanData) -> None:
         client = data.client
-        self._shown = tuple(key for key in SHOWN if client.has(key))
+        self._shown = tuple(key for key in SHOWN if shown(client, key))
         features = ClimateEntityFeature(0)
         self._attr_hvac_modes = [HVACMode.AUTO]
-        if client.can_write(PointKey.ENABLE):
+        if PointKey.ENABLE in self._shown and client.can_write(PointKey.ENABLE):
             features |= ClimateEntityFeature.TURN_ON | ClimateEntityFeature.TURN_OFF
             self._attr_hvac_modes.append(HVACMode.OFF)
-        if client.can_write(PointKey.FAN_LEVEL):
+        if PointKey.FAN_LEVEL in self._shown and client.can_write(PointKey.FAN_LEVEL):
             features |= ClimateEntityFeature.FAN_MODE
             self._attr_fan_modes = levels(client, PointKey.FAN_LEVEL)
-        if client.can_write(PointKey.TEMP_TARGET):
+        if PointKey.TEMP_TARGET in self._shown and client.can_write(PointKey.TEMP_TARGET):
             features |= ClimateEntityFeature.TARGET_TEMPERATURE
             (point,) = client.select([PointKey.TEMP_TARGET])
             if point.limits is not None:
