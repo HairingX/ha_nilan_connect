@@ -38,20 +38,25 @@ SHOWN: tuple[Key[Any], ...] = (
 )
 """Every point the thermostat shows or writes."""
 
+CONTROLS: tuple[Key[Any], ...] = (PointKey.ENABLE, PointKey.FAN_LEVEL, PointKey.TEMP_TARGET)
+"""What the thermostat sets; a unit with none of them shown has no thermostat."""
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: NilanConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Add the thermostat, for a unit that can be turned on and off."""
+    """Add the thermostat, for a unit with something it sets."""
     data = entry.runtime_data
-    if shown(data.client, PointKey.ENABLE):
+    if any(shown(data, key) for key in CONTROLS):
         async_add_entities([NilanClimate(data)])
 
 
 class NilanClimate(NilanEntity, ClimateEntity):
     """The unit: AUTO while it runs, OFF while it is stopped; its fan level as the fan mode.
+
+    A unit whose run setting is not shown is always AUTO: it cannot be turned off here.
 
     The temperature shown is the extract air's, the air taken from the rooms. What it is doing
     is, in order: off, de-icing, drying while high humidity is active, cooling while the bypass
@@ -60,11 +65,12 @@ class NilanClimate(NilanEntity, ClimateEntity):
 
     # The unit itself: the entity is named after its device.
     _attr_name = None
+    _attr_translation_key = THERMOSTAT
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
 
     def __init__(self, data: NilanData) -> None:
         client = data.client
-        self._shown = tuple(key for key in SHOWN if shown(client, key))
+        self._shown = tuple(key for key in SHOWN if shown(data, key))
         features = ClimateEntityFeature(0)
         self._attr_hvac_modes = [HVACMode.AUTO]
         if PointKey.ENABLE in self._shown and client.can_write(PointKey.ENABLE):
@@ -90,10 +96,10 @@ class NilanClimate(NilanEntity, ClimateEntity):
         return self._shown
 
     def _required(self) -> tuple[Key[Any], ...]:
-        return (PointKey.ENABLE,)
+        return (next(key for key in CONTROLS if key in self._shown),)
 
     def _show(self) -> None:
-        running = self._current(PointKey.ENABLE)
+        running = self._current(PointKey.ENABLE) if PointKey.ENABLE in self._shown else True
         self._attr_hvac_mode = (
             None if running is None else HVACMode.AUTO if running else HVACMode.OFF
         )

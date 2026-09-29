@@ -106,7 +106,7 @@ async def test_an_existing_installation_keeps_every_entity_it_has(
         )
         for entry in er.async_entries_for_config_entry(registry, config_entry.entry_id)
     }
-    assert found == EXISTING
+    assert {key: found.get(key) for key in EXISTING} == EXISTING
 
 
 async def test_the_unit_is_one_device_identified_by_its_name(

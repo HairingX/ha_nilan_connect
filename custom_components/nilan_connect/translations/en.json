@@ -85,26 +85,396 @@
   },
   "entity": {
     "sensor": {
+      "alarm_1": {
+        "name": "Alarm 1",
+        "state": {
+          "none": "No alarm",
+          "change_filter": "Change filter",
+          "external_filter": "External filter alarm",
+          "external_stop": "External stop",
+          "emergency_stop": "Emergency stop",
+          "defrost_timeout_exchanger": "De-icing took too long (exchanger)",
+          "defrost_timeout_compressor": "De-icing took too long (compressor)",
+          "sensor_error": "Sensor error",
+          "control_sensor_error": "Control sensor error",
+          "humidity_sensor_error": "Humidity sensor error",
+          "co2_sensor_error": "CO2 sensor error",
+          "air_temperature_error": "Air temperature error",
+          "water_temperature_error": "Hot water temperature error",
+          "central_heat_temperature_error": "Central heating temperature error",
+          "flow_temperature_error": "Flow temperature error",
+          "return_temperature_error": "Return temperature error",
+          "afterheat_frost_thermostat_error": "After-heating frost thermostat error",
+          "afterheat_frost_risk": "Risk of frost in after-heating",
+          "afterheat_frost": "Frost in after-heating",
+          "frost_failure": "Frost protection failure",
+          "fire": "Fire",
+          "fire_input": "Fire input",
+          "fire_test_error": "Fire test error",
+          "fire_damper_1_error": "Fire damper 1 error",
+          "fire_damper_2_error": "Fire damper 2 error",
+          "fire_damper_3_error": "Fire damper 3 error",
+          "fire_damper_4_error": "Fire damper 4 error",
+          "fire_box_1_error": "Fire box 1 error",
+          "fire_box_2_error": "Fire box 2 error",
+          "room_temperature_low": "Room temperature low",
+          "pressure": "Pressure switch",
+          "high_pressure": "High pressure",
+          "low_pressure": "Low pressure",
+          "supply_fan_error": "Supply fan error",
+          "extract_fan_error": "Extract fan error",
+          "fan_error": "Fan error",
+          "motor_overheat": "Fan motor overheated",
+          "rotor": "Rotor",
+          "panel_communication": "Panel communication",
+          "internal_modbus": "Internal Modbus",
+          "hardware": "Hardware error",
+          "timeout": "A warning became critical",
+          "door_open": "Door open",
+          "boiler_overheat": "Boiler overheated",
+          "reheat_overheat": "After-heating overheated",
+          "reheat_no_airflow": "No airflow at after-heating",
+          "water_boiling": "Hot water boiling",
+          "software": "Software restarted",
+          "watchdog": "Program error",
+          "settings_changed": "Settings changed",
+          "legionella_not_done": "Legionella treatment not done",
+          "power_outage": "Power outage",
+          "modem": "Modem",
+          "network": "Network",
+          "anode_worn": "Anode worn",
+          "evaporator_low": "Evaporator too cold",
+          "slave_io": "Slave I/O",
+          "options_module_missing": "Options module missing",
+          "preset_error": "Preset error",
+          "software_rejected": "Software update rejected",
+          "damper_test_failed": "Damper test failed",
+          "sensor_t1_open": "Sensor T1 disconnected",
+          "sensor_t2_open": "Sensor T2 disconnected",
+          "sensor_t3_open": "Sensor T3 disconnected",
+          "sensor_t4_open": "Sensor T4 disconnected",
+          "sensor_t5_open": "Sensor T5 disconnected",
+          "sensor_t6_open": "Sensor T6 disconnected",
+          "sensor_t7_open": "Sensor T7 disconnected",
+          "sensor_t8_open": "Sensor T8 disconnected",
+          "sensor_t9_open": "Sensor T9 disconnected",
+          "sensor_t10_open": "Sensor T10 disconnected",
+          "sensor_t11_open": "Sensor T11 disconnected",
+          "sensor_t12_open": "Sensor T12 disconnected",
+          "sensor_t13_open": "Sensor T13 disconnected",
+          "sensor_t14_open": "Sensor T14 disconnected",
+          "sensor_t15_open": "Sensor T15 disconnected",
+          "sensor_t16_open": "Sensor T16 disconnected",
+          "sensor_t1_short": "Sensor T1 short-circuited",
+          "sensor_t2_short": "Sensor T2 short-circuited",
+          "sensor_t3_short": "Sensor T3 short-circuited",
+          "sensor_t4_short": "Sensor T4 short-circuited",
+          "sensor_t5_short": "Sensor T5 short-circuited",
+          "sensor_t6_short": "Sensor T6 short-circuited",
+          "sensor_t7_short": "Sensor T7 short-circuited",
+          "sensor_t8_short": "Sensor T8 short-circuited",
+          "sensor_t9_short": "Sensor T9 short-circuited",
+          "sensor_t10_short": "Sensor T10 short-circuited",
+          "sensor_t11_short": "Sensor T11 short-circuited",
+          "sensor_t12_short": "Sensor T12 short-circuited",
+          "sensor_t13_short": "Sensor T13 short-circuited",
+          "sensor_t14_short": "Sensor T14 short-circuited",
+          "sensor_t15_short": "Sensor T15 short-circuited",
+          "sensor_t16_short": "Sensor T16 short-circuited",
+          "sensor_t1_error": "Sensor T1 error",
+          "sensor_t2_error": "Sensor T2 error",
+          "sensor_t3_error": "Sensor T3 error",
+          "sensor_t4_error": "Sensor T4 error",
+          "sensor_t5_error": "Sensor T5 error",
+          "sensor_t6_error": "Sensor T6 error",
+          "sensor_t7_error": "Sensor T7 error",
+          "sensor_t8_error": "Sensor T8 error",
+          "sensor_t9_error": "Sensor T9 error",
+          "sensor_t10_error": "Sensor T10 error",
+          "sensor_t11_error": "Sensor T11 error"
+        }
+      },
       "alarm_1_code": {
         "name": "Alarm code 1"
-      },
-      "alarm_2_code": {
-        "name": "Alarm code 2"
-      },
-      "alarm_3_code": {
-        "name": "Alarm code 3"
       },
       "alarm_1_info": {
         "name": "Alarm info 1"
       },
+      "alarm_2": {
+        "name": "Alarm 2",
+        "state": {
+          "none": "No alarm",
+          "change_filter": "Change filter",
+          "external_filter": "External filter alarm",
+          "external_stop": "External stop",
+          "emergency_stop": "Emergency stop",
+          "defrost_timeout_exchanger": "De-icing took too long (exchanger)",
+          "defrost_timeout_compressor": "De-icing took too long (compressor)",
+          "sensor_error": "Sensor error",
+          "control_sensor_error": "Control sensor error",
+          "humidity_sensor_error": "Humidity sensor error",
+          "co2_sensor_error": "CO2 sensor error",
+          "air_temperature_error": "Air temperature error",
+          "water_temperature_error": "Hot water temperature error",
+          "central_heat_temperature_error": "Central heating temperature error",
+          "flow_temperature_error": "Flow temperature error",
+          "return_temperature_error": "Return temperature error",
+          "afterheat_frost_thermostat_error": "After-heating frost thermostat error",
+          "afterheat_frost_risk": "Risk of frost in after-heating",
+          "afterheat_frost": "Frost in after-heating",
+          "frost_failure": "Frost protection failure",
+          "fire": "Fire",
+          "fire_input": "Fire input",
+          "fire_test_error": "Fire test error",
+          "fire_damper_1_error": "Fire damper 1 error",
+          "fire_damper_2_error": "Fire damper 2 error",
+          "fire_damper_3_error": "Fire damper 3 error",
+          "fire_damper_4_error": "Fire damper 4 error",
+          "fire_box_1_error": "Fire box 1 error",
+          "fire_box_2_error": "Fire box 2 error",
+          "room_temperature_low": "Room temperature low",
+          "pressure": "Pressure switch",
+          "high_pressure": "High pressure",
+          "low_pressure": "Low pressure",
+          "supply_fan_error": "Supply fan error",
+          "extract_fan_error": "Extract fan error",
+          "fan_error": "Fan error",
+          "motor_overheat": "Fan motor overheated",
+          "rotor": "Rotor",
+          "panel_communication": "Panel communication",
+          "internal_modbus": "Internal Modbus",
+          "hardware": "Hardware error",
+          "timeout": "A warning became critical",
+          "door_open": "Door open",
+          "boiler_overheat": "Boiler overheated",
+          "reheat_overheat": "After-heating overheated",
+          "reheat_no_airflow": "No airflow at after-heating",
+          "water_boiling": "Hot water boiling",
+          "software": "Software restarted",
+          "watchdog": "Program error",
+          "settings_changed": "Settings changed",
+          "legionella_not_done": "Legionella treatment not done",
+          "power_outage": "Power outage",
+          "modem": "Modem",
+          "network": "Network",
+          "anode_worn": "Anode worn",
+          "evaporator_low": "Evaporator too cold",
+          "slave_io": "Slave I/O",
+          "options_module_missing": "Options module missing",
+          "preset_error": "Preset error",
+          "software_rejected": "Software update rejected",
+          "damper_test_failed": "Damper test failed",
+          "sensor_t1_open": "Sensor T1 disconnected",
+          "sensor_t2_open": "Sensor T2 disconnected",
+          "sensor_t3_open": "Sensor T3 disconnected",
+          "sensor_t4_open": "Sensor T4 disconnected",
+          "sensor_t5_open": "Sensor T5 disconnected",
+          "sensor_t6_open": "Sensor T6 disconnected",
+          "sensor_t7_open": "Sensor T7 disconnected",
+          "sensor_t8_open": "Sensor T8 disconnected",
+          "sensor_t9_open": "Sensor T9 disconnected",
+          "sensor_t10_open": "Sensor T10 disconnected",
+          "sensor_t11_open": "Sensor T11 disconnected",
+          "sensor_t12_open": "Sensor T12 disconnected",
+          "sensor_t13_open": "Sensor T13 disconnected",
+          "sensor_t14_open": "Sensor T14 disconnected",
+          "sensor_t15_open": "Sensor T15 disconnected",
+          "sensor_t16_open": "Sensor T16 disconnected",
+          "sensor_t1_short": "Sensor T1 short-circuited",
+          "sensor_t2_short": "Sensor T2 short-circuited",
+          "sensor_t3_short": "Sensor T3 short-circuited",
+          "sensor_t4_short": "Sensor T4 short-circuited",
+          "sensor_t5_short": "Sensor T5 short-circuited",
+          "sensor_t6_short": "Sensor T6 short-circuited",
+          "sensor_t7_short": "Sensor T7 short-circuited",
+          "sensor_t8_short": "Sensor T8 short-circuited",
+          "sensor_t9_short": "Sensor T9 short-circuited",
+          "sensor_t10_short": "Sensor T10 short-circuited",
+          "sensor_t11_short": "Sensor T11 short-circuited",
+          "sensor_t12_short": "Sensor T12 short-circuited",
+          "sensor_t13_short": "Sensor T13 short-circuited",
+          "sensor_t14_short": "Sensor T14 short-circuited",
+          "sensor_t15_short": "Sensor T15 short-circuited",
+          "sensor_t16_short": "Sensor T16 short-circuited",
+          "sensor_t1_error": "Sensor T1 error",
+          "sensor_t2_error": "Sensor T2 error",
+          "sensor_t3_error": "Sensor T3 error",
+          "sensor_t4_error": "Sensor T4 error",
+          "sensor_t5_error": "Sensor T5 error",
+          "sensor_t6_error": "Sensor T6 error",
+          "sensor_t7_error": "Sensor T7 error",
+          "sensor_t8_error": "Sensor T8 error",
+          "sensor_t9_error": "Sensor T9 error",
+          "sensor_t10_error": "Sensor T10 error",
+          "sensor_t11_error": "Sensor T11 error"
+        }
+      },
+      "alarm_2_code": {
+        "name": "Alarm code 2"
+      },
       "alarm_2_info": {
         "name": "Alarm info 2"
+      },
+      "alarm_3": {
+        "name": "Alarm 3",
+        "state": {
+          "none": "No alarm",
+          "change_filter": "Change filter",
+          "external_filter": "External filter alarm",
+          "external_stop": "External stop",
+          "emergency_stop": "Emergency stop",
+          "defrost_timeout_exchanger": "De-icing took too long (exchanger)",
+          "defrost_timeout_compressor": "De-icing took too long (compressor)",
+          "sensor_error": "Sensor error",
+          "control_sensor_error": "Control sensor error",
+          "humidity_sensor_error": "Humidity sensor error",
+          "co2_sensor_error": "CO2 sensor error",
+          "air_temperature_error": "Air temperature error",
+          "water_temperature_error": "Hot water temperature error",
+          "central_heat_temperature_error": "Central heating temperature error",
+          "flow_temperature_error": "Flow temperature error",
+          "return_temperature_error": "Return temperature error",
+          "afterheat_frost_thermostat_error": "After-heating frost thermostat error",
+          "afterheat_frost_risk": "Risk of frost in after-heating",
+          "afterheat_frost": "Frost in after-heating",
+          "frost_failure": "Frost protection failure",
+          "fire": "Fire",
+          "fire_input": "Fire input",
+          "fire_test_error": "Fire test error",
+          "fire_damper_1_error": "Fire damper 1 error",
+          "fire_damper_2_error": "Fire damper 2 error",
+          "fire_damper_3_error": "Fire damper 3 error",
+          "fire_damper_4_error": "Fire damper 4 error",
+          "fire_box_1_error": "Fire box 1 error",
+          "fire_box_2_error": "Fire box 2 error",
+          "room_temperature_low": "Room temperature low",
+          "pressure": "Pressure switch",
+          "high_pressure": "High pressure",
+          "low_pressure": "Low pressure",
+          "supply_fan_error": "Supply fan error",
+          "extract_fan_error": "Extract fan error",
+          "fan_error": "Fan error",
+          "motor_overheat": "Fan motor overheated",
+          "rotor": "Rotor",
+          "panel_communication": "Panel communication",
+          "internal_modbus": "Internal Modbus",
+          "hardware": "Hardware error",
+          "timeout": "A warning became critical",
+          "door_open": "Door open",
+          "boiler_overheat": "Boiler overheated",
+          "reheat_overheat": "After-heating overheated",
+          "reheat_no_airflow": "No airflow at after-heating",
+          "water_boiling": "Hot water boiling",
+          "software": "Software restarted",
+          "watchdog": "Program error",
+          "settings_changed": "Settings changed",
+          "legionella_not_done": "Legionella treatment not done",
+          "power_outage": "Power outage",
+          "modem": "Modem",
+          "network": "Network",
+          "anode_worn": "Anode worn",
+          "evaporator_low": "Evaporator too cold",
+          "slave_io": "Slave I/O",
+          "options_module_missing": "Options module missing",
+          "preset_error": "Preset error",
+          "software_rejected": "Software update rejected",
+          "damper_test_failed": "Damper test failed",
+          "sensor_t1_open": "Sensor T1 disconnected",
+          "sensor_t2_open": "Sensor T2 disconnected",
+          "sensor_t3_open": "Sensor T3 disconnected",
+          "sensor_t4_open": "Sensor T4 disconnected",
+          "sensor_t5_open": "Sensor T5 disconnected",
+          "sensor_t6_open": "Sensor T6 disconnected",
+          "sensor_t7_open": "Sensor T7 disconnected",
+          "sensor_t8_open": "Sensor T8 disconnected",
+          "sensor_t9_open": "Sensor T9 disconnected",
+          "sensor_t10_open": "Sensor T10 disconnected",
+          "sensor_t11_open": "Sensor T11 disconnected",
+          "sensor_t12_open": "Sensor T12 disconnected",
+          "sensor_t13_open": "Sensor T13 disconnected",
+          "sensor_t14_open": "Sensor T14 disconnected",
+          "sensor_t15_open": "Sensor T15 disconnected",
+          "sensor_t16_open": "Sensor T16 disconnected",
+          "sensor_t1_short": "Sensor T1 short-circuited",
+          "sensor_t2_short": "Sensor T2 short-circuited",
+          "sensor_t3_short": "Sensor T3 short-circuited",
+          "sensor_t4_short": "Sensor T4 short-circuited",
+          "sensor_t5_short": "Sensor T5 short-circuited",
+          "sensor_t6_short": "Sensor T6 short-circuited",
+          "sensor_t7_short": "Sensor T7 short-circuited",
+          "sensor_t8_short": "Sensor T8 short-circuited",
+          "sensor_t9_short": "Sensor T9 short-circuited",
+          "sensor_t10_short": "Sensor T10 short-circuited",
+          "sensor_t11_short": "Sensor T11 short-circuited",
+          "sensor_t12_short": "Sensor T12 short-circuited",
+          "sensor_t13_short": "Sensor T13 short-circuited",
+          "sensor_t14_short": "Sensor T14 short-circuited",
+          "sensor_t15_short": "Sensor T15 short-circuited",
+          "sensor_t16_short": "Sensor T16 short-circuited",
+          "sensor_t1_error": "Sensor T1 error",
+          "sensor_t2_error": "Sensor T2 error",
+          "sensor_t3_error": "Sensor T3 error",
+          "sensor_t4_error": "Sensor T4 error",
+          "sensor_t5_error": "Sensor T5 error",
+          "sensor_t6_error": "Sensor T6 error",
+          "sensor_t7_error": "Sensor T7 error",
+          "sensor_t8_error": "Sensor T8 error",
+          "sensor_t9_error": "Sensor T9 error",
+          "sensor_t10_error": "Sensor T10 error",
+          "sensor_t11_error": "Sensor T11 error"
+        }
+      },
+      "alarm_3_code": {
+        "name": "Alarm code 3"
       },
       "alarm_3_info": {
         "name": "Alarm info 3"
       },
+      "alarm_bits": {
+        "name": "Alarm bits"
+      },
+      "alarm_bits_high": {
+        "name": "Alarm bits, high"
+      },
+      "bypass_position": {
+        "name": "Bypass damper position"
+      },
       "co2_level": {
         "name": "CO2 level"
+      },
+      "damper_test_day": {
+        "name": "Damper test day",
+        "state": {
+          "off": "Off",
+          "monday": "Monday",
+          "tuesday": "Tuesday",
+          "wednesday": "Wednesday",
+          "thursday": "Thursday",
+          "friday": "Friday",
+          "saturday": "Saturday",
+          "sunday": "Sunday"
+        }
+      },
+      "damper_test_last_date": {
+        "name": "Last damper test"
+      },
+      "damper_test_state": {
+        "name": "Damper test",
+        "state": {
+          "off": "Off",
+          "standby": "Standby",
+          "start": "Start",
+          "closing": "Closing",
+          "opening": "Opening",
+          "ok": "OK",
+          "error": "Error"
+        }
+      },
+      "discharge_pressure": {
+        "name": "Discharge pressure"
+      },
+      "efficiency": {
+        "name": "Heat recovery efficiency"
       },
       "fan_dutycycle_extract": {
         "name": "Extract fan speed"
@@ -115,11 +485,69 @@
       "fan_level_current": {
         "name": "Current fan level"
       },
+      "fan_level_extract": {
+        "name": "Extract fan level"
+      },
+      "fan_level_supply": {
+        "name": "Supply fan level"
+      },
+      "fan_rpm_extract": {
+        "name": "Extract fan rotation speed"
+      },
+      "fan_rpm_supply": {
+        "name": "Supply fan rotation speed"
+      },
       "filter_replace_time_ago": {
         "name": "Time since filter change"
       },
       "filter_replace_time_remain": {
         "name": "Time until filter change"
+      },
+      "heat_pump_capacity": {
+        "name": "Heat pump capacity"
+      },
+      "heat_pump_state": {
+        "name": "Heat pump state",
+        "state": {
+          "off": "Off",
+          "shift": "Shift",
+          "stop": "Stop",
+          "start": "Start",
+          "standby": "Standby",
+          "ventilation_stop": "Ventilation stopped",
+          "ventilation": "Ventilation",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "hot_water": "Hot water",
+          "legionella": "Legionella",
+          "cooling_hot_water": "Cooling and hot water",
+          "central_heating": "Central heating",
+          "defrost": "De-icing",
+          "frost_protection": "Frost protection",
+          "service": "Service",
+          "alarm": "Alarm",
+          "heating_hot_water": "Heating and hot water",
+          "ready": "Ready",
+          "heating_start_up": "Heating starting",
+          "cooling_start_up": "Cooling starting",
+          "hot_water_start_up": "Hot water starting",
+          "air_defrost": "Air de-icing",
+          "hotgas_defrost": "Hot gas de-icing",
+          "drip_delay": "Drip delay",
+          "heat_pump_stop": "Heat pump stopped",
+          "electric_heating": "Electric heating",
+          "electric_hot_water": "Electric hot water",
+          "forced_cold_pump": "Forced cold pump",
+          "hot_water_heat_pump_stop": "Hot water, heat pump stopped",
+          "heating_heat_pump_stop": "Heating, heat pump stopped",
+          "pump_exercise": "Pump exercise",
+          "forced_start_up": "Forced start",
+          "forced_running": "Forced running",
+          "forced_running_heat_pump_stop": "Forced running, heat pump stopped",
+          "manual": "Manual",
+          "external_stop": "External stop",
+          "forced_low_speed": "Forced low speed"
+        }
       },
       "humidity": {
         "name": "Humidity"
@@ -133,28 +561,255 @@
       "humidity_high_level_time": {
         "name": "High humidity duration"
       },
+      "operation_mode_current": {
+        "name": "Current operation mode",
+        "state": {
+          "off": "Off",
+          "heat": "Heat",
+          "cool": "Cool",
+          "auto": "Auto",
+          "service": "Service"
+        }
+      },
+      "operation_state": {
+        "name": "Operating state",
+        "state": {
+          "off": "Off",
+          "shift": "Shift",
+          "stop": "Stop",
+          "start": "Start",
+          "standby": "Standby",
+          "ventilation_stop": "Ventilation stopped",
+          "ventilation": "Ventilation",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "hot_water": "Hot water",
+          "legionella": "Legionella",
+          "cooling_hot_water": "Cooling and hot water",
+          "central_heating": "Central heating",
+          "defrost": "De-icing",
+          "frost_protection": "Frost protection",
+          "service": "Service",
+          "alarm": "Alarm",
+          "heating_hot_water": "Heating and hot water",
+          "ready": "Ready",
+          "heating_start_up": "Heating starting",
+          "cooling_start_up": "Cooling starting",
+          "hot_water_start_up": "Hot water starting",
+          "air_defrost": "Air de-icing",
+          "hotgas_defrost": "Hot gas de-icing",
+          "drip_delay": "Drip delay",
+          "heat_pump_stop": "Heat pump stopped",
+          "electric_heating": "Electric heating",
+          "electric_hot_water": "Electric hot water",
+          "forced_cold_pump": "Forced cold pump",
+          "hot_water_heat_pump_stop": "Hot water, heat pump stopped",
+          "heating_heat_pump_stop": "Heating, heat pump stopped",
+          "pump_exercise": "Pump exercise",
+          "forced_start_up": "Forced start",
+          "forced_running": "Forced running",
+          "forced_running_heat_pump_stop": "Forced running, heat pump stopped",
+          "manual": "Manual",
+          "external_stop": "External stop",
+          "forced_low_speed": "Forced low speed"
+        }
+      },
+      "preheat_output": {
+        "name": "Preheater output"
+      },
+      "reheat_output": {
+        "name": "After-heating output"
+      },
+      "rotor_speed": {
+        "name": "Rotor speed"
+      },
+      "state_code": {
+        "name": "State code"
+      },
+      "suction_pressure": {
+        "name": "Suction pressure"
+      },
+      "temp_after_condenser": {
+        "name": "Temperature after condenser"
+      },
+      "temp_aux": {
+        "name": "Auxiliary temperature"
+      },
+      "temp_before_condenser": {
+        "name": "Temperature before condenser"
+      },
+      "temp_buffer_tank": {
+        "name": "Buffer tank temperature"
+      },
+      "temp_central_heat_return": {
+        "name": "Central heating return temperature"
+      },
+      "temp_central_heat_supply": {
+        "name": "Central heating supply temperature"
+      },
+      "temp_condenser": {
+        "name": "Condenser temperature"
+      },
+      "temp_controller": {
+        "name": "Controller temperature"
+      },
+      "temp_evaporator": {
+        "name": "Evaporator temperature"
+      },
       "temp_exhaust": {
         "name": "Exhaust air temperature"
       },
       "temp_extract": {
         "name": "Extract air temperature"
       },
+      "temp_frost_protection": {
+        "name": "Frost protection temperature"
+      },
+      "temp_heat_pump_outdoor": {
+        "name": "Heat pump outdoor temperature"
+      },
+      "temp_heater": {
+        "name": "Heating surface temperature"
+      },
+      "temp_hotwater_bottom": {
+        "name": "Hot water bottom temperature"
+      },
+      "temp_hotwater_top": {
+        "name": "Hot water top temperature"
+      },
+      "temp_intake": {
+        "name": "Intake air temperature"
+      },
       "temp_outside": {
         "name": "Outdoor air temperature"
+      },
+      "temp_preheat_intake": {
+        "name": "Temperature before preheater"
+      },
+      "temp_pressure_pipe": {
+        "name": "Pressure pipe temperature"
+      },
+      "temp_room": {
+        "name": "Room temperature"
+      },
+      "temp_room_panel": {
+        "name": "Room temperature at panel"
       },
       "temp_supply": {
         "name": "Supply air temperature"
       },
+      "temp_supply_after_heater": {
+        "name": "Supply air temperature after heater"
+      },
+      "time_in_state": {
+        "name": "Time in state"
+      },
       "voc_level": {
         "name": "VOC level"
-      },
-      "efficiency": {
-        "name": "Heat recovery efficiency"
       }
     },
     "binary_sensor": {
+      "alarm_external_filter": {
+        "name": "External filter alarm"
+      },
+      "alarm_external_stop": {
+        "name": "External stop"
+      },
+      "alarm_extract_fan_error": {
+        "name": "Extract fan error"
+      },
+      "alarm_fan_error": {
+        "name": "Fan error"
+      },
+      "alarm_fire_box_1_error": {
+        "name": "Fire box 1 error"
+      },
+      "alarm_fire_box_2_error": {
+        "name": "Fire box 2 error"
+      },
+      "alarm_fire_damper_1_error": {
+        "name": "Fire damper 1 error"
+      },
+      "alarm_fire_damper_2_error": {
+        "name": "Fire damper 2 error"
+      },
+      "alarm_fire_damper_3_error": {
+        "name": "Fire damper 3 error"
+      },
+      "alarm_fire_damper_4_error": {
+        "name": "Fire damper 4 error"
+      },
+      "alarm_fire_test_error": {
+        "name": "Fire test error"
+      },
+      "alarm_flow_temperature_error": {
+        "name": "Flow temperature error"
+      },
+      "alarm_frost_failure": {
+        "name": "Frost protection failure"
+      },
+      "alarm_high_pressure": {
+        "name": "High pressure"
+      },
+      "alarm_humidity_sensor_error": {
+        "name": "Humidity sensor error"
+      },
+      "alarm_internal_modbus": {
+        "name": "Internal Modbus"
+      },
+      "alarm_low_pressure": {
+        "name": "Low pressure"
+      },
+      "alarm_panel_communication": {
+        "name": "Panel communication"
+      },
+      "alarm_return_temperature_error": {
+        "name": "Return temperature error"
+      },
+      "alarm_rotor": {
+        "name": "Rotor"
+      },
+      "alarm_sensor_error": {
+        "name": "Sensor error"
+      },
+      "alarm_sensor_t10_error": {
+        "name": "Sensor T10 error"
+      },
+      "alarm_sensor_t11_error": {
+        "name": "Sensor T11 error"
+      },
+      "alarm_sensor_t1_error": {
+        "name": "Sensor T1 error"
+      },
+      "alarm_sensor_t2_error": {
+        "name": "Sensor T2 error"
+      },
+      "alarm_sensor_t3_error": {
+        "name": "Sensor T3 error"
+      },
+      "alarm_sensor_t4_error": {
+        "name": "Sensor T4 error"
+      },
+      "alarm_sensor_t5_error": {
+        "name": "Sensor T5 error"
+      },
+      "alarm_sensor_t6_error": {
+        "name": "Sensor T6 error"
+      },
+      "alarm_sensor_t7_error": {
+        "name": "Sensor T7 error"
+      },
+      "alarm_sensor_t8_error": {
+        "name": "Sensor T8 error"
+      },
+      "alarm_sensor_t9_error": {
+        "name": "Sensor T9 error"
+      },
       "alarm_status": {
         "name": "Alarm"
+      },
+      "alarm_supply_fan_error": {
+        "name": "Supply fan error"
       },
       "bypass_active": {
         "name": "Bypass damper"
@@ -162,11 +817,41 @@
       "defrost_active": {
         "name": "De-icing"
       },
+      "digital_input_1": {
+        "name": "Digital input 1"
+      },
+      "digital_input_2": {
+        "name": "Digital input 2"
+      },
+      "digital_input_3": {
+        "name": "Digital input 3"
+      },
       "filter_ok": {
         "name": "Filter change"
       },
+      "heat_pump_active": {
+        "name": "Heat pump"
+      },
+      "heat_pump_heater_active": {
+        "name": "Heat pump electric heater"
+      },
+      "heat_pump_room_heating": {
+        "name": "Heat pump room heating"
+      },
+      "heat_pump_water_heating": {
+        "name": "Heat pump water heating"
+      },
       "humidity_high_active": {
         "name": "High humidity"
+      },
+      "reheat_active": {
+        "name": "After-heating"
+      },
+      "running": {
+        "name": "Running"
+      },
+      "sacrificial_anode_ok": {
+        "name": "Anode replacement"
       },
       "winter_mode_active": {
         "name": "Winter mode"
@@ -181,14 +866,23 @@
       }
     },
     "number": {
-      "temp_target": {
-        "name": "Target temperature"
+      "boost_time": {
+        "name": "Boost duration"
+      },
+      "bypass_fan_increase": {
+        "name": "Bypass fan increase"
+      },
+      "central_heat_curve": {
+        "name": "Central heating curve"
+      },
+      "central_heat_regulation_time": {
+        "name": "Central heating regulation time"
       },
       "co2_threshold": {
         "name": "High CO2 level"
       },
-      "voc_threshold": {
-        "name": "High VOC level"
+      "cooling_temperature": {
+        "name": "Cooling temperature"
       },
       "defrost_break_time": {
         "name": "Time between de-icing"
@@ -196,29 +890,32 @@
       "defrost_max_time": {
         "name": "Longest de-icing"
       },
-      "fan_level1_supply_preset": {
-        "name": "Supply air, level 1"
-      },
-      "fan_level2_supply_preset": {
-        "name": "Supply air, level 2"
-      },
-      "fan_level3_supply_preset": {
-        "name": "Supply air, level 3"
-      },
-      "fan_level4_supply_preset": {
-        "name": "Supply air, level 4"
-      },
       "fan_level1_extract_preset": {
         "name": "Extract air, level 1"
+      },
+      "fan_level1_supply_preset": {
+        "name": "Supply air, level 1"
       },
       "fan_level2_extract_preset": {
         "name": "Extract air, level 2"
       },
+      "fan_level2_supply_preset": {
+        "name": "Supply air, level 2"
+      },
       "fan_level3_extract_preset": {
         "name": "Extract air, level 3"
       },
+      "fan_level3_supply_preset": {
+        "name": "Supply air, level 3"
+      },
       "fan_level4_extract_preset": {
         "name": "Extract air, level 4"
+      },
+      "fan_level4_supply_preset": {
+        "name": "Supply air, level 4"
+      },
+      "fan_level_cooling": {
+        "name": "Fan level while cooling"
       },
       "fan_level_high_co2": {
         "name": "Fan level at high CO2"
@@ -238,14 +935,62 @@
       "humidity_low_threshold": {
         "name": "Low humidity level"
       },
+      "service_capacity": {
+        "name": "Service capacity"
+      },
+      "temp_bypass_close_offset": {
+        "name": "Bypass closing offset"
+      },
+      "temp_bypass_fan_increase_offset": {
+        "name": "Bypass fan increase offset"
+      },
+      "temp_bypass_open_offset": {
+        "name": "Bypass opening offset"
+      },
+      "temp_central_heat_compensation": {
+        "name": "Outdoor temperature compensation"
+      },
+      "temp_central_heat_offset": {
+        "name": "Central heating offset"
+      },
+      "temp_central_heat_supply_max": {
+        "name": "Maximum central heating supply temperature"
+      },
+      "temp_central_heat_supply_min": {
+        "name": "Minimum central heating supply temperature"
+      },
       "temp_defrost_high_threshold": {
         "name": "De-icing stop temperature"
       },
       "temp_defrost_low_threshold": {
         "name": "De-icing start temperature"
       },
+      "temp_hotwater": {
+        "name": "Hot water temperature"
+      },
+      "temp_hotwater_boost": {
+        "name": "Hot water top temperature, electric"
+      },
+      "temp_hotwater_bypass_offset": {
+        "name": "Hot water bypass offset"
+      },
+      "temp_hotwater_scald_protection": {
+        "name": "Scald protection temperature"
+      },
+      "temp_night_cooling_day_limit": {
+        "name": "Night cooling day limit"
+      },
+      "temp_night_cooling_target": {
+        "name": "Night cooling target"
+      },
       "temp_regulation_dead_band": {
         "name": "Regulation dead band"
+      },
+      "temp_summer_supply_max": {
+        "name": "Maximum supply air temperature, summer"
+      },
+      "temp_summer_supply_min": {
+        "name": "Minimum supply air temperature, summer"
       },
       "temp_supply_max": {
         "name": "Maximum supply air temperature"
@@ -253,18 +998,227 @@
       "temp_supply_min": {
         "name": "Minimum supply air temperature"
       },
+      "temp_target": {
+        "name": "Target temperature"
+      },
       "temp_winter_mode_threshold": {
         "name": "Summer/winter changeover"
+      },
+      "temp_winter_supply_max": {
+        "name": "Maximum supply air temperature, winter"
+      },
+      "temp_winter_supply_min": {
+        "name": "Minimum supply air temperature, winter"
+      },
+      "voc_threshold": {
+        "name": "High VOC level"
       }
     },
     "select": {
+      "air_exchange_mode": {
+        "name": "Air exchange mode",
+        "state": {
+          "energy": "Energy",
+          "comfort": "Comfort",
+          "comfort_water": "Comfort water"
+        }
+      },
+      "antilegionella_day": {
+        "name": "Anti-legionella day",
+        "state": {
+          "off": "Off",
+          "monday": "Monday",
+          "tuesday": "Tuesday",
+          "wednesday": "Wednesday",
+          "thursday": "Thursday",
+          "friday": "Friday",
+          "saturday": "Saturday",
+          "sunday": "Sunday"
+        }
+      },
+      "central_heat_mode": {
+        "name": "Central heating mode",
+        "state": {
+          "frost_protection_only": "Frost protection only",
+          "always": "Always",
+          "when_room_cold": "When the room is cold"
+        }
+      },
+      "central_heat_pump_mode": {
+        "name": "Circulation pump",
+        "state": {
+          "when_heating": "When heating",
+          "continuous": "Continuous"
+        }
+      },
+      "central_heat_source": {
+        "name": "Central heating source",
+        "state": {
+          "off": "Off",
+          "electric": "Electric",
+          "heat_pump": "Heat pump",
+          "afterheat": "After-heating",
+          "heat_pump_then_afterheat": "Heat pump, then after-heating",
+          "afterheat_then_heat_pump": "After-heating, then heat pump",
+          "heat_pump_then_electric": "Heat pump, then electric"
+        }
+      },
+      "compressor_priority": {
+        "name": "Compressor priority",
+        "state": {
+          "hot_water": "Hot water",
+          "inlet_air": "Inlet air"
+        }
+      },
+      "control_sensor": {
+        "name": "Control sensor",
+        "state": {
+          "user_panel": "User panel",
+          "external": "External sensor",
+          "inlet": "Inlet",
+          "exhaust": "Exhaust"
+        }
+      },
+      "extra_sensor": {
+        "name": "Extra sensor",
+        "state": {
+          "none": "None",
+          "voc": "VOC",
+          "co2": "CO2"
+        }
+      },
       "fan_level": {
-        "name": "Fan level"
+        "name": "Fan level",
+        "state": {
+          "0": "Off",
+          "1": "Level 1",
+          "2": "Level 2",
+          "3": "Level 3",
+          "4": "Level 4"
+        }
+      },
+      "filter_replace_interval_choice": {
+        "name": "Filter change interval",
+        "state": {
+          "pressure_guard": "Pressure guard",
+          "days_30": "30 days",
+          "days_90": "90 days",
+          "days_180": "180 days",
+          "days_360": "360 days",
+          "days_70_and_pressure_guard": "70 days and pressure guard"
+        }
+      },
+      "heat_source": {
+        "name": "Heat source",
+        "state": {
+          "off": "Off",
+          "electric": "Electric",
+          "heat_pump": "Heat pump",
+          "afterheat": "After-heating",
+          "heat_pump_then_afterheat": "Heat pump, then after-heating",
+          "afterheat_then_heat_pump": "After-heating, then heat pump",
+          "heat_pump_then_electric": "Heat pump, then electric"
+        }
+      },
+      "hotwater_supplement": {
+        "name": "Hot water supplement",
+        "state": {
+          "off": "Off",
+          "electric": "Electric",
+          "heat_pump": "Heat pump",
+          "afterheat": "After-heating",
+          "heat_pump_then_afterheat": "Heat pump, then after-heating",
+          "afterheat_then_heat_pump": "After-heating, then heat pump",
+          "heat_pump_then_electric": "Heat pump, then electric"
+        }
+      },
+      "operation_mode": {
+        "name": "Operation mode",
+        "state": {
+          "off": "Off",
+          "heat": "Heat",
+          "cool": "Cool",
+          "auto": "Auto",
+          "service": "Service"
+        }
+      },
+      "service_mode": {
+        "name": "Service mode",
+        "state": {
+          "off": "Off",
+          "defrost": "De-icing",
+          "flaps": "Dampers",
+          "inlet": "Inlet",
+          "exhaust": "Exhaust",
+          "compressor": "Compressor",
+          "heating": "Heating",
+          "hot_water": "Hot water",
+          "central_heat": "Central heating"
+        }
+      },
+      "temp_cooling_start_offset": {
+        "name": "Cooling starts at",
+        "state": {
+          "off": "Off",
+          "plus_0": "Target + 0 °C",
+          "plus_1": "Target + 1 °C",
+          "plus_2": "Target + 2 °C",
+          "plus_3": "Target + 3 °C",
+          "plus_4": "Target + 4 °C",
+          "plus_5": "Target + 5 °C",
+          "plus_7": "Target + 7 °C",
+          "plus_10": "Target + 10 °C"
+        }
       }
     },
     "switch": {
+      "boost_enable": {
+        "name": "Boost"
+      },
+      "cooling_enable": {
+        "name": "Cooling"
+      },
+      "defrost_supply_fan": {
+        "name": "Supply fan while de-icing"
+      },
       "enable": {
         "name": "Power"
+      },
+      "filter_alarm_on_panel": {
+        "name": "Filter alarm on panel"
+      },
+      "hotwater_heater_enable": {
+        "name": "Hot water electric heater"
+      },
+      "humidity_control_enable": {
+        "name": "Humidity control"
+      },
+      "panel_lock_fan_level": {
+        "name": "Lock the panel's fan level"
+      },
+      "panel_lock_on_off": {
+        "name": "Lock the panel's on/off"
+      },
+      "preheat_enable": {
+        "name": "Preheating"
+      },
+      "reheat_enable": {
+        "name": "After-heating"
+      }
+    },
+    "climate": {
+      "hvac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "0": "Off",
+              "1": "Level 1",
+              "2": "Level 2",
+              "3": "Level 3",
+              "4": "Level 4"
+            }
+          }
+        }
       }
     }
   },
@@ -283,6 +1237,20 @@
     },
     "write_refused": {
       "message": "The unit did not take the change."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Values shown",
+        "description": "Some addresses of controllers other than the CTS400 are known only from the order of the registers in Nilan's manual, and have not been read on a unit.",
+        "data": {
+          "show_inferred": "Show values found only from the manual"
+        },
+        "data_description": {
+          "show_inferred": "Their values may be wrong. Report what your unit shows, right or wrong, in an issue."
+        }
+      }
     }
   }
 }

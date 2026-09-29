@@ -18,6 +18,8 @@ class NilanData:
     client: Client
     name: str
     """The unit's name, which every unique id and the device's identifier start with."""
+    show_inferred: bool = False
+    """Whether a value placed only by its manual's register order gets an entity."""
     poller: asyncio.Task[None] | None = field(default=None, repr=False)
     unique_ids: set[str] = field(default_factory=set[str])
     """The unique id of every entity built for the entry, disabled ones included."""

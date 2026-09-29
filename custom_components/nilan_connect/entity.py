@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from enum import IntEnum
 from typing import Any
 
 from homeassistant.core import callback
@@ -12,7 +13,6 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import Entity, EntityDescription
 from nilan_connect import (
     Certainty,
-    Client,
     DataValue,
     InvalidValueError,
     Key,
@@ -40,20 +40,23 @@ class NilanEntityDescription(EntityDescription):
     point: Key[Any]
 
 
-def shown(client: Client, key: Key[Any]) -> bool:
-    """Whether the unit has `key` at an address read on a unit or found published.
-
-    A point placed only by its manual's register order is left out.
-    """
-    if not client.has(key):
+def shown(data: NilanData, key: Key[Any]) -> bool:
+    """Whether the unit has `key` at an address read on a unit or found published, or placed by
+    its manual's register order when the user has chosen to see those too."""
+    if not data.client.has(key):
         return False
-    (point,) = client.select([key])
-    return certainty(point) is not Certainty.INFERRED
+    (point,) = data.client.select([key])
+    return data.show_inferred or certainty(point) is not Certainty.INFERRED
+
+
+def state_name(state: IntEnum) -> str:
+    """The name a state is shown and translated by."""
+    return state.name.lower()
 
 
 def describe[D: NilanEntityDescription](data: NilanData, descriptions: tuple[D, ...]) -> list[D]:
     """The descriptions of the points this unit shows."""
-    return [d for d in descriptions if shown(data.client, d.point)]
+    return [d for d in descriptions if shown(data, d.point)]
 
 
 def device_info(data: NilanData) -> DeviceInfo:
