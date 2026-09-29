@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+
 from collections.abc import AsyncIterator
 from typing import Any
 
@@ -22,6 +24,8 @@ from custom_components.nilan_connect.const import CONF_SHOW_INFERRED, DOMAIN
 from custom_components.nilan_connect.data import NilanData
 
 from .conftest import GATEWAY_ID, NAME, entry_data, simulated_gateway
+
+SETPOINT_WRITE = 0x2B
 
 EVERY_REGISTER = {(0, address): 0 for address in range(300)}
 """A register at every address a controller's model reads, each holding 0."""
@@ -143,3 +147,19 @@ async def test_a_filter_interval_in_months_is_a_number_without_a_duration(
     assert interval.unit_of_measurement == UnitOfTime.MONTHS
     state = hass.states.get(interval.entity_id)
     assert state is not None and "device_class" not in state.attributes
+
+
+@pytest.mark.parametrize("gateway", [CTS602], indirect=True, ids=["cts602"])
+async def test_choosing_a_state_writes_the_units_code_for_it(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, loaded: NilanData
+) -> None:
+    entry = _entity(hass, "select", PointKey.FILTER_REPLACE_INTERVAL_CHOICE)
+    assert entry is not None
+    await hass.services.async_call(
+        "select", "select_option", {"entity_id": entry.entity_id, "option": "days_90"}, blocking=True
+    )
+    for _ in range(100):
+        if gateway.received(SETPOINT_WRITE):
+            break
+        await asyncio.sleep(0.01)
+    assert (0, 159, 2) in [item for command in gateway.received(SETPOINT_WRITE) for item in command.items]

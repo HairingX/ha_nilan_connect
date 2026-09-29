@@ -183,8 +183,6 @@ class NilanSensor(NilanPointEntity, SensorEntity):
         if isinstance(value, IntEnum):
             name = state_name(value)
             self._attr_native_value = name if name in (self._attr_options or ()) else None
-        elif isinstance(value, bool):
-            self._attr_native_value = None
         elif isinstance(value, int | float | date):
             self._attr_native_value = value
         else:
