@@ -1,0 +1,14 @@
+{
+  "domain": "nilan_connect",
+  "name": "Nilan Connect",
+  "codeowners": ["@HairingX"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/HairingX/ha_nilan_connect",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/HairingX/ha_nilan_connect/issues",
+  "loggers": ["modbus_event_connect", "nilan_connect"],
+  "requirements": ["nilan_connect==0.2.0rc3"],
+  "version": "0.0.0"
+}

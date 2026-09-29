@@ -3,7 +3,7 @@
 A Home Assistant integration, installed through HACS, for Nilan ventilation units behind a Nilan
 gateway, reached over micro_nabto on the local network. The controller itself is modelled by the
 `nilan_connect` library; this repository only turns it into Home Assistant devices and entities.
-Until the integration is written, CI tests only the release scripts.
+How and why it is built as it is: `docs/design.md`.
 
 ## Comments and docstrings
 
@@ -55,6 +55,9 @@ obvious from the name - one or two lines, no narrative.
 - A test fails when Home Assistant reports this integration using something deprecated.
 - Every point the library has is an entity, or is listed with the reason it is not; a test
   fails for a new point that is neither.
+- An existing installation keeps its entities: a unique id is the unit's name and the point's
+  key, and a test holds every entity a CTS400 had, with its platform and defaults. Removing or
+  moving one is agreed with the user first.
 - Translations live in `translations/en.json` and `translations/da.json`, which hold the same
   keys; icons in `icons.json`, by translation key.
 - No real IP addresses, hostnames or email addresses in tracked files.

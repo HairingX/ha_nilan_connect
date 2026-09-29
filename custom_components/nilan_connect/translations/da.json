@@ -1,0 +1,288 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Opsæt et Nilan-anlæg",
+        "description": "Anlægget nås gennem sin Nilan-gateway på dit eget netværk.",
+        "menu_options": {
+          "discover": "Find gatewayen på netværket",
+          "manual": "Indtast gatewayens adresse"
+        }
+      },
+      "discover": {
+        "title": "Nilan-gateway",
+        "data": {
+          "gateway_id": "Gateway",
+          "name": "Navn",
+          "email": "E-mail"
+        },
+        "data_description": {
+          "gateway_id": "De gateways, der svarede på netværket.",
+          "name": "Alle anlæggets entitets-id'er begynder med det, og det bliver, når anlægget skiftes ud. Giv flere anlæg forskellige navne, fx Overetage.",
+          "email": "E-mailen på den konto, gatewayen er parret med i Nilans app."
+        }
+      },
+      "no_gateways": {
+        "title": "Ingen gateway fundet",
+        "description": "Ingen gateway svarede på netværket. En gateway på et andet netværk eller VLAN hører ikke søgningen.",
+        "menu_options": {
+          "discover": "Søg igen",
+          "manual": "Indtast gatewayens adresse"
+        }
+      },
+      "manual": {
+        "title": "Nilan-gateway",
+        "data": {
+          "name": "Navn",
+          "host": "Vært",
+          "port": "Port",
+          "email": "E-mail"
+        },
+        "data_description": {
+          "name": "Alle anlæggets entitets-id'er begynder med det, og det bliver, når anlægget skiftes ud. Giv flere anlæg forskellige navne, fx Overetage.",
+          "host": "Gatewayens IP-adresse eller værtsnavn. Giv den en fast adresse i din router.",
+          "port": "Den UDP-port, gatewayen svarer på.",
+          "email": "E-mailen på den konto, gatewayen er parret med i Nilans app."
+        }
+      },
+      "reconfigure": {
+        "title": "Skift forbindelse",
+        "description": "Skift hvor gatewayen til {name} nås, eller dens e-mail. Lad værten være tom for at finde gatewayen på netværket ud fra dens id.",
+        "data": {
+          "host": "Vært",
+          "port": "Port",
+          "email": "E-mail"
+        },
+        "data_description": {
+          "host": "Gatewayens IP-adresse eller værtsnavn.",
+          "port": "Den UDP-port, gatewayen svarer på.",
+          "email": "E-mailen på den konto, gatewayen er parret med i Nilans app."
+        }
+      },
+      "reauth_confirm": {
+        "title": "E-mail afvist",
+        "description": "Gatewayen til {name} afviste den e-mail, den blev sat op med. Indtast e-mailen på den konto, den nu er parret med i Nilans app.",
+        "data": {
+          "email": "E-mail"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Gatewayen svarede ikke.",
+      "invalid_auth": "Gatewayen afviste denne e-mail, også med små bogstaver.",
+      "unsupported_device": "Styringen bag denne gateway understøttes ikke endnu.",
+      "invalid_host": "Indtast en vært.",
+      "invalid_name": "Indtast et navn.",
+      "name_in_use": "Et andet anlæg har allerede dette navn.",
+      "wrong_gateway": "En anden gateway svarer på denne adresse.",
+      "unknown": "Uventet fejl; se loggen."
+    },
+    "abort": {
+      "already_configured": "Denne gateway er allerede sat op.",
+      "reconfigure_successful": "Forbindelsen blev ændret.",
+      "reauth_successful": "E-mailen blev ændret."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_1_code": {
+        "name": "Alarmkode 1"
+      },
+      "alarm_2_code": {
+        "name": "Alarmkode 2"
+      },
+      "alarm_3_code": {
+        "name": "Alarmkode 3"
+      },
+      "alarm_1_info": {
+        "name": "Alarminfo 1"
+      },
+      "alarm_2_info": {
+        "name": "Alarminfo 2"
+      },
+      "alarm_3_info": {
+        "name": "Alarminfo 3"
+      },
+      "co2_level": {
+        "name": "CO2-niveau"
+      },
+      "fan_dutycycle_extract": {
+        "name": "Ventilatorhastighed, udsugning"
+      },
+      "fan_dutycycle_supply": {
+        "name": "Ventilatorhastighed, indblæsning"
+      },
+      "fan_level_current": {
+        "name": "Aktuelt ventilationstrin"
+      },
+      "filter_replace_time_ago": {
+        "name": "Tid siden filterskift"
+      },
+      "filter_replace_time_remain": {
+        "name": "Tid til filterskift"
+      },
+      "humidity": {
+        "name": "Luftfugtighed"
+      },
+      "humidity_average": {
+        "name": "Gennemsnitlig luftfugtighed"
+      },
+      "humidity_high_level": {
+        "name": "Højt fugtniveau"
+      },
+      "humidity_high_level_time": {
+        "name": "Varighed af høj fugt"
+      },
+      "temp_exhaust": {
+        "name": "Afkastluftens temperatur"
+      },
+      "temp_extract": {
+        "name": "Udsugningsluftens temperatur"
+      },
+      "temp_outside": {
+        "name": "Udeluftens temperatur"
+      },
+      "temp_supply": {
+        "name": "Indblæsningsluftens temperatur"
+      },
+      "voc_level": {
+        "name": "VOC-niveau"
+      },
+      "efficiency": {
+        "name": "Varmegenvindingsgrad"
+      }
+    },
+    "binary_sensor": {
+      "alarm_status": {
+        "name": "Alarm"
+      },
+      "bypass_active": {
+        "name": "Bypass-spjæld"
+      },
+      "defrost_active": {
+        "name": "Afisning"
+      },
+      "filter_ok": {
+        "name": "Filterskift"
+      },
+      "humidity_high_active": {
+        "name": "Høj luftfugtighed"
+      },
+      "winter_mode_active": {
+        "name": "Vintertilstand"
+      }
+    },
+    "button": {
+      "alarm_reset": {
+        "name": "Nulstil alarm"
+      },
+      "filter_replace_reset": {
+        "name": "Nulstil filtertimer"
+      }
+    },
+    "number": {
+      "temp_target": {
+        "name": "Ønsket rumtemperatur"
+      },
+      "co2_threshold": {
+        "name": "Højt CO2-niveau"
+      },
+      "voc_threshold": {
+        "name": "Højt VOC-niveau"
+      },
+      "defrost_break_time": {
+        "name": "Tid mellem afisninger"
+      },
+      "defrost_max_time": {
+        "name": "Længste afisning"
+      },
+      "fan_level1_supply_preset": {
+        "name": "Indblæsning, trin 1"
+      },
+      "fan_level2_supply_preset": {
+        "name": "Indblæsning, trin 2"
+      },
+      "fan_level3_supply_preset": {
+        "name": "Indblæsning, trin 3"
+      },
+      "fan_level4_supply_preset": {
+        "name": "Indblæsning, trin 4"
+      },
+      "fan_level1_extract_preset": {
+        "name": "Udsugning, trin 1"
+      },
+      "fan_level2_extract_preset": {
+        "name": "Udsugning, trin 2"
+      },
+      "fan_level3_extract_preset": {
+        "name": "Udsugning, trin 3"
+      },
+      "fan_level4_extract_preset": {
+        "name": "Udsugning, trin 4"
+      },
+      "fan_level_high_co2": {
+        "name": "Ventilationstrin ved højt CO2"
+      },
+      "fan_level_high_humidity": {
+        "name": "Ventilationstrin ved høj fugt"
+      },
+      "fan_level_high_humidity_time": {
+        "name": "Længste tid ved høj fugt"
+      },
+      "fan_level_low_humidity": {
+        "name": "Ventilationstrin ved lav fugt"
+      },
+      "filter_replace_interval": {
+        "name": "Interval mellem filterskift"
+      },
+      "humidity_low_threshold": {
+        "name": "Lavt fugtniveau"
+      },
+      "temp_defrost_high_threshold": {
+        "name": "Afisning stopper ved"
+      },
+      "temp_defrost_low_threshold": {
+        "name": "Afisning starter ved"
+      },
+      "temp_regulation_dead_band": {
+        "name": "Reguleringens dødbånd"
+      },
+      "temp_supply_max": {
+        "name": "Højeste indblæsningstemperatur"
+      },
+      "temp_supply_min": {
+        "name": "Laveste indblæsningstemperatur"
+      },
+      "temp_winter_mode_threshold": {
+        "name": "Skift mellem sommer og vinter"
+      }
+    },
+    "select": {
+      "fan_level": {
+        "name": "Ventilationstrin"
+      }
+    },
+    "switch": {
+      "enable": {
+        "name": "Drift"
+      }
+    }
+  },
+  "exceptions": {
+    "cannot_connect": {
+      "message": "Gatewayen til {name} svarede ikke."
+    },
+    "email_refused": {
+      "message": "Gatewayen til {name} afviste sin e-mail."
+    },
+    "unsupported_device": {
+      "message": "Styringen bag gatewayen understøttes ikke."
+    },
+    "invalid_value": {
+      "message": "{value} er ikke en værdi, denne indstilling kan få."
+    },
+    "write_refused": {
+      "message": "Anlægget tog ikke imod ændringen."
+    }
+  }
+}

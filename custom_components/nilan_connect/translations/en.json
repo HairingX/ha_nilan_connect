@@ -1,0 +1,288 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up a Nilan unit",
+        "description": "The unit is reached through its Nilan gateway on your own network.",
+        "menu_options": {
+          "discover": "Find the gateway on the network",
+          "manual": "Enter the gateway's address"
+        }
+      },
+      "discover": {
+        "title": "Nilan gateway",
+        "data": {
+          "gateway_id": "Gateway",
+          "name": "Name",
+          "email": "Email"
+        },
+        "data_description": {
+          "gateway_id": "The gateways that answered on the network.",
+          "name": "Every entity id of the unit starts with it, and it stays when the unit is replaced. Give several units different names, such as Upstairs.",
+          "email": "The email of the account the gateway is paired with in Nilan's app."
+        }
+      },
+      "no_gateways": {
+        "title": "No gateway found",
+        "description": "No gateway answered on the network. A gateway on another network or VLAN does not hear discovery.",
+        "menu_options": {
+          "discover": "Look again",
+          "manual": "Enter the gateway's address"
+        }
+      },
+      "manual": {
+        "title": "Nilan gateway",
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "port": "Port",
+          "email": "Email"
+        },
+        "data_description": {
+          "name": "Every entity id of the unit starts with it, and it stays when the unit is replaced. Give several units different names, such as Upstairs.",
+          "host": "The IP address or host name of the gateway. Give it a fixed address in your router.",
+          "port": "The UDP port the gateway answers on.",
+          "email": "The email of the account the gateway is paired with in Nilan's app."
+        }
+      },
+      "reconfigure": {
+        "title": "Change connection",
+        "description": "Change where the gateway of {name} is reached, or its email. Leave the host empty to find the gateway on the network by its id.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "email": "Email"
+        },
+        "data_description": {
+          "host": "The IP address or host name of the gateway.",
+          "port": "The UDP port the gateway answers on.",
+          "email": "The email of the account the gateway is paired with in Nilan's app."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Email refused",
+        "description": "The gateway of {name} refused the email it was set up with. Enter the email of the account it is paired with in Nilan's app now.",
+        "data": {
+          "email": "Email"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "The gateway did not answer.",
+      "invalid_auth": "The gateway refused this email, also in lower case.",
+      "unsupported_device": "The controller behind this gateway is not supported yet.",
+      "invalid_host": "Enter a host.",
+      "invalid_name": "Enter a name.",
+      "name_in_use": "Another unit already has this name.",
+      "wrong_gateway": "Another gateway answers at this address.",
+      "unknown": "Unexpected error; see the log."
+    },
+    "abort": {
+      "already_configured": "This gateway is already set up.",
+      "reconfigure_successful": "The connection was changed.",
+      "reauth_successful": "The email was changed."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_1_code": {
+        "name": "Alarm code 1"
+      },
+      "alarm_2_code": {
+        "name": "Alarm code 2"
+      },
+      "alarm_3_code": {
+        "name": "Alarm code 3"
+      },
+      "alarm_1_info": {
+        "name": "Alarm info 1"
+      },
+      "alarm_2_info": {
+        "name": "Alarm info 2"
+      },
+      "alarm_3_info": {
+        "name": "Alarm info 3"
+      },
+      "co2_level": {
+        "name": "CO2 level"
+      },
+      "fan_dutycycle_extract": {
+        "name": "Extract fan speed"
+      },
+      "fan_dutycycle_supply": {
+        "name": "Supply fan speed"
+      },
+      "fan_level_current": {
+        "name": "Current fan level"
+      },
+      "filter_replace_time_ago": {
+        "name": "Time since filter change"
+      },
+      "filter_replace_time_remain": {
+        "name": "Time until filter change"
+      },
+      "humidity": {
+        "name": "Humidity"
+      },
+      "humidity_average": {
+        "name": "Average humidity"
+      },
+      "humidity_high_level": {
+        "name": "High humidity level"
+      },
+      "humidity_high_level_time": {
+        "name": "High humidity duration"
+      },
+      "temp_exhaust": {
+        "name": "Exhaust air temperature"
+      },
+      "temp_extract": {
+        "name": "Extract air temperature"
+      },
+      "temp_outside": {
+        "name": "Outdoor air temperature"
+      },
+      "temp_supply": {
+        "name": "Supply air temperature"
+      },
+      "voc_level": {
+        "name": "VOC level"
+      },
+      "efficiency": {
+        "name": "Heat recovery efficiency"
+      }
+    },
+    "binary_sensor": {
+      "alarm_status": {
+        "name": "Alarm"
+      },
+      "bypass_active": {
+        "name": "Bypass damper"
+      },
+      "defrost_active": {
+        "name": "De-icing"
+      },
+      "filter_ok": {
+        "name": "Filter change"
+      },
+      "humidity_high_active": {
+        "name": "High humidity"
+      },
+      "winter_mode_active": {
+        "name": "Winter mode"
+      }
+    },
+    "button": {
+      "alarm_reset": {
+        "name": "Reset alarm"
+      },
+      "filter_replace_reset": {
+        "name": "Reset filter timer"
+      }
+    },
+    "number": {
+      "temp_target": {
+        "name": "Target room temperature"
+      },
+      "co2_threshold": {
+        "name": "High CO2 level"
+      },
+      "voc_threshold": {
+        "name": "High VOC level"
+      },
+      "defrost_break_time": {
+        "name": "Time between de-icing"
+      },
+      "defrost_max_time": {
+        "name": "Longest de-icing"
+      },
+      "fan_level1_supply_preset": {
+        "name": "Supply air, level 1"
+      },
+      "fan_level2_supply_preset": {
+        "name": "Supply air, level 2"
+      },
+      "fan_level3_supply_preset": {
+        "name": "Supply air, level 3"
+      },
+      "fan_level4_supply_preset": {
+        "name": "Supply air, level 4"
+      },
+      "fan_level1_extract_preset": {
+        "name": "Extract air, level 1"
+      },
+      "fan_level2_extract_preset": {
+        "name": "Extract air, level 2"
+      },
+      "fan_level3_extract_preset": {
+        "name": "Extract air, level 3"
+      },
+      "fan_level4_extract_preset": {
+        "name": "Extract air, level 4"
+      },
+      "fan_level_high_co2": {
+        "name": "Fan level at high CO2"
+      },
+      "fan_level_high_humidity": {
+        "name": "Fan level at high humidity"
+      },
+      "fan_level_high_humidity_time": {
+        "name": "High humidity timeout"
+      },
+      "fan_level_low_humidity": {
+        "name": "Fan level at low humidity"
+      },
+      "filter_replace_interval": {
+        "name": "Filter change interval"
+      },
+      "humidity_low_threshold": {
+        "name": "Low humidity level"
+      },
+      "temp_defrost_high_threshold": {
+        "name": "De-icing stop temperature"
+      },
+      "temp_defrost_low_threshold": {
+        "name": "De-icing start temperature"
+      },
+      "temp_regulation_dead_band": {
+        "name": "Regulation dead band"
+      },
+      "temp_supply_max": {
+        "name": "Maximum supply air temperature"
+      },
+      "temp_supply_min": {
+        "name": "Minimum supply air temperature"
+      },
+      "temp_winter_mode_threshold": {
+        "name": "Summer/winter changeover"
+      }
+    },
+    "select": {
+      "fan_level": {
+        "name": "Fan level"
+      }
+    },
+    "switch": {
+      "enable": {
+        "name": "Operation"
+      }
+    }
+  },
+  "exceptions": {
+    "cannot_connect": {
+      "message": "The gateway of {name} did not answer."
+    },
+    "email_refused": {
+      "message": "The gateway of {name} refused its email."
+    },
+    "unsupported_device": {
+      "message": "The controller behind the gateway is not supported."
+    },
+    "invalid_value": {
+      "message": "{value} is not a value this setting can take."
+    },
+    "write_refused": {
+      "message": "The unit did not take the change."
+    }
+  }
+}

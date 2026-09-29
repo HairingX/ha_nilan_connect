@@ -30,7 +30,7 @@ defaults:
 
 jobs:
   test:
-    name: Release scripts
+    name: Tests and type check
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -39,16 +39,42 @@ jobs:
           ref: ${{ inputs.ref }}
           persist-credentials: false
 
+      # The Python the pinned Home Assistant release requires.
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
           python-version: "3.14"
 
-      - name: Install the test tools
+      - name: Install the test tools, Home Assistant and the libraries
         run: python -m pip install -r requirements-test.txt
 
-      - name: Type check the release scripts (pyright strict)
-        run: pyright -p .github/scripts
+      # A development branch is tested with the libraries' branch of the same name, where they
+      # have one, as the three are developed together. main is tested with what the manifest pins.
+      - name: Use the libraries' branch of the same name
+        env:
+          BRANCH: ${{ inputs.branch || github.head_ref || github.ref_name }}
+        run: |
+          if [[ "$BRANCH" == "main" ]]; then
+            echo "main: the libraries the manifest pins"
+            exit 0
+          fi
+          python .github/scripts/test_build.py libraries "$BRANCH" | while read -r requirement; do
+            echo "Library: $requirement"
+            python -m pip install "$requirement"
+          done
+
+      - name: Type check (pyright strict)
+        run: |
+          pyright
+          pyright -p .github/scripts
+
+      # Live tests need a real controller; they skip themselves without one, and are excluded here.
+      # Every line of the integration is covered, and stays so.
+      - name: Test
+        run: >-
+          python -m pytest -m "not live" -q -o log_cli=false
+          --cov=custom_components.nilan_connect --cov-report=term-missing
+          --cov-fail-under=100
 
       - name: Test the release scripts
         run: python -m pytest .github/scripts -q -o log_cli=false
