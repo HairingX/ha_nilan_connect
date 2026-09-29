@@ -10,6 +10,10 @@ CONF_EMAIL: Final = "email"
 CONF_GATEWAY_ID: Final = "gateway_id"
 """The id the gateway answers discovery with; None while it is not known."""
 
+CONF_SHOW_INFERRED: Final = "show_inferred"
+"""Whether a value whose address is known only from the order of its manual's registers gets an
+entity."""
+
 DEFAULT_NAME: Final = "Nilan"
 """What a unit is called unless the user names it: every unique id starts with the name, so the
 entities keep theirs when the unit is replaced."""

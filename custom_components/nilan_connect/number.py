@@ -47,6 +47,16 @@ def _setting(
     )
 
 
+def _user_setting(point: Key[Any], device_class: NumberDeviceClass | None) -> NilanNumberDescription:
+    """A setting a user changes in daily use: shown, and enabled."""
+    return NilanNumberDescription(
+        key=str(point),
+        translation_key=str(point),
+        point=point,
+        device_class=device_class,
+    )
+
+
 TARGET_TEMPERATURE = NilanNumberDescription(
     key=str(PointKey.TEMP_TARGET),
     translation_key=str(PointKey.TEMP_TARGET),
@@ -81,6 +91,30 @@ NUMBERS: tuple[NilanNumberDescription, ...] = (
     _setting(PointKey.TEMP_SUPPLY_MAX, NumberDeviceClass.TEMPERATURE),
     _setting(PointKey.TEMP_SUPPLY_MIN, NumberDeviceClass.TEMPERATURE),
     _setting(PointKey.TEMP_WINTER_MODE_THRESHOLD, NumberDeviceClass.TEMPERATURE),
+    _user_setting(PointKey.TEMP_HOTWATER, NumberDeviceClass.TEMPERATURE),
+    _user_setting(PointKey.TEMP_HOTWATER_BOOST, NumberDeviceClass.TEMPERATURE),
+    _user_setting(PointKey.BOOST_TIME, NumberDeviceClass.DURATION),
+    _setting(PointKey.TEMP_HOTWATER_SCALD_PROTECTION, NumberDeviceClass.TEMPERATURE),
+    _setting(PointKey.TEMP_HOTWATER_BYPASS_OFFSET, NumberDeviceClass.TEMPERATURE_DELTA),
+    _setting(PointKey.TEMP_SUMMER_SUPPLY_MIN, NumberDeviceClass.TEMPERATURE),
+    _setting(PointKey.TEMP_SUMMER_SUPPLY_MAX, NumberDeviceClass.TEMPERATURE),
+    _setting(PointKey.TEMP_WINTER_SUPPLY_MIN, NumberDeviceClass.TEMPERATURE),
+    _setting(PointKey.TEMP_WINTER_SUPPLY_MAX, NumberDeviceClass.TEMPERATURE),
+    _setting(PointKey.TEMP_NIGHT_COOLING_DAY_LIMIT, NumberDeviceClass.TEMPERATURE),
+    _setting(PointKey.TEMP_NIGHT_COOLING_TARGET, NumberDeviceClass.TEMPERATURE),
+    _setting(PointKey.TEMP_BYPASS_OPEN_OFFSET, NumberDeviceClass.TEMPERATURE_DELTA),
+    _setting(PointKey.TEMP_BYPASS_CLOSE_OFFSET, NumberDeviceClass.TEMPERATURE_DELTA),
+    _setting(PointKey.TEMP_BYPASS_FAN_INCREASE_OFFSET, NumberDeviceClass.TEMPERATURE_DELTA),
+    _setting(PointKey.BYPASS_FAN_INCREASE, None),
+    _setting(PointKey.TEMP_CENTRAL_HEAT_SUPPLY_MIN, NumberDeviceClass.TEMPERATURE),
+    _setting(PointKey.TEMP_CENTRAL_HEAT_SUPPLY_MAX, NumberDeviceClass.TEMPERATURE),
+    _setting(PointKey.TEMP_CENTRAL_HEAT_OFFSET, NumberDeviceClass.TEMPERATURE_DELTA),
+    _setting(PointKey.TEMP_CENTRAL_HEAT_COMPENSATION, NumberDeviceClass.TEMPERATURE_DELTA),
+    _setting(PointKey.CENTRAL_HEAT_CURVE, None),
+    _setting(PointKey.CENTRAL_HEAT_REGULATION_TIME, NumberDeviceClass.DURATION),
+    _setting(PointKey.COOLING_TEMPERATURE, None),
+    _setting(PointKey.FAN_LEVEL_COOLING, None),
+    _setting(PointKey.SERVICE_CAPACITY, None),
 )
 
 

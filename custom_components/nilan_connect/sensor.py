@@ -1,8 +1,10 @@
-"""Measurements of the unit, its alarm codes, and its heat recovery efficiency."""
+"""Measurements of the unit, its codes and states, and its heat recovery efficiency."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date
+from enum import IntEnum
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -11,13 +13,13 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.const import UnitOfRatio
+from homeassistant.const import EntityCategory, UnitOfRatio
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from nilan_connect import Key, PointKey
 
 from .data import NilanConfigEntry, NilanData
-from .entity import NilanEntity, NilanEntityDescription, NilanPointEntity, describe
+from .entity import NilanEntity, NilanEntityDescription, NilanPointEntity, describe, state_name
 from .units import ha_unit
 
 PARALLEL_UPDATES = 0
@@ -32,7 +34,7 @@ class NilanSensorDescription(NilanEntityDescription, SensorEntityDescription):
 
 
 def _reading(
-    point: Key[Any], device_class: SensorDeviceClass | None
+    point: Key[Any], device_class: SensorDeviceClass | None = None, *, enabled: bool = True
 ) -> NilanSensorDescription:
     return NilanSensorDescription(
         key=str(point),
@@ -40,7 +42,12 @@ def _reading(
         point=point,
         device_class=device_class,
         state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=enabled,
     )
+
+
+def _temperature(point: Key[float], *, enabled: bool = True) -> NilanSensorDescription:
+    return _reading(point, SensorDeviceClass.TEMPERATURE, enabled=enabled)
 
 
 def _code(point: Key[Any]) -> NilanSensorDescription:
@@ -53,6 +60,17 @@ def _code(point: Key[Any]) -> NilanSensorDescription:
     )
 
 
+def _state(point: Key[Any], *, diagnostic: bool = False) -> NilanSensorDescription:
+    """A state of the unit, shown by its name; its options are the states the unit's point has."""
+    return NilanSensorDescription(
+        key=str(point),
+        translation_key=str(point),
+        point=point,
+        device_class=SensorDeviceClass.ENUM,
+        entity_category=EntityCategory.DIAGNOSTIC if diagnostic else None,
+    )
+
+
 SENSORS: tuple[NilanSensorDescription, ...] = (
     _code(PointKey.ALARM_1_CODE),
     _code(PointKey.ALARM_2_CODE),
@@ -60,21 +78,71 @@ SENSORS: tuple[NilanSensorDescription, ...] = (
     _code(PointKey.ALARM_1_INFO),
     _code(PointKey.ALARM_2_INFO),
     _code(PointKey.ALARM_3_INFO),
+    _code(PointKey.ALARM_BITS),
+    _code(PointKey.ALARM_BITS_HIGH),
+    _code(PointKey.STATE_CODE),
+    _state(PointKey.ALARM_1),
+    _state(PointKey.ALARM_2),
+    _state(PointKey.ALARM_3),
+    _state(PointKey.OPERATION_STATE),
+    _state(PointKey.OPERATION_MODE_CURRENT),
+    _state(PointKey.HEAT_PUMP_STATE),
+    _state(PointKey.DAMPER_TEST_STATE, diagnostic=True),
+    _state(PointKey.DAMPER_TEST_DAY, diagnostic=True),
+    NilanSensorDescription(
+        key=str(PointKey.DAMPER_TEST_LAST_DATE),
+        translation_key=str(PointKey.DAMPER_TEST_LAST_DATE),
+        point=PointKey.DAMPER_TEST_LAST_DATE,
+        device_class=SensorDeviceClass.DATE,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
     _reading(PointKey.CO2_LEVEL, SensorDeviceClass.CO2),
-    _reading(PointKey.FAN_DUTYCYCLE_EXTRACT, None),
-    _reading(PointKey.FAN_DUTYCYCLE_SUPPLY, None),
-    _reading(PointKey.FAN_LEVEL_CURRENT, None),
+    _reading(PointKey.FAN_DUTYCYCLE_EXTRACT),
+    _reading(PointKey.FAN_DUTYCYCLE_SUPPLY),
+    _reading(PointKey.FAN_LEVEL_CURRENT),
+    _reading(PointKey.FAN_LEVEL_SUPPLY),
+    _reading(PointKey.FAN_LEVEL_EXTRACT),
+    _reading(PointKey.FAN_RPM_SUPPLY),
+    _reading(PointKey.FAN_RPM_EXTRACT),
+    _reading(PointKey.ROTOR_SPEED),
+    _reading(PointKey.BYPASS_POSITION),
+    _reading(PointKey.PREHEAT_OUTPUT),
+    _reading(PointKey.REHEAT_OUTPUT),
+    _reading(PointKey.HEAT_PUMP_CAPACITY),
+    _reading(PointKey.SUCTION_PRESSURE, SensorDeviceClass.PRESSURE),
+    _reading(PointKey.DISCHARGE_PRESSURE, SensorDeviceClass.PRESSURE),
+    _reading(PointKey.TIME_IN_STATE, SensorDeviceClass.DURATION, enabled=False),
     _reading(PointKey.FILTER_REPLACE_TIME_AGO, SensorDeviceClass.DURATION),
     _reading(PointKey.FILTER_REPLACE_TIME_REMAIN, SensorDeviceClass.DURATION),
     _reading(PointKey.HUMIDITY, SensorDeviceClass.HUMIDITY),
     _reading(PointKey.HUMIDITY_AVG, SensorDeviceClass.HUMIDITY),
-    _reading(PointKey.HUMIDITY_HIGH_LEVEL, None),
+    _reading(PointKey.HUMIDITY_HIGH_LEVEL),
     _reading(PointKey.HUMIDITY_HIGH_LEVEL_TIME, SensorDeviceClass.DURATION),
-    _reading(PointKey.TEMP_EXHAUST, SensorDeviceClass.TEMPERATURE),
-    _reading(PointKey.TEMP_EXTRACT, SensorDeviceClass.TEMPERATURE),
-    _reading(PointKey.TEMP_OUTSIDE, SensorDeviceClass.TEMPERATURE),
-    _reading(PointKey.TEMP_SUPPLY, SensorDeviceClass.TEMPERATURE),
     _reading(PointKey.VOC_LEVEL, SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS_PARTS),
+    _temperature(PointKey.TEMP_EXHAUST),
+    _temperature(PointKey.TEMP_EXTRACT),
+    _temperature(PointKey.TEMP_OUTSIDE),
+    _temperature(PointKey.TEMP_SUPPLY),
+    _temperature(PointKey.TEMP_INTAKE),
+    _temperature(PointKey.TEMP_PREHEAT_INTAKE),
+    _temperature(PointKey.TEMP_SUPPLY_AFTER_HEATER),
+    _temperature(PointKey.TEMP_ROOM),
+    _temperature(PointKey.TEMP_ROOM_PANEL),
+    _temperature(PointKey.TEMP_HEATER),
+    _temperature(PointKey.TEMP_FROST_PROTECTION),
+    _temperature(PointKey.TEMP_CONTROLLER, enabled=False),
+    _temperature(PointKey.TEMP_AUX),
+    _temperature(PointKey.TEMP_HOTWATER_TOP),
+    _temperature(PointKey.TEMP_HOTWATER_BOTTOM),
+    _temperature(PointKey.TEMP_CENTRAL_HEAT_SUPPLY),
+    _temperature(PointKey.TEMP_CENTRAL_HEAT_RETURN),
+    _temperature(PointKey.TEMP_CONDENSER),
+    _temperature(PointKey.TEMP_EVAPORATOR),
+    _temperature(PointKey.TEMP_BEFORE_CONDENSER),
+    _temperature(PointKey.TEMP_AFTER_CONDENSER),
+    _temperature(PointKey.TEMP_PRESSURE_PIPE),
+    _temperature(PointKey.TEMP_BUFFER_TANK),
+    _temperature(PointKey.TEMP_HEAT_PUMP_OUTDOOR),
 )
 
 EFFICIENCY_FROM: tuple[Key[float], Key[float], Key[float]] = (
@@ -101,17 +169,26 @@ async def async_setup_entry(
 
 
 class NilanSensor(NilanPointEntity, SensorEntity):
-    """The value of one point."""
+    """The value of one point: a number, a date, or a state by its name."""
 
     def __init__(self, data: NilanData, description: NilanSensorDescription) -> None:
+        (point,) = data.client.select([description.point])
+        if description.device_class is SensorDeviceClass.ENUM:
+            self._attr_options = [state_name(state) for state in point.states]
         self._attr_native_unit_of_measurement = ha_unit(data.client, description.point)
         super().__init__(data, description)
 
     def _show(self) -> None:
         value = self._current(self._key)
-        self._attr_native_value = (
-            value if isinstance(value, int | float) and not isinstance(value, bool) else None
-        )
+        if isinstance(value, IntEnum):
+            name = state_name(value)
+            self._attr_native_value = name if name in (self._attr_options or ()) else None
+        elif isinstance(value, bool):
+            self._attr_native_value = None
+        elif isinstance(value, int | float | date):
+            self._attr_native_value = value
+        else:
+            self._attr_native_value = None
 
 
 class NilanEfficiency(NilanEntity, SensorEntity):

@@ -12,11 +12,15 @@ your own network - no cloud.
 | Nilan CTS602, including Geo, and CTS602 Light | no |
 | Genvex Optima 250, 251, 260, 301, 312, 314 | no |
 
-A controller other than the CTS400 gets an entity for each value the CTS400 has too: temperatures,
-humidity, fan levels and speeds, the target temperature and the filter, where it has them. Values
-of its own - hot water, central heating, heat pump, its operating states - follow in a later
-release. A value whose address is known only from the order of its manual's registers gets no
-entity yet.
+Every unit gets an entity for each value it has: temperatures, humidity, fans, heating, hot water,
+central heating and heat pump, its alarms and operating states - named, in English and Danish - and
+its settings. The thermostat shows the unit's fan level and target temperature, and turns it on
+and off where the unit's on/off setting is known.
+
+Some addresses of the controllers other than the CTS400 are known only from the order of the
+registers in Nilan's manual. Their values get no entity unless you choose to see them: Settings >
+Devices & services > Nilan Connect > Configure > *Show values found only from the manual*. Their
+values may be wrong; please report what your unit shows in an issue.
 
 ## Installation
 

@@ -25,7 +25,7 @@ from nilan_connect import (
 )
 
 from . import const
-from .const import CONF_EMAIL, CONF_GATEWAY_ID, DEFAULT_PORT, DOMAIN, POLL_TICK
+from .const import CONF_EMAIL, CONF_GATEWAY_ID, CONF_SHOW_INFERRED, DEFAULT_PORT, DOMAIN, POLL_TICK
 from .data import NilanConfigEntry, NilanData, new_client
 
 _LOGGER = logging.getLogger(__name__)
@@ -96,7 +96,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> boo
 
     try:
         await _identify_gateway(hass, entry)
-        entry.runtime_data = NilanData(client=client, name=name)
+        entry.runtime_data = NilanData(
+            client=client,
+            name=name,
+            show_inferred=bool(entry.options.get(CONF_SHOW_INFERRED, False)),
+        )
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
         _remove_lost_entities(hass, entry)
     except BaseException:

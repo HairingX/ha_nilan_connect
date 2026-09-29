@@ -1,4 +1,5 @@
-"""Set up a Nilan unit behind its gateway, change where it is reached, and renew its email."""
+"""Set up a Nilan unit behind its gateway, change where it is reached, renew its email, and choose
+which values it shows."""
 
 from __future__ import annotations
 
@@ -7,8 +8,14 @@ from collections.abc import Mapping
 from typing import Any
 
 import voluptuous as vol
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import (
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    OptionsFlowWithReload,
+)
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT
+from homeassistant.core import callback
 from nilan_connect import (
     AuthenticationError,
     CannotConnectError,
@@ -18,7 +25,14 @@ from nilan_connect import (
 )
 
 from . import const
-from .const import CONF_EMAIL, CONF_GATEWAY_ID, DEFAULT_NAME, DEFAULT_PORT, DOMAIN
+from .const import (
+    CONF_EMAIL,
+    CONF_GATEWAY_ID,
+    CONF_SHOW_INFERRED,
+    DEFAULT_NAME,
+    DEFAULT_PORT,
+    DOMAIN,
+)
 from .data import new_client
 
 _LOGGER = logging.getLogger(__name__)
@@ -69,6 +83,12 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
     MINOR_VERSION = 1
 
     _gateways: dict[str, DiscoveredDevice]
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> NilanOptionsFlow:
+        """Choose which values the unit shows."""
+        return NilanOptionsFlow()
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
@@ -299,3 +319,19 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
             _LOGGER.exception("Unexpected error while connecting to the gateway")
             errors["base"] = "unknown"
         return None
+
+
+class NilanOptionsFlow(OptionsFlowWithReload):
+    """Whether values whose address is known only from the order of the manual's registers get
+    entities; the entry reloads with the choice."""
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        if user_input is not None:
+            return self.async_create_entry(data=user_input)
+        schema = vol.Schema({vol.Required(CONF_SHOW_INFERRED, default=False): bool})
+        return self.async_show_form(
+            step_id="init",
+            data_schema=self.add_suggested_values_to_schema(schema, self.config_entry.options),
+        )

@@ -85,26 +85,396 @@
   },
   "entity": {
     "sensor": {
+      "alarm_1": {
+        "name": "Alarm 1",
+        "state": {
+          "none": "Ingen alarm",
+          "change_filter": "Skift filter",
+          "external_filter": "Ekstern filteralarm",
+          "external_stop": "Eksternt stop",
+          "emergency_stop": "Nødstop",
+          "defrost_timeout_exchanger": "Afisning tog for lang tid (veksler)",
+          "defrost_timeout_compressor": "Afisning tog for lang tid (kompressor)",
+          "sensor_error": "Følerfejl",
+          "control_sensor_error": "Fejl i styrende føler",
+          "humidity_sensor_error": "Fejl i fugtføler",
+          "co2_sensor_error": "Fejl i CO2-føler",
+          "air_temperature_error": "Fejl i lufttemperatur",
+          "water_temperature_error": "Fejl i varmtvandstemperatur",
+          "central_heat_temperature_error": "Fejl i centralvarmetemperatur",
+          "flow_temperature_error": "Fejl i fremløbstemperatur",
+          "return_temperature_error": "Fejl i returtemperatur",
+          "afterheat_frost_thermostat_error": "Fejl i eftervarmens frosttermostat",
+          "afterheat_frost_risk": "Risiko for frost i eftervarme",
+          "afterheat_frost": "Frost i eftervarme",
+          "frost_failure": "Frostsikringsfejl",
+          "fire": "Brand",
+          "fire_input": "Brandindgang",
+          "fire_test_error": "Fejl i brandtest",
+          "fire_damper_1_error": "Fejl i brandspjæld 1",
+          "fire_damper_2_error": "Fejl i brandspjæld 2",
+          "fire_damper_3_error": "Fejl i brandspjæld 3",
+          "fire_damper_4_error": "Fejl i brandspjæld 4",
+          "fire_box_1_error": "Fejl i brandboks 1",
+          "fire_box_2_error": "Fejl i brandboks 2",
+          "room_temperature_low": "Lav rumtemperatur",
+          "pressure": "Pressostat",
+          "high_pressure": "Højtryk",
+          "low_pressure": "Lavtryk",
+          "supply_fan_error": "Fejl i indblæsningsventilator",
+          "extract_fan_error": "Fejl i udsugningsventilator",
+          "fan_error": "Ventilatorfejl",
+          "motor_overheat": "Ventilatormotor overophedet",
+          "rotor": "Rotor",
+          "panel_communication": "Panelkommunikation",
+          "internal_modbus": "Intern Modbus",
+          "hardware": "Hardwarefejl",
+          "timeout": "En advarsel blev kritisk",
+          "door_open": "Låge åben",
+          "boiler_overheat": "Kedel overophedet",
+          "reheat_overheat": "Eftervarme overophedet",
+          "reheat_no_airflow": "Ingen luftstrøm ved eftervarme",
+          "water_boiling": "Varmt vand koger",
+          "software": "Software genstartet",
+          "watchdog": "Programfejl",
+          "settings_changed": "Indstillinger ændret",
+          "legionella_not_done": "Legionellabehandling ikke udført",
+          "power_outage": "Strømafbrydelse",
+          "modem": "Modem",
+          "network": "Netværk",
+          "anode_worn": "Anode slidt",
+          "evaporator_low": "Fordamper for kold",
+          "slave_io": "Slave-I/O",
+          "options_module_missing": "Optionsmodul mangler",
+          "preset_error": "Fejl i forindstilling",
+          "software_rejected": "Softwareopdatering afvist",
+          "damper_test_failed": "Spjældtest fejlet",
+          "sensor_t1_open": "Føler T1 afbrudt",
+          "sensor_t2_open": "Føler T2 afbrudt",
+          "sensor_t3_open": "Føler T3 afbrudt",
+          "sensor_t4_open": "Føler T4 afbrudt",
+          "sensor_t5_open": "Føler T5 afbrudt",
+          "sensor_t6_open": "Føler T6 afbrudt",
+          "sensor_t7_open": "Føler T7 afbrudt",
+          "sensor_t8_open": "Føler T8 afbrudt",
+          "sensor_t9_open": "Føler T9 afbrudt",
+          "sensor_t10_open": "Føler T10 afbrudt",
+          "sensor_t11_open": "Føler T11 afbrudt",
+          "sensor_t12_open": "Føler T12 afbrudt",
+          "sensor_t13_open": "Føler T13 afbrudt",
+          "sensor_t14_open": "Føler T14 afbrudt",
+          "sensor_t15_open": "Føler T15 afbrudt",
+          "sensor_t16_open": "Føler T16 afbrudt",
+          "sensor_t1_short": "Føler T1 kortsluttet",
+          "sensor_t2_short": "Føler T2 kortsluttet",
+          "sensor_t3_short": "Føler T3 kortsluttet",
+          "sensor_t4_short": "Føler T4 kortsluttet",
+          "sensor_t5_short": "Føler T5 kortsluttet",
+          "sensor_t6_short": "Føler T6 kortsluttet",
+          "sensor_t7_short": "Føler T7 kortsluttet",
+          "sensor_t8_short": "Føler T8 kortsluttet",
+          "sensor_t9_short": "Føler T9 kortsluttet",
+          "sensor_t10_short": "Føler T10 kortsluttet",
+          "sensor_t11_short": "Føler T11 kortsluttet",
+          "sensor_t12_short": "Føler T12 kortsluttet",
+          "sensor_t13_short": "Føler T13 kortsluttet",
+          "sensor_t14_short": "Føler T14 kortsluttet",
+          "sensor_t15_short": "Føler T15 kortsluttet",
+          "sensor_t16_short": "Føler T16 kortsluttet",
+          "sensor_t1_error": "Fejl i føler T1",
+          "sensor_t2_error": "Fejl i føler T2",
+          "sensor_t3_error": "Fejl i føler T3",
+          "sensor_t4_error": "Fejl i føler T4",
+          "sensor_t5_error": "Fejl i føler T5",
+          "sensor_t6_error": "Fejl i føler T6",
+          "sensor_t7_error": "Fejl i føler T7",
+          "sensor_t8_error": "Fejl i føler T8",
+          "sensor_t9_error": "Fejl i føler T9",
+          "sensor_t10_error": "Fejl i føler T10",
+          "sensor_t11_error": "Fejl i føler T11"
+        }
+      },
       "alarm_1_code": {
         "name": "Alarmkode 1"
-      },
-      "alarm_2_code": {
-        "name": "Alarmkode 2"
-      },
-      "alarm_3_code": {
-        "name": "Alarmkode 3"
       },
       "alarm_1_info": {
         "name": "Alarminfo 1"
       },
+      "alarm_2": {
+        "name": "Alarm 2",
+        "state": {
+          "none": "Ingen alarm",
+          "change_filter": "Skift filter",
+          "external_filter": "Ekstern filteralarm",
+          "external_stop": "Eksternt stop",
+          "emergency_stop": "Nødstop",
+          "defrost_timeout_exchanger": "Afisning tog for lang tid (veksler)",
+          "defrost_timeout_compressor": "Afisning tog for lang tid (kompressor)",
+          "sensor_error": "Følerfejl",
+          "control_sensor_error": "Fejl i styrende føler",
+          "humidity_sensor_error": "Fejl i fugtføler",
+          "co2_sensor_error": "Fejl i CO2-føler",
+          "air_temperature_error": "Fejl i lufttemperatur",
+          "water_temperature_error": "Fejl i varmtvandstemperatur",
+          "central_heat_temperature_error": "Fejl i centralvarmetemperatur",
+          "flow_temperature_error": "Fejl i fremløbstemperatur",
+          "return_temperature_error": "Fejl i returtemperatur",
+          "afterheat_frost_thermostat_error": "Fejl i eftervarmens frosttermostat",
+          "afterheat_frost_risk": "Risiko for frost i eftervarme",
+          "afterheat_frost": "Frost i eftervarme",
+          "frost_failure": "Frostsikringsfejl",
+          "fire": "Brand",
+          "fire_input": "Brandindgang",
+          "fire_test_error": "Fejl i brandtest",
+          "fire_damper_1_error": "Fejl i brandspjæld 1",
+          "fire_damper_2_error": "Fejl i brandspjæld 2",
+          "fire_damper_3_error": "Fejl i brandspjæld 3",
+          "fire_damper_4_error": "Fejl i brandspjæld 4",
+          "fire_box_1_error": "Fejl i brandboks 1",
+          "fire_box_2_error": "Fejl i brandboks 2",
+          "room_temperature_low": "Lav rumtemperatur",
+          "pressure": "Pressostat",
+          "high_pressure": "Højtryk",
+          "low_pressure": "Lavtryk",
+          "supply_fan_error": "Fejl i indblæsningsventilator",
+          "extract_fan_error": "Fejl i udsugningsventilator",
+          "fan_error": "Ventilatorfejl",
+          "motor_overheat": "Ventilatormotor overophedet",
+          "rotor": "Rotor",
+          "panel_communication": "Panelkommunikation",
+          "internal_modbus": "Intern Modbus",
+          "hardware": "Hardwarefejl",
+          "timeout": "En advarsel blev kritisk",
+          "door_open": "Låge åben",
+          "boiler_overheat": "Kedel overophedet",
+          "reheat_overheat": "Eftervarme overophedet",
+          "reheat_no_airflow": "Ingen luftstrøm ved eftervarme",
+          "water_boiling": "Varmt vand koger",
+          "software": "Software genstartet",
+          "watchdog": "Programfejl",
+          "settings_changed": "Indstillinger ændret",
+          "legionella_not_done": "Legionellabehandling ikke udført",
+          "power_outage": "Strømafbrydelse",
+          "modem": "Modem",
+          "network": "Netværk",
+          "anode_worn": "Anode slidt",
+          "evaporator_low": "Fordamper for kold",
+          "slave_io": "Slave-I/O",
+          "options_module_missing": "Optionsmodul mangler",
+          "preset_error": "Fejl i forindstilling",
+          "software_rejected": "Softwareopdatering afvist",
+          "damper_test_failed": "Spjældtest fejlet",
+          "sensor_t1_open": "Føler T1 afbrudt",
+          "sensor_t2_open": "Føler T2 afbrudt",
+          "sensor_t3_open": "Føler T3 afbrudt",
+          "sensor_t4_open": "Føler T4 afbrudt",
+          "sensor_t5_open": "Føler T5 afbrudt",
+          "sensor_t6_open": "Føler T6 afbrudt",
+          "sensor_t7_open": "Føler T7 afbrudt",
+          "sensor_t8_open": "Føler T8 afbrudt",
+          "sensor_t9_open": "Føler T9 afbrudt",
+          "sensor_t10_open": "Føler T10 afbrudt",
+          "sensor_t11_open": "Føler T11 afbrudt",
+          "sensor_t12_open": "Føler T12 afbrudt",
+          "sensor_t13_open": "Føler T13 afbrudt",
+          "sensor_t14_open": "Føler T14 afbrudt",
+          "sensor_t15_open": "Føler T15 afbrudt",
+          "sensor_t16_open": "Føler T16 afbrudt",
+          "sensor_t1_short": "Føler T1 kortsluttet",
+          "sensor_t2_short": "Føler T2 kortsluttet",
+          "sensor_t3_short": "Føler T3 kortsluttet",
+          "sensor_t4_short": "Føler T4 kortsluttet",
+          "sensor_t5_short": "Føler T5 kortsluttet",
+          "sensor_t6_short": "Føler T6 kortsluttet",
+          "sensor_t7_short": "Føler T7 kortsluttet",
+          "sensor_t8_short": "Føler T8 kortsluttet",
+          "sensor_t9_short": "Føler T9 kortsluttet",
+          "sensor_t10_short": "Føler T10 kortsluttet",
+          "sensor_t11_short": "Føler T11 kortsluttet",
+          "sensor_t12_short": "Føler T12 kortsluttet",
+          "sensor_t13_short": "Føler T13 kortsluttet",
+          "sensor_t14_short": "Føler T14 kortsluttet",
+          "sensor_t15_short": "Føler T15 kortsluttet",
+          "sensor_t16_short": "Føler T16 kortsluttet",
+          "sensor_t1_error": "Fejl i føler T1",
+          "sensor_t2_error": "Fejl i føler T2",
+          "sensor_t3_error": "Fejl i føler T3",
+          "sensor_t4_error": "Fejl i føler T4",
+          "sensor_t5_error": "Fejl i føler T5",
+          "sensor_t6_error": "Fejl i føler T6",
+          "sensor_t7_error": "Fejl i føler T7",
+          "sensor_t8_error": "Fejl i føler T8",
+          "sensor_t9_error": "Fejl i føler T9",
+          "sensor_t10_error": "Fejl i føler T10",
+          "sensor_t11_error": "Fejl i føler T11"
+        }
+      },
+      "alarm_2_code": {
+        "name": "Alarmkode 2"
+      },
       "alarm_2_info": {
         "name": "Alarminfo 2"
+      },
+      "alarm_3": {
+        "name": "Alarm 3",
+        "state": {
+          "none": "Ingen alarm",
+          "change_filter": "Skift filter",
+          "external_filter": "Ekstern filteralarm",
+          "external_stop": "Eksternt stop",
+          "emergency_stop": "Nødstop",
+          "defrost_timeout_exchanger": "Afisning tog for lang tid (veksler)",
+          "defrost_timeout_compressor": "Afisning tog for lang tid (kompressor)",
+          "sensor_error": "Følerfejl",
+          "control_sensor_error": "Fejl i styrende føler",
+          "humidity_sensor_error": "Fejl i fugtføler",
+          "co2_sensor_error": "Fejl i CO2-føler",
+          "air_temperature_error": "Fejl i lufttemperatur",
+          "water_temperature_error": "Fejl i varmtvandstemperatur",
+          "central_heat_temperature_error": "Fejl i centralvarmetemperatur",
+          "flow_temperature_error": "Fejl i fremløbstemperatur",
+          "return_temperature_error": "Fejl i returtemperatur",
+          "afterheat_frost_thermostat_error": "Fejl i eftervarmens frosttermostat",
+          "afterheat_frost_risk": "Risiko for frost i eftervarme",
+          "afterheat_frost": "Frost i eftervarme",
+          "frost_failure": "Frostsikringsfejl",
+          "fire": "Brand",
+          "fire_input": "Brandindgang",
+          "fire_test_error": "Fejl i brandtest",
+          "fire_damper_1_error": "Fejl i brandspjæld 1",
+          "fire_damper_2_error": "Fejl i brandspjæld 2",
+          "fire_damper_3_error": "Fejl i brandspjæld 3",
+          "fire_damper_4_error": "Fejl i brandspjæld 4",
+          "fire_box_1_error": "Fejl i brandboks 1",
+          "fire_box_2_error": "Fejl i brandboks 2",
+          "room_temperature_low": "Lav rumtemperatur",
+          "pressure": "Pressostat",
+          "high_pressure": "Højtryk",
+          "low_pressure": "Lavtryk",
+          "supply_fan_error": "Fejl i indblæsningsventilator",
+          "extract_fan_error": "Fejl i udsugningsventilator",
+          "fan_error": "Ventilatorfejl",
+          "motor_overheat": "Ventilatormotor overophedet",
+          "rotor": "Rotor",
+          "panel_communication": "Panelkommunikation",
+          "internal_modbus": "Intern Modbus",
+          "hardware": "Hardwarefejl",
+          "timeout": "En advarsel blev kritisk",
+          "door_open": "Låge åben",
+          "boiler_overheat": "Kedel overophedet",
+          "reheat_overheat": "Eftervarme overophedet",
+          "reheat_no_airflow": "Ingen luftstrøm ved eftervarme",
+          "water_boiling": "Varmt vand koger",
+          "software": "Software genstartet",
+          "watchdog": "Programfejl",
+          "settings_changed": "Indstillinger ændret",
+          "legionella_not_done": "Legionellabehandling ikke udført",
+          "power_outage": "Strømafbrydelse",
+          "modem": "Modem",
+          "network": "Netværk",
+          "anode_worn": "Anode slidt",
+          "evaporator_low": "Fordamper for kold",
+          "slave_io": "Slave-I/O",
+          "options_module_missing": "Optionsmodul mangler",
+          "preset_error": "Fejl i forindstilling",
+          "software_rejected": "Softwareopdatering afvist",
+          "damper_test_failed": "Spjældtest fejlet",
+          "sensor_t1_open": "Føler T1 afbrudt",
+          "sensor_t2_open": "Føler T2 afbrudt",
+          "sensor_t3_open": "Føler T3 afbrudt",
+          "sensor_t4_open": "Føler T4 afbrudt",
+          "sensor_t5_open": "Føler T5 afbrudt",
+          "sensor_t6_open": "Føler T6 afbrudt",
+          "sensor_t7_open": "Føler T7 afbrudt",
+          "sensor_t8_open": "Føler T8 afbrudt",
+          "sensor_t9_open": "Føler T9 afbrudt",
+          "sensor_t10_open": "Føler T10 afbrudt",
+          "sensor_t11_open": "Føler T11 afbrudt",
+          "sensor_t12_open": "Føler T12 afbrudt",
+          "sensor_t13_open": "Føler T13 afbrudt",
+          "sensor_t14_open": "Føler T14 afbrudt",
+          "sensor_t15_open": "Føler T15 afbrudt",
+          "sensor_t16_open": "Føler T16 afbrudt",
+          "sensor_t1_short": "Føler T1 kortsluttet",
+          "sensor_t2_short": "Føler T2 kortsluttet",
+          "sensor_t3_short": "Føler T3 kortsluttet",
+          "sensor_t4_short": "Føler T4 kortsluttet",
+          "sensor_t5_short": "Føler T5 kortsluttet",
+          "sensor_t6_short": "Føler T6 kortsluttet",
+          "sensor_t7_short": "Føler T7 kortsluttet",
+          "sensor_t8_short": "Føler T8 kortsluttet",
+          "sensor_t9_short": "Føler T9 kortsluttet",
+          "sensor_t10_short": "Føler T10 kortsluttet",
+          "sensor_t11_short": "Føler T11 kortsluttet",
+          "sensor_t12_short": "Føler T12 kortsluttet",
+          "sensor_t13_short": "Føler T13 kortsluttet",
+          "sensor_t14_short": "Føler T14 kortsluttet",
+          "sensor_t15_short": "Føler T15 kortsluttet",
+          "sensor_t16_short": "Føler T16 kortsluttet",
+          "sensor_t1_error": "Fejl i føler T1",
+          "sensor_t2_error": "Fejl i føler T2",
+          "sensor_t3_error": "Fejl i føler T3",
+          "sensor_t4_error": "Fejl i føler T4",
+          "sensor_t5_error": "Fejl i føler T5",
+          "sensor_t6_error": "Fejl i føler T6",
+          "sensor_t7_error": "Fejl i føler T7",
+          "sensor_t8_error": "Fejl i føler T8",
+          "sensor_t9_error": "Fejl i føler T9",
+          "sensor_t10_error": "Fejl i føler T10",
+          "sensor_t11_error": "Fejl i føler T11"
+        }
+      },
+      "alarm_3_code": {
+        "name": "Alarmkode 3"
       },
       "alarm_3_info": {
         "name": "Alarminfo 3"
       },
+      "alarm_bits": {
+        "name": "Alarmbits"
+      },
+      "alarm_bits_high": {
+        "name": "Alarmbits, høje"
+      },
+      "bypass_position": {
+        "name": "Bypass-spjældets stilling"
+      },
       "co2_level": {
         "name": "CO2-niveau"
+      },
+      "damper_test_day": {
+        "name": "Dag for spjældtest",
+        "state": {
+          "off": "Fra",
+          "monday": "Mandag",
+          "tuesday": "Tirsdag",
+          "wednesday": "Onsdag",
+          "thursday": "Torsdag",
+          "friday": "Fredag",
+          "saturday": "Lørdag",
+          "sunday": "Søndag"
+        }
+      },
+      "damper_test_last_date": {
+        "name": "Seneste spjældtest"
+      },
+      "damper_test_state": {
+        "name": "Spjældtest",
+        "state": {
+          "off": "Fra",
+          "standby": "Standby",
+          "start": "Start",
+          "closing": "Lukker",
+          "opening": "Åbner",
+          "ok": "OK",
+          "error": "Fejl"
+        }
+      },
+      "discharge_pressure": {
+        "name": "Afgangstryk"
+      },
+      "efficiency": {
+        "name": "Varmegenvindingsgrad"
       },
       "fan_dutycycle_extract": {
         "name": "Ventilatorhastighed, udsugning"
@@ -115,11 +485,69 @@
       "fan_level_current": {
         "name": "Aktuelt ventilationstrin"
       },
+      "fan_level_extract": {
+        "name": "Ventilationstrin, udsugning"
+      },
+      "fan_level_supply": {
+        "name": "Ventilationstrin, indblæsning"
+      },
+      "fan_rpm_extract": {
+        "name": "Omdrejninger, udsugning"
+      },
+      "fan_rpm_supply": {
+        "name": "Omdrejninger, indblæsning"
+      },
       "filter_replace_time_ago": {
         "name": "Tid siden filterskift"
       },
       "filter_replace_time_remain": {
         "name": "Tid til filterskift"
+      },
+      "heat_pump_capacity": {
+        "name": "Varmepumpens kapacitet"
+      },
+      "heat_pump_state": {
+        "name": "Varmepumpens tilstand",
+        "state": {
+          "off": "Slukket",
+          "shift": "Skift",
+          "stop": "Stop",
+          "start": "Start",
+          "standby": "Standby",
+          "ventilation_stop": "Ventilation stoppet",
+          "ventilation": "Ventilation",
+          "heating": "Opvarmning",
+          "cooling": "Køling",
+          "hot_water": "Varmt vand",
+          "legionella": "Legionella",
+          "cooling_hot_water": "Køling og varmt vand",
+          "central_heating": "Centralvarme",
+          "defrost": "Afisning",
+          "frost_protection": "Frostsikring",
+          "service": "Service",
+          "alarm": "Alarm",
+          "heating_hot_water": "Opvarmning og varmt vand",
+          "ready": "Klar",
+          "heating_start_up": "Opvarmning starter",
+          "cooling_start_up": "Køling starter",
+          "hot_water_start_up": "Varmt vand starter",
+          "air_defrost": "Luftafisning",
+          "hotgas_defrost": "Hedgasafisning",
+          "drip_delay": "Dryppause",
+          "heat_pump_stop": "Varmepumpe stoppet",
+          "electric_heating": "Elopvarmning",
+          "electric_hot_water": "Varmt vand med el",
+          "forced_cold_pump": "Tvungen koldpumpe",
+          "hot_water_heat_pump_stop": "Varmt vand, varmepumpe stoppet",
+          "heating_heat_pump_stop": "Opvarmning, varmepumpe stoppet",
+          "pump_exercise": "Pumpemotion",
+          "forced_start_up": "Tvungen start",
+          "forced_running": "Tvungen drift",
+          "forced_running_heat_pump_stop": "Tvungen drift, varmepumpe stoppet",
+          "manual": "Manuel",
+          "external_stop": "Eksternt stop",
+          "forced_low_speed": "Tvungen lav hastighed"
+        }
       },
       "humidity": {
         "name": "Luftfugtighed"
@@ -133,28 +561,255 @@
       "humidity_high_level_time": {
         "name": "Varighed af høj fugt"
       },
+      "operation_mode_current": {
+        "name": "Aktuel driftsform",
+        "state": {
+          "off": "Slukket",
+          "heat": "Varme",
+          "cool": "Køl",
+          "auto": "Auto",
+          "service": "Service"
+        }
+      },
+      "operation_state": {
+        "name": "Driftstilstand",
+        "state": {
+          "off": "Slukket",
+          "shift": "Skift",
+          "stop": "Stop",
+          "start": "Start",
+          "standby": "Standby",
+          "ventilation_stop": "Ventilation stoppet",
+          "ventilation": "Ventilation",
+          "heating": "Opvarmning",
+          "cooling": "Køling",
+          "hot_water": "Varmt vand",
+          "legionella": "Legionella",
+          "cooling_hot_water": "Køling og varmt vand",
+          "central_heating": "Centralvarme",
+          "defrost": "Afisning",
+          "frost_protection": "Frostsikring",
+          "service": "Service",
+          "alarm": "Alarm",
+          "heating_hot_water": "Opvarmning og varmt vand",
+          "ready": "Klar",
+          "heating_start_up": "Opvarmning starter",
+          "cooling_start_up": "Køling starter",
+          "hot_water_start_up": "Varmt vand starter",
+          "air_defrost": "Luftafisning",
+          "hotgas_defrost": "Hedgasafisning",
+          "drip_delay": "Dryppause",
+          "heat_pump_stop": "Varmepumpe stoppet",
+          "electric_heating": "Elopvarmning",
+          "electric_hot_water": "Varmt vand med el",
+          "forced_cold_pump": "Tvungen koldpumpe",
+          "hot_water_heat_pump_stop": "Varmt vand, varmepumpe stoppet",
+          "heating_heat_pump_stop": "Opvarmning, varmepumpe stoppet",
+          "pump_exercise": "Pumpemotion",
+          "forced_start_up": "Tvungen start",
+          "forced_running": "Tvungen drift",
+          "forced_running_heat_pump_stop": "Tvungen drift, varmepumpe stoppet",
+          "manual": "Manuel",
+          "external_stop": "Eksternt stop",
+          "forced_low_speed": "Tvungen lav hastighed"
+        }
+      },
+      "preheat_output": {
+        "name": "Forvarmens effekt"
+      },
+      "reheat_output": {
+        "name": "Eftervarmens effekt"
+      },
+      "rotor_speed": {
+        "name": "Rotorens omdrejninger"
+      },
+      "state_code": {
+        "name": "Tilstandskode"
+      },
+      "suction_pressure": {
+        "name": "Sugetryk"
+      },
+      "temp_after_condenser": {
+        "name": "Temperatur efter kondensator"
+      },
+      "temp_aux": {
+        "name": "Ekstra temperatur"
+      },
+      "temp_before_condenser": {
+        "name": "Temperatur før kondensator"
+      },
+      "temp_buffer_tank": {
+        "name": "Buffertankens temperatur"
+      },
+      "temp_central_heat_return": {
+        "name": "Centralvarme, returløb"
+      },
+      "temp_central_heat_supply": {
+        "name": "Centralvarme, fremløb"
+      },
+      "temp_condenser": {
+        "name": "Kondensatorens temperatur"
+      },
+      "temp_controller": {
+        "name": "Styringens temperatur"
+      },
+      "temp_evaporator": {
+        "name": "Fordamperens temperatur"
+      },
       "temp_exhaust": {
         "name": "Afkastluftens temperatur"
       },
       "temp_extract": {
         "name": "Udsugningsluftens temperatur"
       },
+      "temp_frost_protection": {
+        "name": "Frostsikringens temperatur"
+      },
+      "temp_heat_pump_outdoor": {
+        "name": "Varmepumpens udetemperatur"
+      },
+      "temp_heater": {
+        "name": "Varmefladens temperatur"
+      },
+      "temp_hotwater_bottom": {
+        "name": "Varmtvand, bund"
+      },
+      "temp_hotwater_top": {
+        "name": "Varmtvand, top"
+      },
+      "temp_intake": {
+        "name": "Indtagsluftens temperatur"
+      },
       "temp_outside": {
         "name": "Udeluftens temperatur"
+      },
+      "temp_preheat_intake": {
+        "name": "Temperatur før forvarme"
+      },
+      "temp_pressure_pipe": {
+        "name": "Trykrørets temperatur"
+      },
+      "temp_room": {
+        "name": "Rumtemperatur"
+      },
+      "temp_room_panel": {
+        "name": "Rumtemperatur ved panel"
       },
       "temp_supply": {
         "name": "Indblæsningsluftens temperatur"
       },
+      "temp_supply_after_heater": {
+        "name": "Indblæsningstemperatur efter varmeflade"
+      },
+      "time_in_state": {
+        "name": "Tid i tilstand"
+      },
       "voc_level": {
         "name": "VOC-niveau"
-      },
-      "efficiency": {
-        "name": "Varmegenvindingsgrad"
       }
     },
     "binary_sensor": {
+      "alarm_external_filter": {
+        "name": "Ekstern filteralarm"
+      },
+      "alarm_external_stop": {
+        "name": "Eksternt stop"
+      },
+      "alarm_extract_fan_error": {
+        "name": "Fejl i udsugningsventilator"
+      },
+      "alarm_fan_error": {
+        "name": "Ventilatorfejl"
+      },
+      "alarm_fire_box_1_error": {
+        "name": "Fejl i brandboks 1"
+      },
+      "alarm_fire_box_2_error": {
+        "name": "Fejl i brandboks 2"
+      },
+      "alarm_fire_damper_1_error": {
+        "name": "Fejl i brandspjæld 1"
+      },
+      "alarm_fire_damper_2_error": {
+        "name": "Fejl i brandspjæld 2"
+      },
+      "alarm_fire_damper_3_error": {
+        "name": "Fejl i brandspjæld 3"
+      },
+      "alarm_fire_damper_4_error": {
+        "name": "Fejl i brandspjæld 4"
+      },
+      "alarm_fire_test_error": {
+        "name": "Fejl i brandtest"
+      },
+      "alarm_flow_temperature_error": {
+        "name": "Fejl i fremløbstemperatur"
+      },
+      "alarm_frost_failure": {
+        "name": "Frostsikringsfejl"
+      },
+      "alarm_high_pressure": {
+        "name": "Højtryk"
+      },
+      "alarm_humidity_sensor_error": {
+        "name": "Fejl i fugtføler"
+      },
+      "alarm_internal_modbus": {
+        "name": "Intern Modbus"
+      },
+      "alarm_low_pressure": {
+        "name": "Lavtryk"
+      },
+      "alarm_panel_communication": {
+        "name": "Panelkommunikation"
+      },
+      "alarm_return_temperature_error": {
+        "name": "Fejl i returtemperatur"
+      },
+      "alarm_rotor": {
+        "name": "Rotor"
+      },
+      "alarm_sensor_error": {
+        "name": "Følerfejl"
+      },
+      "alarm_sensor_t10_error": {
+        "name": "Fejl i føler T10"
+      },
+      "alarm_sensor_t11_error": {
+        "name": "Fejl i føler T11"
+      },
+      "alarm_sensor_t1_error": {
+        "name": "Fejl i føler T1"
+      },
+      "alarm_sensor_t2_error": {
+        "name": "Fejl i føler T2"
+      },
+      "alarm_sensor_t3_error": {
+        "name": "Fejl i føler T3"
+      },
+      "alarm_sensor_t4_error": {
+        "name": "Fejl i føler T4"
+      },
+      "alarm_sensor_t5_error": {
+        "name": "Fejl i føler T5"
+      },
+      "alarm_sensor_t6_error": {
+        "name": "Fejl i føler T6"
+      },
+      "alarm_sensor_t7_error": {
+        "name": "Fejl i føler T7"
+      },
+      "alarm_sensor_t8_error": {
+        "name": "Fejl i føler T8"
+      },
+      "alarm_sensor_t9_error": {
+        "name": "Fejl i føler T9"
+      },
       "alarm_status": {
         "name": "Alarm"
+      },
+      "alarm_supply_fan_error": {
+        "name": "Fejl i indblæsningsventilator"
       },
       "bypass_active": {
         "name": "Bypass-spjæld"
@@ -162,11 +817,41 @@
       "defrost_active": {
         "name": "Afisning"
       },
+      "digital_input_1": {
+        "name": "Digital indgang 1"
+      },
+      "digital_input_2": {
+        "name": "Digital indgang 2"
+      },
+      "digital_input_3": {
+        "name": "Digital indgang 3"
+      },
       "filter_ok": {
         "name": "Filterskift"
       },
+      "heat_pump_active": {
+        "name": "Varmepumpe"
+      },
+      "heat_pump_heater_active": {
+        "name": "Varmepumpens elvarme"
+      },
+      "heat_pump_room_heating": {
+        "name": "Varmepumpe, rumopvarmning"
+      },
+      "heat_pump_water_heating": {
+        "name": "Varmepumpe, vandopvarmning"
+      },
       "humidity_high_active": {
         "name": "Høj luftfugtighed"
+      },
+      "reheat_active": {
+        "name": "Eftervarme"
+      },
+      "running": {
+        "name": "Kører"
+      },
+      "sacrificial_anode_ok": {
+        "name": "Udskiftning af anode"
       },
       "winter_mode_active": {
         "name": "Vintertilstand"
@@ -181,14 +866,23 @@
       }
     },
     "number": {
-      "temp_target": {
-        "name": "Måltemperatur"
+      "boost_time": {
+        "name": "Varighed af boost"
+      },
+      "bypass_fan_increase": {
+        "name": "Bypass, øget ventilation"
+      },
+      "central_heat_curve": {
+        "name": "Centralvarmekurve"
+      },
+      "central_heat_regulation_time": {
+        "name": "Centralvarme, reguleringstid"
       },
       "co2_threshold": {
         "name": "Højt CO2-niveau"
       },
-      "voc_threshold": {
-        "name": "Højt VOC-niveau"
+      "cooling_temperature": {
+        "name": "Køletemperatur"
       },
       "defrost_break_time": {
         "name": "Tid mellem afisninger"
@@ -196,29 +890,32 @@
       "defrost_max_time": {
         "name": "Længste afisning"
       },
-      "fan_level1_supply_preset": {
-        "name": "Indblæsning, trin 1"
-      },
-      "fan_level2_supply_preset": {
-        "name": "Indblæsning, trin 2"
-      },
-      "fan_level3_supply_preset": {
-        "name": "Indblæsning, trin 3"
-      },
-      "fan_level4_supply_preset": {
-        "name": "Indblæsning, trin 4"
-      },
       "fan_level1_extract_preset": {
         "name": "Udsugning, trin 1"
+      },
+      "fan_level1_supply_preset": {
+        "name": "Indblæsning, trin 1"
       },
       "fan_level2_extract_preset": {
         "name": "Udsugning, trin 2"
       },
+      "fan_level2_supply_preset": {
+        "name": "Indblæsning, trin 2"
+      },
       "fan_level3_extract_preset": {
         "name": "Udsugning, trin 3"
       },
+      "fan_level3_supply_preset": {
+        "name": "Indblæsning, trin 3"
+      },
       "fan_level4_extract_preset": {
         "name": "Udsugning, trin 4"
+      },
+      "fan_level4_supply_preset": {
+        "name": "Indblæsning, trin 4"
+      },
+      "fan_level_cooling": {
+        "name": "Ventilationstrin ved køling"
       },
       "fan_level_high_co2": {
         "name": "Ventilationstrin ved højt CO2"
@@ -238,14 +935,62 @@
       "humidity_low_threshold": {
         "name": "Lavt fugtniveau"
       },
+      "service_capacity": {
+        "name": "Servicekapacitet"
+      },
+      "temp_bypass_close_offset": {
+        "name": "Bypass, lukkeoffset"
+      },
+      "temp_bypass_fan_increase_offset": {
+        "name": "Bypass, offset for øget ventilation"
+      },
+      "temp_bypass_open_offset": {
+        "name": "Bypass, åbningsoffset"
+      },
+      "temp_central_heat_compensation": {
+        "name": "Udetemperaturkompensering"
+      },
+      "temp_central_heat_offset": {
+        "name": "Centralvarme, offset"
+      },
+      "temp_central_heat_supply_max": {
+        "name": "Højeste fremløbstemperatur, centralvarme"
+      },
+      "temp_central_heat_supply_min": {
+        "name": "Laveste fremløbstemperatur, centralvarme"
+      },
       "temp_defrost_high_threshold": {
         "name": "Afisning stopper ved"
       },
       "temp_defrost_low_threshold": {
         "name": "Afisning starter ved"
       },
+      "temp_hotwater": {
+        "name": "Varmtvandstemperatur"
+      },
+      "temp_hotwater_boost": {
+        "name": "Varmtvand top, el"
+      },
+      "temp_hotwater_bypass_offset": {
+        "name": "Varmtvand, bypass-offset"
+      },
+      "temp_hotwater_scald_protection": {
+        "name": "Skoldningsbeskyttelse"
+      },
+      "temp_night_cooling_day_limit": {
+        "name": "Natkøling, dagsgrænse"
+      },
+      "temp_night_cooling_target": {
+        "name": "Natkøling, mål"
+      },
       "temp_regulation_dead_band": {
         "name": "Reguleringens dødbånd"
+      },
+      "temp_summer_supply_max": {
+        "name": "Højeste indblæsningstemperatur, sommer"
+      },
+      "temp_summer_supply_min": {
+        "name": "Laveste indblæsningstemperatur, sommer"
       },
       "temp_supply_max": {
         "name": "Højeste indblæsningstemperatur"
@@ -253,18 +998,227 @@
       "temp_supply_min": {
         "name": "Laveste indblæsningstemperatur"
       },
+      "temp_target": {
+        "name": "Måltemperatur"
+      },
       "temp_winter_mode_threshold": {
         "name": "Skift mellem sommer og vinter"
+      },
+      "temp_winter_supply_max": {
+        "name": "Højeste indblæsningstemperatur, vinter"
+      },
+      "temp_winter_supply_min": {
+        "name": "Laveste indblæsningstemperatur, vinter"
+      },
+      "voc_threshold": {
+        "name": "Højt VOC-niveau"
       }
     },
     "select": {
+      "air_exchange_mode": {
+        "name": "Luftskiftetilstand",
+        "state": {
+          "energy": "Energi",
+          "comfort": "Komfort",
+          "comfort_water": "Komfort vand"
+        }
+      },
+      "antilegionella_day": {
+        "name": "Dag for legionellabehandling",
+        "state": {
+          "off": "Fra",
+          "monday": "Mandag",
+          "tuesday": "Tirsdag",
+          "wednesday": "Onsdag",
+          "thursday": "Torsdag",
+          "friday": "Fredag",
+          "saturday": "Lørdag",
+          "sunday": "Søndag"
+        }
+      },
+      "central_heat_mode": {
+        "name": "Centralvarmetilstand",
+        "state": {
+          "frost_protection_only": "Kun frostsikring",
+          "always": "Altid",
+          "when_room_cold": "Når rummet er koldt"
+        }
+      },
+      "central_heat_pump_mode": {
+        "name": "Cirkulationspumpe",
+        "state": {
+          "when_heating": "Ved opvarmning",
+          "continuous": "Konstant"
+        }
+      },
+      "central_heat_source": {
+        "name": "Centralvarmekilde",
+        "state": {
+          "off": "Fra",
+          "electric": "El",
+          "heat_pump": "Varmepumpe",
+          "afterheat": "Eftervarme",
+          "heat_pump_then_afterheat": "Varmepumpe, derefter eftervarme",
+          "afterheat_then_heat_pump": "Eftervarme, derefter varmepumpe",
+          "heat_pump_then_electric": "Varmepumpe, derefter el"
+        }
+      },
+      "compressor_priority": {
+        "name": "Kompressorprioritet",
+        "state": {
+          "hot_water": "Varmt vand",
+          "inlet_air": "Indblæsningsluft"
+        }
+      },
+      "control_sensor": {
+        "name": "Styrende føler",
+        "state": {
+          "user_panel": "Betjeningspanel",
+          "external": "Ekstern føler",
+          "inlet": "Indblæsning",
+          "exhaust": "Udsugning"
+        }
+      },
+      "extra_sensor": {
+        "name": "Ekstra føler",
+        "state": {
+          "none": "Ingen",
+          "voc": "VOC",
+          "co2": "CO2"
+        }
+      },
       "fan_level": {
-        "name": "Ventilationstrin"
+        "name": "Ventilationstrin",
+        "state": {
+          "0": "Slukket",
+          "1": "Trin 1",
+          "2": "Trin 2",
+          "3": "Trin 3",
+          "4": "Trin 4"
+        }
+      },
+      "filter_replace_interval_choice": {
+        "name": "Interval mellem filterskift",
+        "state": {
+          "pressure_guard": "Trykvagt",
+          "days_30": "30 dage",
+          "days_90": "90 dage",
+          "days_180": "180 dage",
+          "days_360": "360 dage",
+          "days_70_and_pressure_guard": "70 dage og trykvagt"
+        }
+      },
+      "heat_source": {
+        "name": "Varmekilde",
+        "state": {
+          "off": "Fra",
+          "electric": "El",
+          "heat_pump": "Varmepumpe",
+          "afterheat": "Eftervarme",
+          "heat_pump_then_afterheat": "Varmepumpe, derefter eftervarme",
+          "afterheat_then_heat_pump": "Eftervarme, derefter varmepumpe",
+          "heat_pump_then_electric": "Varmepumpe, derefter el"
+        }
+      },
+      "hotwater_supplement": {
+        "name": "Varmtvandstilskud",
+        "state": {
+          "off": "Fra",
+          "electric": "El",
+          "heat_pump": "Varmepumpe",
+          "afterheat": "Eftervarme",
+          "heat_pump_then_afterheat": "Varmepumpe, derefter eftervarme",
+          "afterheat_then_heat_pump": "Eftervarme, derefter varmepumpe",
+          "heat_pump_then_electric": "Varmepumpe, derefter el"
+        }
+      },
+      "operation_mode": {
+        "name": "Driftsform",
+        "state": {
+          "off": "Slukket",
+          "heat": "Varme",
+          "cool": "Køl",
+          "auto": "Auto",
+          "service": "Service"
+        }
+      },
+      "service_mode": {
+        "name": "Servicetilstand",
+        "state": {
+          "off": "Fra",
+          "defrost": "Afisning",
+          "flaps": "Spjæld",
+          "inlet": "Indblæsning",
+          "exhaust": "Udsugning",
+          "compressor": "Kompressor",
+          "heating": "Opvarmning",
+          "hot_water": "Varmt vand",
+          "central_heat": "Centralvarme"
+        }
+      },
+      "temp_cooling_start_offset": {
+        "name": "Køling starter ved",
+        "state": {
+          "off": "Fra",
+          "plus_0": "Ønsket + 0 °C",
+          "plus_1": "Ønsket + 1 °C",
+          "plus_2": "Ønsket + 2 °C",
+          "plus_3": "Ønsket + 3 °C",
+          "plus_4": "Ønsket + 4 °C",
+          "plus_5": "Ønsket + 5 °C",
+          "plus_7": "Ønsket + 7 °C",
+          "plus_10": "Ønsket + 10 °C"
+        }
       }
     },
     "switch": {
+      "boost_enable": {
+        "name": "Boost"
+      },
+      "cooling_enable": {
+        "name": "Køling"
+      },
+      "defrost_supply_fan": {
+        "name": "Indblæsning under afisning"
+      },
       "enable": {
         "name": "Tænd"
+      },
+      "filter_alarm_on_panel": {
+        "name": "Filteralarm på panel"
+      },
+      "hotwater_heater_enable": {
+        "name": "Elvarme til varmt vand"
+      },
+      "humidity_control_enable": {
+        "name": "Fugtstyring"
+      },
+      "panel_lock_fan_level": {
+        "name": "Lås panelets trinknap"
+      },
+      "panel_lock_on_off": {
+        "name": "Lås panelets tænd/sluk"
+      },
+      "preheat_enable": {
+        "name": "Forvarme"
+      },
+      "reheat_enable": {
+        "name": "Eftervarme"
+      }
+    },
+    "climate": {
+      "hvac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "0": "Slukket",
+              "1": "Trin 1",
+              "2": "Trin 2",
+              "3": "Trin 3",
+              "4": "Trin 4"
+            }
+          }
+        }
       }
     }
   },
@@ -283,6 +1237,20 @@
     },
     "write_refused": {
       "message": "Anlægget tog ikke imod ændringen."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Viste værdier",
+        "description": "Nogle adresser på andre styringer end CTS400 kendes kun ud fra rækkefølgen af registrene i Nilans manual og er ikke læst på et anlæg.",
+        "data": {
+          "show_inferred": "Vis værdier fundet kun ud fra manualen"
+        },
+        "data_description": {
+          "show_inferred": "Deres værdier kan være forkerte. Meld det i et issue, hvad dit anlæg viser, rigtigt eller forkert."
+        }
+      }
     }
   }
 }

@@ -6,6 +6,6 @@
 pytest-homeassistant-custom-component==0.13.366
 pyright==1.1.414
 # The integration's requirement, as the manifest pins it.
-nilan_connect==0.4.0
+nilan_connect==0.5.0
 # Home Assistant installs every requirement under its package constraints, which pin pymodbus.
 pymodbus==3.13.1

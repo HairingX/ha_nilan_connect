@@ -1,4 +1,4 @@
-"""Whether the unit runs."""
+"""On/off settings: whether the unit runs, its heating and boost, and the panel's locks."""
 
 from __future__ import annotations
 
@@ -10,9 +10,10 @@ from homeassistant.components.switch import (
     SwitchEntity,
     SwitchEntityDescription,
 )
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from nilan_connect import PointKey
+from nilan_connect import Key, PointKey
 
 from .data import NilanConfigEntry
 from .entity import NilanEntityDescription, NilanPointEntity, describe
@@ -27,6 +28,17 @@ class NilanSwitchDescription(NilanEntityDescription, SwitchEntityDescription):
     """A switch of one point that holds a bool."""
 
 
+def _toggle(point: Key[bool], *, config: bool = True) -> NilanSwitchDescription:
+    """An on/off setting; an installer's setting unless not `config`."""
+    return NilanSwitchDescription(
+        key=str(point),
+        translation_key=str(point),
+        point=point,
+        device_class=SwitchDeviceClass.SWITCH,
+        entity_category=EntityCategory.CONFIG if config else None,
+    )
+
+
 SWITCHES: tuple[NilanSwitchDescription, ...] = (
     # The thermostat turns the unit on and off too; this switch is for scripts.
     NilanSwitchDescription(
@@ -36,6 +48,16 @@ SWITCHES: tuple[NilanSwitchDescription, ...] = (
         device_class=SwitchDeviceClass.SWITCH,
         entity_registry_enabled_default=False,
     ),
+    _toggle(PointKey.BOOST_ENABLE, config=False),
+    _toggle(PointKey.COOLING_ENABLE, config=False),
+    _toggle(PointKey.HOTWATER_HEATER_ENABLE, config=False),
+    _toggle(PointKey.REHEAT_ENABLE),
+    _toggle(PointKey.PREHEAT_ENABLE),
+    _toggle(PointKey.HUMIDITY_CONTROL_ENABLE),
+    _toggle(PointKey.DEFROST_SUPPLY_FAN),
+    _toggle(PointKey.FILTER_ALARM_ON_PANEL),
+    _toggle(PointKey.PANEL_LOCK_FAN_LEVEL),
+    _toggle(PointKey.PANEL_LOCK_ON_OFF),
 )
 
 
