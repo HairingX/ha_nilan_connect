@@ -17,10 +17,11 @@ central heating and heat pump, its alarms and operating states - named, in Engli
 its settings. The thermostat shows the unit's fan level and target temperature, and turns it on
 and off where the unit's on/off setting is known.
 
-Some addresses of the controllers other than the CTS400 are known only from the order of the
-registers in Nilan's manual. Their values get no entity unless you choose to see them: Settings >
-Devices & services > Nilan Connect > Configure > *Show values found only from the manual*. Their
-values may be wrong; please report what your unit shows in an issue.
+Some entities of units other than the CTS400 have an address estimated from Nilan's manual, never
+checked on a real unit. They are hidden unless you choose to see them: Settings > Devices &
+services > Nilan Connect > Configure > *Show estimated, untested entities*. They may show wrong
+values, and changing one may change a different setting; please report what your unit shows in an
+issue.
 
 ## Installation
 

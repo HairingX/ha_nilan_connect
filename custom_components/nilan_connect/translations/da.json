@@ -1242,13 +1242,12 @@
   "options": {
     "step": {
       "init": {
-        "title": "Viste værdier",
-        "description": "Nogle adresser på andre styringer end CTS400 kendes kun ud fra rækkefølgen af registrene i Nilans manual og er ikke læst på et anlæg.",
+        "title": "Anslåede værdier",
         "data": {
-          "show_inferred": "Vis værdier fundet kun ud fra manualen"
+          "show_inferred": "Vis anslåede, utestede entiteter"
         },
         "data_description": {
-          "show_inferred": "Deres værdier kan være forkerte. Meld det i et issue, hvad dit anlæg viser, rigtigt eller forkert."
+          "show_inferred": "Nogle entiteter på andre anlæg end CTS400 har en adresse, der er anslået ud fra Nilans manual og aldrig tjekket på et rigtigt anlæg. De kan vise forkerte værdier, og en ændring kan ramme en anden indstilling."
         }
       }
     }
