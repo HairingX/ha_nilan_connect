@@ -1242,13 +1242,12 @@
   "options": {
     "step": {
       "init": {
-        "title": "Values shown",
-        "description": "Some addresses of controllers other than the CTS400 are known only from the order of the registers in Nilan's manual, and have not been read on a unit.",
+        "title": "Estimated values",
         "data": {
-          "show_inferred": "Show values found only from the manual"
+          "show_inferred": "Show estimated, untested entities"
         },
         "data_description": {
-          "show_inferred": "Their values may be wrong. Report what your unit shows, right or wrong, in an issue."
+          "show_inferred": "Some entities of units other than the CTS400 have an address estimated from Nilan's manual, never checked on a real unit. They may show wrong values, and changing one may change a different setting."
         }
       }
     }
