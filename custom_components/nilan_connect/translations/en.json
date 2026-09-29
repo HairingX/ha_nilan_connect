@@ -182,7 +182,7 @@
     },
     "number": {
       "temp_target": {
-        "name": "Target room temperature"
+        "name": "Target temperature"
       },
       "co2_threshold": {
         "name": "High CO2 level"
@@ -264,7 +264,7 @@
     },
     "switch": {
       "enable": {
-        "name": "Operation"
+        "name": "Power"
       }
     }
   },

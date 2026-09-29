@@ -182,7 +182,7 @@
     },
     "number": {
       "temp_target": {
-        "name": "Ønsket rumtemperatur"
+        "name": "Måltemperatur"
       },
       "co2_threshold": {
         "name": "Højt CO2-niveau"
@@ -264,7 +264,7 @@
     },
     "switch": {
       "enable": {
-        "name": "Drift"
+        "name": "Tænd"
       }
     }
   },
