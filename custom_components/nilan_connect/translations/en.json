@@ -70,7 +70,7 @@
     "error": {
       "cannot_connect": "The gateway did not answer.",
       "invalid_auth": "The gateway refused this email, also in lower case.",
-      "unsupported_device": "The controller behind this gateway is not supported yet. Its numbers are {identity}. Please open an issue with them.",
+      "unsupported_device": "Your unit's controller is not supported yet. Please open an issue and include its identification: {identity}",
       "invalid_host": "Enter a host.",
       "invalid_name": "Enter a name.",
       "name_in_use": "Another unit already has this name.",
@@ -1230,7 +1230,7 @@
       "message": "The gateway of {name} refused its email."
     },
     "unsupported_device": {
-      "message": "The controller behind the gateway is not supported yet. Its numbers are {identity}. Please open an issue with them."
+      "message": "Your unit's controller is not supported yet. Please open an issue and include its identification: {identity}"
     },
     "invalid_value": {
       "message": "{value} is not a value this setting can take."
