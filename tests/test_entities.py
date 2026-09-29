@@ -118,6 +118,14 @@ async def test_the_unit_is_one_device_identified_by_its_name(
     ]
 
 
+async def test_the_device_shows_the_numbers_its_gateway_reported(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry
+) -> None:
+    """They can be copied into an issue from the device's page."""
+    devices = dr.async_entries_for_config_entry(dr.async_get(hass), config_entry.entry_id)
+    assert [d.model_id for d in devices] == ["1140/72280/72270/1"]
+
+
 @pytest.mark.parametrize(
     ("platform", "key", "state"),
     [

@@ -26,7 +26,7 @@ from nilan_connect import (
 
 from . import const
 from .const import CONF_EMAIL, CONF_GATEWAY_ID, CONF_SHOW_INFERRED, DEFAULT_PORT, DOMAIN, POLL_TICK
-from .data import NilanConfigEntry, NilanData, new_client
+from .data import NilanConfigEntry, NilanData, identity_text, new_client
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -91,7 +91,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> boo
     except UnsupportedDeviceError as err:
         _LOGGER.warning("%s is not a supported Nilan controller: %s", name, err)
         raise ConfigEntryError(
-            translation_domain=DOMAIN, translation_key="unsupported_device"
+            translation_domain=DOMAIN,
+            translation_key="unsupported_device",
+            translation_placeholders={"identity": identity_text(err.identity)},
         ) from err
 
     try:

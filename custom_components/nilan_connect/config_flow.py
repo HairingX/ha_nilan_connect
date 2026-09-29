@@ -33,7 +33,7 @@ from .const import (
     DEFAULT_PORT,
     DOMAIN,
 )
-from .data import new_client
+from .data import identity_text, new_client
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -83,6 +83,8 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
     MINOR_VERSION = 1
 
     _gateways: dict[str, DiscoveredDevice]
+    _identity: str = ""
+    """What an unsupported controller reported, shown in the error so it can be copied."""
 
     @staticmethod
     @callback
@@ -141,6 +143,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="discover",
             data_schema=self.add_suggested_values_to_schema(schema, user_input),
+            description_placeholders={"identity": self._identity},
             errors=errors,
         )
 
@@ -193,6 +196,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="manual",
             data_schema=self.add_suggested_values_to_schema(schema, user_input),
+            description_placeholders={"identity": self._identity},
             errors=errors,
         )
 
@@ -243,7 +247,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
             data_schema=self.add_suggested_values_to_schema(
                 schema, user_input if user_input is not None else entry.data
             ),
-            description_placeholders={"name": entry.title},
+            description_placeholders={"name": entry.title, "identity": self._identity},
             errors=errors,
         )
 
@@ -274,7 +278,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="reauth_confirm",
             data_schema=vol.Schema({vol.Required(CONF_EMAIL): str}),
-            description_placeholders={"name": entry.title},
+            description_placeholders={"name": entry.title, "identity": self._identity},
             errors=errors,
         )
 
@@ -313,8 +317,9 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
             errors[CONF_EMAIL] = "invalid_auth"
         except CannotConnectError:
             errors["base"] = "cannot_connect"
-        except UnsupportedDeviceError:
+        except UnsupportedDeviceError as err:
             errors["base"] = "unsupported_device"
+            self._identity = identity_text(err.identity)
         except Exception:
             _LOGGER.exception("Unexpected error while connecting to the gateway")
             errors["base"] = "unknown"

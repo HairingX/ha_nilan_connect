@@ -216,14 +216,15 @@ async def test_a_gateway_that_does_not_answer_is_reported(
     assert result.get("errors") == {"base": "cannot_connect"}
 
 
-async def test_a_controller_that_is_not_supported_is_reported(hass: HomeAssistant) -> None:
+async def test_a_controller_that_is_not_supported_is_reported_with_its_numbers(hass: HomeAssistant) -> None:
     other = simulated_gateway(identity={
-        "device_number": 1, "device_model": 9999, "slave_device_number": 1, "slave_device_model": 1
+        "device_number": 2, "device_model": 9999, "slave_device_number": 3, "slave_device_model": 4
     })
     async with other:
         form = await start(hass, "manual")
         result = await configure(hass, form, by_address(other))
     assert result.get("errors") == {"base": "unsupported_device"}
+    assert result.get("description_placeholders") == {"identity": "9999/2/3/4"}
 
 
 async def test_an_unexpected_error_is_reported(
