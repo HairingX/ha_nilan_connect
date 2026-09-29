@@ -70,7 +70,7 @@
     "error": {
       "cannot_connect": "Gatewayen svarede ikke.",
       "invalid_auth": "Gatewayen afviste denne e-mail, også med små bogstaver.",
-      "unsupported_device": "Styringen bag denne gateway understøttes ikke endnu.",
+      "unsupported_device": "Styringen bag denne gateway understøttes ikke endnu. Dens tal er {identity}. Opret gerne et issue med dem.",
       "invalid_host": "Indtast en vært.",
       "invalid_name": "Indtast et navn.",
       "name_in_use": "Et andet anlæg har allerede dette navn.",
@@ -1230,7 +1230,7 @@
       "message": "Gatewayen til {name} afviste sin e-mail."
     },
     "unsupported_device": {
-      "message": "Styringen bag gatewayen understøttes ikke."
+      "message": "Styringen bag gatewayen understøttes ikke endnu. Dens tal er {identity}. Opret gerne et issue med dem."
     },
     "invalid_value": {
       "message": "{value} er ikke en værdi, denne indstilling kan få."

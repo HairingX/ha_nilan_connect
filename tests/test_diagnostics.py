@@ -20,6 +20,8 @@ async def test_diagnostics_hold_every_value_but_not_the_email_or_where_the_gatew
     assert found["entry"]["data"]["gateway_id"] == "**REDACTED**"
     assert found["entry"]["data"]["name"] == NAME
     assert found["model"] == "CTS 400"
+    assert found["identity"] == {
+        "device_number": 72280, "device_model": 1140, "slave_device_number": 72270, "slave_device_model": 1}
     assert found["status"]["CONNECTED"] is True
     assert found["values"]["temp_outside"] == {"value": 15.2, "quality": "GOOD", "raw": [152]}
     text = repr(found)

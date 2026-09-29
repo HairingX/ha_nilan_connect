@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 
 from homeassistant.config_entries import ConfigEntry
@@ -37,6 +38,15 @@ def new_client(
     return create_client(
         email, host=host, port=port, device_id=gateway_id, read_only=read_only
     )
+
+
+IDENTITY_NUMBERS = ("device_model", "device_number", "slave_device_number", "slave_device_model")
+"""What a gateway's handshake says the controller behind it is, in the order it is shown."""
+
+
+def identity_text(identity: Mapping[str, object]) -> str:
+    """The handshake's numbers, as a user copies them into an issue: "1140/72280/72270/1"."""
+    return "/".join(str(identity.get(number)) for number in IDENTITY_NUMBERS)
 
 
 def value[T](client: Client, key: Key[T]) -> T | None:

@@ -35,6 +35,7 @@ async def async_get_config_entry_diagnostics(
             },
         },
         "model": client.model.name,
+        "identity": dict(client.identity),
         "status": {status.name: client.status(status).value for status in Status},
         "values": {
             str(key): {
