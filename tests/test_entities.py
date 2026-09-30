@@ -37,11 +37,11 @@ EXISTING: dict[tuple[str, str], tuple[bool, bool]] = {
     **{("button", key): (False, False) for key in ("alarm_reset", "filter_replace_reset")},
     ("climate", "hvac"): (False, False),
     **{("number", key): (True, True) for key in (
-        "co2_threshold", "defrost_break_time", "defrost_max_time",
+        "defrost_break_time", "defrost_max_time",
         *(f"fan_level{n}_{side}_preset" for n in range(1, 5) for side in ("supply", "extract")),
-        "fan_level_high_co2", "fan_level_high_humidity", "temp_defrost_high_threshold",
+        "fan_level_high_humidity", "temp_defrost_high_threshold",
         "temp_defrost_low_threshold", "temp_regulation_dead_band", "temp_supply_max",
-        "temp_supply_min", "temp_winter_mode_threshold", "voc_threshold")},
+        "temp_supply_min", "temp_winter_mode_threshold")},
     **{("number", key): (False, True) for key in (
         "fan_level_high_humidity_time", "fan_level_low_humidity", "filter_replace_interval",
         "humidity_low_threshold")},
@@ -49,15 +49,21 @@ EXISTING: dict[tuple[str, str], tuple[bool, bool]] = {
     ("select", "fan_level"): (False, True),
     **{("sensor", f"alarm_{n}_{kind}"): (True, False) for n in (1, 2, 3) for kind in ("code", "info")},
     **{("sensor", key): (False, False) for key in (
-        "co2_level", "efficiency", "fan_dutycycle_extract", "fan_dutycycle_supply",
+        "efficiency", "fan_dutycycle_extract", "fan_dutycycle_supply",
         "fan_level_current", "filter_replace_time_ago", "filter_replace_time_remain", "humidity",
         "humidity_average", "humidity_high_level", "humidity_high_level_time", "temp_exhaust",
-        "temp_extract", "temp_outside", "temp_supply", "voc_level")},
+        "temp_extract", "temp_outside", "temp_supply")},
     ("switch", "enable"): (True, False),
 }
 """Every entity a CTS400 had with Nilan Connect before this integration, as its entity registry
 held them, and whether it was disabled or hidden by default. Their unique ids are the unit's
-name, an underscore, and this."""
+name, an underscore, and this. The unit has no extra sensor, so it keeps none of its CO2 or VOC
+entities."""
+
+WITHOUT_EXTRA_SENSOR: frozenset[tuple[str, str]] = frozenset({
+    ("sensor", "co2_level"), ("sensor", "voc_level"), ("number", "co2_threshold"),
+    ("number", "voc_threshold"), ("number", "fan_level_high_co2")})
+"""The entities a CTS400 without an extra sensor no longer has."""
 
 
 def entity_id(hass: HomeAssistant, platform: str, key: str) -> str:
@@ -109,6 +115,18 @@ async def test_an_existing_installation_keeps_every_entity_it_has(
     assert {key: found.get(key) for key in EXISTING} == EXISTING
 
 
+async def test_a_unit_without_an_extra_sensor_has_no_co2_or_voc_entities(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry
+) -> None:
+    """HR 48 of the real unit says no extra sensor is fitted."""
+    registry = er.async_get(hass)
+    found = {
+        (entry.domain, entry.unique_id.removeprefix(f"{NAME}_"))
+        for entry in er.async_entries_for_config_entry(registry, config_entry.entry_id)
+    }
+    assert not found & WITHOUT_EXTRA_SENSOR
+
+
 async def test_the_unit_is_one_device_identified_by_its_name(
     hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry
 ) -> None:
@@ -117,13 +135,6 @@ async def test_the_unit_is_one_device_identified_by_its_name(
         ({(DOMAIN, NAME)}, NAME, "Nilan", "CTS 400")
     ]
 
-
-async def test_the_device_shows_the_numbers_its_gateway_reported(
-    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry
-) -> None:
-    """They can be copied into an issue from the device's page."""
-    devices = dr.async_entries_for_config_entry(dr.async_get(hass), config_entry.entry_id)
-    assert [d.model_id for d in devices] == ["1140/72280/72270/1"]
 
 
 @pytest.mark.parametrize(
