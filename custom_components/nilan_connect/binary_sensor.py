@@ -29,7 +29,11 @@ class NilanBinarySensorDescription(NilanEntityDescription, BinarySensorEntityDes
 
 
 def _state(
-    point: Key[bool], device_class: BinarySensorDeviceClass | None, *, on: bool = True
+    point: Key[bool],
+    device_class: BinarySensorDeviceClass | None,
+    *,
+    on: bool = True,
+    enabled: bool = True,
 ) -> NilanBinarySensorDescription:
     return NilanBinarySensorDescription(
         key=str(point),
@@ -37,6 +41,7 @@ def _state(
         point=point,
         device_class=device_class,
         on=on,
+        entity_registry_enabled_default=enabled,
     )
 
 
@@ -71,7 +76,8 @@ BINARY_SENSORS: tuple[NilanBinarySensorDescription, ...] = (
     _state(PointKey.HUMIDITY_HIGH_ACTIVE, BinarySensorDeviceClass.MOISTURE),
     _state(PointKey.WINTER_MODE_ACTIVE, None),
     _state(PointKey.RUNNING, BinarySensorDeviceClass.RUNNING),
-    _state(PointKey.REHEAT_ACTIVE, BinarySensorDeviceClass.HEAT),
+    # No register says whether an after-heating element is fitted.
+    _state(PointKey.REHEAT_ACTIVE, BinarySensorDeviceClass.HEAT, enabled=False),
     _state(PointKey.HEAT_PUMP_ACTIVE, BinarySensorDeviceClass.RUNNING),
     _state(PointKey.HEAT_PUMP_HEATER_ACTIVE, BinarySensorDeviceClass.HEAT),
     _state(PointKey.HEAT_PUMP_ROOM_HEATING, BinarySensorDeviceClass.HEAT),

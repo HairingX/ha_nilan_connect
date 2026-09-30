@@ -22,7 +22,7 @@ from nilan_connect import (
 )
 
 from .const import DOMAIN
-from .data import NilanData, identity_text, value
+from .data import NilanData, value
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -67,7 +67,6 @@ def device_info(data: NilanData) -> DeviceInfo:
         name=data.name,
         manufacturer=model.manufacturer,
         model=model.name,
-        model_id=identity_text(data.client.identity),
     )
 
 

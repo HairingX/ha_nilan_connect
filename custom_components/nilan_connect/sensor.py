@@ -107,7 +107,8 @@ SENSORS: tuple[NilanSensorDescription, ...] = (
     _reading(PointKey.ROTOR_SPEED),
     _reading(PointKey.BYPASS_POSITION),
     _reading(PointKey.PREHEAT_OUTPUT),
-    _reading(PointKey.REHEAT_OUTPUT),
+    # No register says whether an after-heating element is fitted.
+    _reading(PointKey.REHEAT_OUTPUT, enabled=False),
     _reading(PointKey.HEAT_PUMP_CAPACITY),
     _reading(PointKey.SUCTION_PRESSURE, SensorDeviceClass.PRESSURE),
     _reading(PointKey.DISCHARGE_PRESSURE, SensorDeviceClass.PRESSURE),
