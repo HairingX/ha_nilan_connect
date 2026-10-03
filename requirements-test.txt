@@ -3,7 +3,7 @@
 #
 # pytest-homeassistant-custom-component pins the Home Assistant release it tests against;
 # hacs.json requires that release.
-pytest-homeassistant-custom-component==0.13.366
+pytest-homeassistant-custom-component==0.13.367
 pyright==1.1.414
 # The integration's requirement, as the manifest pins it.
 nilan_connect==0.6.0
