@@ -8,6 +8,8 @@ updates:
       interval: weekly
     labels:
       - dependencies
+    assignees:
+      - HairingX
 
   - package-ecosystem: pip
     directory: /
@@ -15,6 +17,8 @@ updates:
       interval: weekly
     labels:
       - dependencies
+    assignees:
+      - HairingX
     ignore:
       # Home Assistant's package constraints decide pymodbus, so it moves with the pinned Home
       # Assistant release; the tests fail when the two disagree.
