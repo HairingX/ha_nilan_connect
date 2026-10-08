@@ -1,8 +1,12 @@
 # How GitHub groups a release's notes: each pull request by its labels.
 changelog:
+  # The notes are for users: what is changed for them, not work on the repository itself.
   exclude:
     labels:
       - skip-changelog
+      - chore
+      - documentation
+      - dependencies
   categories:
     - title: 🛠 Breaking Changes
       labels:
@@ -16,12 +20,6 @@ changelog:
         - bug
         - fix
         - bugfix
-    - title: 🧰 Maintenance
-      labels:
-        - chore
-    - title: 📦 Dependencies
-      labels:
-        - dependencies
     - title: Other Changes
       labels:
         - "*"

@@ -139,9 +139,13 @@ libraries' branch of the same name, where they have one.
   enforces it; its only bypass is the owner's, and only for merging a pull request. A change
   to what a user gets - the integration's code or documentation - comes with its tests.
 - Name every branch by the kind of change, as the release draft's labels follow the name:
-  `feature/<what>` is labelled `feature request`, `fix/<what>` is labelled `bug`, and
-  `chore/<what>` - CI, tooling, documentation - is labelled `chore`.
+  `feature/<what>` is labelled `feature request`, `fix/<what>` is labelled `bug`,
+  `docs/<what>` is labelled `documentation`, and `chore/<what>` - CI, tooling, anything that
+  stays in the repository - is labelled `chore`. The release notes list features and fixes;
+  documentation, chores and Dependabot's `dependencies` are left out. A change to what a user
+  installs, such as a new library pin, is a `fix/` or a `feature/`, never a `chore/`.
 - A pull request's text describes only its own change: what it does and how it was tested. Never
   releases to come, merge order, or other repositories.
-- Put `breaking-change` on a pull request that breaks the API, and `minor` on one that needs a
-  minor bump; both give a minor bump, and a patch is the default. No label gives a major.
+- Put `breaking-change` on a pull request that breaks the API - a `feature/` or `fix/` one, as a
+  chore is left out of the notes - and `minor` on one that needs a minor bump; both give a minor
+  bump, and a patch is the default. No label gives a major.
