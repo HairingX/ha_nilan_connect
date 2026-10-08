@@ -131,7 +131,10 @@ workflow from the Actions tab on that branch:
 
 A new test build of a branch replaces its previous one, and closing the branch's pull request or
 deleting the branch removes them. Development branches are tested the same way in CI: with the
-libraries' branch of the same name, where they have one.
+libraries' branch of the same name, where they have one. The test that the manifest pins the
+library the tests run is skipped then, as a library built from a branch is no release; instead,
+the check "Libraries released and pinned" fails until the library is released, pinned here and
+its branch deleted. Make that check required, so such a pull request is not merged.
 
 ## Branches and pull requests
 
