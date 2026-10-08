@@ -17,6 +17,7 @@ import yaml
 from homeassistant.const import __version__ as HA_VERSION
 from homeassistant.helpers.entity import EntityDescription
 from nilan_connect import PointKey
+from packaging.version import Version
 
 from custom_components.nilan_connect.binary_sensor import BINARY_SENSORS
 from custom_components.nilan_connect.button import BUTTONS
@@ -115,8 +116,21 @@ def _manifest() -> dict[str, Any]:
     return loaded
 
 
+def _released(version: str) -> bool:
+    """Whether `version` can be a release: one built from a branch carries a local part, such as
+    `+g1c7097c`, which PyPI refuses."""
+    return Version(version).local is None
+
+
+def test_a_library_built_from_a_branch_is_not_a_release() -> None:
+    assert _released("0.6.0")
+    assert not _released("0.6.1.dev3+g1c7097c")
+
+
 def test_the_manifest_pins_the_library_version_the_tests_run() -> None:
     installed = importlib.metadata.version("nilan_connect")
+    if not _released(installed):
+        pytest.skip(f"nilan_connect {installed} is built from a branch, so no release pins it yet")
     assert _manifest()["requirements"] == [f"nilan_connect=={installed}"]
 
 
