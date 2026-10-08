@@ -3,9 +3,14 @@ tag-template: 'v$RESOLVED_VERSION'
 change-template: '- #$NUMBER $TITLE @$AUTHOR'
 sort-direction: ascending
 categories:
+  # The notes are for users: what is changed for them, not work on the repository itself.
   - type: 'pre-exclude'
     when:
-      label: 'skip-changelog'
+      labels:
+        - 'skip-changelog'
+        - 'chore'
+        - 'documentation'
+        - 'dependencies'
 
   # Each pull request is listed once, under the first of these its labels match.
   - title: '🛠 Breaking Changes'
@@ -28,16 +33,6 @@ categories:
         - 'bugfix'
         - 'bug'
 
-  - title: '🧰 Maintenance'
-    exclusive: true
-    when:
-      label: 'chore'
-
-  - title: '📦 Dependencies'
-    exclusive: true
-    when:
-      label: 'dependencies'
-
   # The next version: a minor bump for a breaking change or by label, a patch otherwise. A major
   # is never taken from a label, as one placed wrongly must not release a new major version.
   - type: 'version-resolver'
@@ -58,6 +53,9 @@ autolabeler:
   - label: 'feature request'
     branch:
       - '/feature\/.+/'
+  - label: 'documentation'
+    branch:
+      - '/docs\/.+/'
   - label: 'chore'
     branch:
       - '/chore\/.+/'
