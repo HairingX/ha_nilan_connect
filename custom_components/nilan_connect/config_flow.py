@@ -7,7 +7,7 @@ import logging
 from collections.abc import Mapping
 from typing import Any
 
-import voluptuous as vol
+import probatio
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow,
@@ -37,7 +37,7 @@ from .data import identity_text, new_client
 
 _LOGGER = logging.getLogger(__name__)
 
-_PORT = vol.All(int, vol.Range(min=1, max=65535))
+_PORT = probatio.All(int, probatio.Range(min=1, max=65535))
 
 
 class EmailRefusedError(Exception):
@@ -133,11 +133,11 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
                         CONF_GATEWAY_ID: gateway.device_id,
                     },
                 )
-        schema = vol.Schema(
+        schema = probatio.Schema(
             {
-                vol.Required(CONF_GATEWAY_ID): vol.In(sorted(self._gateways)),
-                vol.Required(CONF_NAME, default=DEFAULT_NAME): str,
-                vol.Required(CONF_EMAIL): str,
+                probatio.Required(CONF_GATEWAY_ID): probatio.In(sorted(self._gateways)),
+                probatio.Required(CONF_NAME, default=DEFAULT_NAME): str,
+                probatio.Required(CONF_EMAIL): str,
             }
         )
         return self.async_show_form(
@@ -185,12 +185,12 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
                             CONF_GATEWAY_ID: gateway_id,
                         },
                     )
-        schema = vol.Schema(
+        schema = probatio.Schema(
             {
-                vol.Required(CONF_NAME, default=DEFAULT_NAME): str,
-                vol.Required(CONF_HOST): str,
-                vol.Required(CONF_PORT, default=DEFAULT_PORT): _PORT,
-                vol.Required(CONF_EMAIL): str,
+                probatio.Required(CONF_NAME, default=DEFAULT_NAME): str,
+                probatio.Required(CONF_HOST): str,
+                probatio.Required(CONF_PORT, default=DEFAULT_PORT): _PORT,
+                probatio.Required(CONF_EMAIL): str,
             }
         )
         return self.async_show_form(
@@ -235,11 +235,11 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
                                 CONF_GATEWAY_ID: gateway_id,
                             },
                         )
-        schema = vol.Schema(
+        schema = probatio.Schema(
             {
-                vol.Optional(CONF_HOST): str,
-                vol.Required(CONF_PORT): _PORT,
-                vol.Required(CONF_EMAIL): str,
+                probatio.Optional(CONF_HOST): str,
+                probatio.Required(CONF_PORT): _PORT,
+                probatio.Required(CONF_EMAIL): str,
             }
         )
         return self.async_show_form(
@@ -277,7 +277,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
                 )
         return self.async_show_form(
             step_id="reauth_confirm",
-            data_schema=vol.Schema({vol.Required(CONF_EMAIL): str}),
+            data_schema=probatio.Schema({probatio.Required(CONF_EMAIL): str}),
             description_placeholders={"name": entry.title, "identity": self._identity},
             errors=errors,
         )
@@ -335,7 +335,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
     ) -> ConfigFlowResult:
         if user_input is not None:
             return self.async_create_entry(data=user_input)
-        schema = vol.Schema({vol.Required(CONF_SHOW_INFERRED, default=False): bool})
+        schema = probatio.Schema({probatio.Required(CONF_SHOW_INFERRED, default=False): bool})
         return self.async_show_form(
             step_id="init",
             data_schema=self.add_suggested_values_to_schema(schema, self.config_entry.options),

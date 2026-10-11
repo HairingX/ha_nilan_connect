@@ -1,6 +1,6 @@
 {
   "name": "Nilan Connect",
-  "homeassistant": "2026.9.3",
+  "homeassistant": "2026.10.0",
   "zip_release": true,
   "filename": "nilan_connect.zip"
 }
