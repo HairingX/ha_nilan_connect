@@ -6,10 +6,10 @@ from dataclasses import dataclass
 from typing import Any
 
 from homeassistant.components.switch import (
-    SwitchDeviceClass,
     SwitchEntity,
     SwitchEntityDescription,
 )
+from homeassistant.components.switch.const import SwitchDeviceClass
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
