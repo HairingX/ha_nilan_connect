@@ -3,6 +3,9 @@ name: Library released
 # A pull request's tests run with a library's branch of the same name, where it has one, and pass
 # without a release. It is merged only with the libraries the manifest pins, which are released:
 # this fails while a library is still taken from a branch.
+#
+# The workflows and the tools are shared by every integration of the owner, from
+# HairingX/ha_integration_workflows; this file is a copy of its template and is checked to stay so.
 on:
   pull_request:
 
@@ -24,23 +27,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: "3.14"
-
       - name: No library from a branch
-        env:
-          BRANCH: ${{ github.head_ref }}
-        run: |
-          python -m pip install packaging
-          unreleased=$(python .github/scripts/test_build.py libraries "$BRANCH")
-          if [[ -n "$unreleased" ]]; then
-            echo "$unreleased" | while read -r requirement; do
-              echo "::error::Taken from branch $BRANCH, not a release: $requirement"
-            done
-            echo "Release the library, pin its version in the manifest and requirements-test.txt,"
-            echo "and delete its branch $BRANCH."
-            exit 1
-          fi
-          echo "Every library comes from the release the manifest pins."
+        uses: HairingX/ha_integration_workflows/actions/libraries-released@v1
+        with:
+          branch: ${{ github.head_ref }}

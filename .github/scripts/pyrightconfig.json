@@ -1,5 +1,0 @@
-{
-  // A project of its own, as pyright skips directories whose names begin with a dot.
-  "typeCheckingMode": "strict",
-  "reportMissingTypeStubs": "none"
-}
