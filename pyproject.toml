@@ -15,3 +15,8 @@ include = ["custom_components", "tests"]
 exclude = ["**/__pycache__", "**/.venv"]
 typeCheckingMode = "strict"
 reportMissingTypeStubs = "none"
+
+[tool.ha-integration-workflows]
+# Developed alongside this integration, in the order they are installed (modbus_event_connect first, as nilan_connect needs it): a development
+# branch is tested and test-built with their branch of the same name, where they have one.
+libraries = ["modbus_event_connect", "nilan_connect"]
