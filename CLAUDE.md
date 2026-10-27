@@ -70,6 +70,11 @@ obvious from the name - one or two lines, no narrative.
 - The tests are pytest with pytest-homeassistant-custom-component, in `tests/`, and cover every
   line of the integration; the build fails below 100%. Tests that need a real device are marked
   `live`, skip themselves without one, and never run in CI.
+- A repository on its way to this standard says so under `[tool.ha-integration-workflows]` in
+  `pyproject.toml`: `transition` says why, and `coverage` the percentage its tests must reach
+  meanwhile; pyright may then hold only the modules listed in `[tool.pyright] strict` to strict.
+  Every run warns while it lasts. Each pull request raises the coverage it reaches and the
+  modules held to strict, never the reverse, until the transition is removed.
 - Every problem found gets a test that fails without the fix.
 - A test fails when Home Assistant reports this integration using something deprecated.
 - Test tools, Home Assistant and the libraries are pinned in `requirements-test.txt`:
