@@ -1,8 +1,8 @@
 # Proposes updates to the pinned actions and test tools as pull requests, which the tests then
 # check before anything is merged.
 #
-# Shared by every integration of the owner, from HairingX/ha_integration_workflows; this file is
-# a copy of its template and is checked to stay so.
+# Shared by every integration of the owner, from HairingX/workflows; this file is a copy of its
+# template and is checked to stay so.
 version: 2
 updates:
   - package-ecosystem: github-actions

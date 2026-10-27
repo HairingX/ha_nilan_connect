@@ -4,7 +4,7 @@ name: Release Drafter
 # name. The draft is never published by hand: the Release workflow publishes it.
 #
 # The workflows and the tools are shared by every integration of the owner, from
-# HairingX/ha_integration_workflows; this file is a copy of its template and is checked to stay so.
+# HairingX/workflows; this file is a copy of its template and is checked to stay so.
 on:
   push:
     branches:
@@ -25,4 +25,4 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: HairingX/ha_integration_workflows/.github/workflows/release-drafter.yml@v1
+    uses: HairingX/workflows/.github/workflows/release-drafter.yml@v2
