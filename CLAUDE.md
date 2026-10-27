@@ -80,9 +80,13 @@ obvious from the name - one or two lines, no narrative.
 - Test tools, Home Assistant and the libraries are pinned in `requirements-test.txt`:
   `pip install -r requirements-test.txt`. They need Python 3.14, as the pinned Home Assistant
   does, on Linux or WSL.
-- The pins agree, and the tests enforce it: the manifest pins every requirement with `==`, the
-  tests run that version and `requirements-test.txt` pins it; `hacs.json` requires the Home
-  Assistant version the tests run, and names the zip after the domain.
+- The requirements follow hassfest's rules for a custom integration, which shares Home
+  Assistant's Python environment, and the tests enforce them: a package Home Assistant itself
+  installs is not listed; one Home Assistant's own integrations pin is required at a minimum
+  version that admits theirs, and the tests run Home Assistant's version; any other is pinned
+  with `==`, and the tests run that version. `requirements-test.txt` pins what the tests run.
+  `hacs.json` requires the Home Assistant version the tests run, and names the zip after the
+  domain.
 - `quality_scale.yaml` states every rule of the Integration Quality Scale, with a reason for each
   exemption and each rule not yet met; the tests check it.
 - Translations live in `translations/en.json` and `translations/da.json`, which hold the same
