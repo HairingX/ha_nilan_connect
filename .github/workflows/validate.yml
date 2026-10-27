@@ -5,7 +5,7 @@ name: Validate
 # new rule turns a build red before a user meets it.
 #
 # The workflows and the tools are shared by every integration of the owner, from
-# HairingX/ha_integration_workflows; this file is a copy of its template and is checked to stay so.
+# HairingX/workflows; this file is a copy of its template and is checked to stay so.
 on:
   push:
     branches:

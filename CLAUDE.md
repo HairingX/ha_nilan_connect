@@ -22,15 +22,15 @@ How and why it is built as it is: `docs/design.md`.
 - The libraries developed alongside it are `modbus_event_connect` and `nilan_connect`, in that
   order, listed in `pyproject.toml` for test builds and CI.
 
-<!-- BEGIN ha_integration_workflows: shared by every integration; edit it there -->
+<!-- BEGIN HairingX/workflows: shared by every integration; edit it there -->
 ## Shared by every integration
 
 This section, the workflows and the release tools are the same in every Home Assistant
-integration of the owner. They come from `HairingX/ha_integration_workflows`: the workflows in
-`.github/` are copies of its template, which call its reusable workflows and actions at `@v1`,
-and this section is a copy of its `template/CLAUDE.md`. The tests check that the copies agree;
-a change to any of them is made there, released, and synced into every repository with its
-`tools/template.py sync`. What is this repository's own is above this section.
+integration of the owner. They come from `HairingX/workflows`: the workflows in `.github/` are
+copies of its template, which call its reusable workflows and actions at `@v2`, and this section
+is a copy of its `ha/template/CLAUDE.md`. The tests check that the copies agree; a change to any
+of them is made there, released, and synced into every repository with its
+`ha/tools/template.py sync`. What is this repository's own is above this section.
 
 ## Comments and docstrings
 
@@ -195,4 +195,4 @@ the library is released, pinned here and its branch deleted.
 - Put `breaking-change` on a pull request that breaks the API - a `feature/` or `fix/` one, as a
   chore is left out of the notes - and `minor` on one that needs a minor bump; both give a minor
   bump, and a patch is the default. No label gives a major.
-<!-- END ha_integration_workflows -->
+<!-- END HairingX/workflows -->

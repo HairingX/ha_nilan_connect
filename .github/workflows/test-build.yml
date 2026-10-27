@@ -5,7 +5,7 @@ name: Test build
 # on for this repository.
 #
 # The workflows and the tools are shared by every integration of the owner, from
-# HairingX/ha_integration_workflows; this file is a copy of its template and is checked to stay so.
+# HairingX/workflows; this file is a copy of its template and is checked to stay so.
 on:
   workflow_dispatch:
 
@@ -27,4 +27,4 @@ jobs:
     name: Test build
     permissions:
       contents: write
-    uses: HairingX/ha_integration_workflows/.github/workflows/test-build.yml@v1
+    uses: HairingX/workflows/.github/workflows/ha-test-build.yml@v2
