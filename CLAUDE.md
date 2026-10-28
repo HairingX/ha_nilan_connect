@@ -22,7 +22,7 @@ How and why it is built as it is: `docs/design.md`.
 - The libraries developed alongside it are `modbus_event_connect` and `nilan_connect`, in that
   order, listed in `pyproject.toml` for test builds and CI.
 
-<!-- BEGIN HairingX/workflows: shared by every integration; edit it there -->
+<!-- BEGIN HairingX/workflows: shared; edit it there -->
 ## Shared by every integration
 
 This section, the workflows and the release tools are the same in every Home Assistant
@@ -30,7 +30,7 @@ integration of the owner. They come from `HairingX/workflows`: the workflows in 
 copies of its template, which call its reusable workflows and actions at `@v2`, and this section
 is a copy of its `ha/template/CLAUDE.md`. The tests check that the copies agree; a change to any
 of them is made there, released, and synced into every repository with its
-`ha/tools/template.py sync`. What is this repository's own is above this section.
+`common/tools/template.py sync ha`. What is this repository's own is above this section.
 
 ## Comments and docstrings
 
@@ -70,7 +70,7 @@ obvious from the name - one or two lines, no narrative.
 - The tests are pytest with pytest-homeassistant-custom-component, in `tests/`, and cover every
   line of the integration; the build fails below 100%. Tests that need a real device are marked
   `live`, skip themselves without one, and never run in CI.
-- A repository on its way to this standard says so under `[tool.ha-integration-workflows]` in
+- A repository on its way to this standard says so under `[tool.hairingx-workflows]` in
   `pyproject.toml`: `transition` says why, and `coverage` the percentage its tests must reach
   meanwhile; pyright, still strict, may leave the files listed in `[tool.pyright] ignore`
   unchecked. Every run warns while it lasts. Each pull request raises the coverage and takes
@@ -162,7 +162,7 @@ on a real Home Assistant, run the **Test build** workflow from the Actions tab o
    `v0.1.0b3`: the next release's version - the draft's, or the patch after the last release
    when there is no draft - with the first free `b<n>`. The branch's commit is tagged; the
    version and the libraries are set only in the zip the pre-release carries.
-2. Where a library listed under `[tool.ha-integration-workflows] libraries` in `pyproject.toml`
+2. Where a library listed under `[tool.hairingx-workflows] libraries` in `pyproject.toml`
    has a branch of the same name, the test build requires that branch's current commit, from
    GitHub; otherwise the version the manifest pins. Home Assistant then checks that requirement
    at every start, so it must reach GitHub.
