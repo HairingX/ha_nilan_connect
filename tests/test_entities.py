@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import dataclasses
 import math
+from datetime import timedelta
 from typing import Any
 
 import pytest
@@ -16,11 +17,12 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.setup import async_setup_component
-from nilan_connect import Client, Point, PointKey
+from homeassistant.util import dt as dt_util
+from nilan_connect import Client, Point, PointKey, PollRate
 from nilan_connect.testing import FakeClock, SimulatedMicroNabtoDevice
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
 
-from custom_components.nilan_connect.const import DOMAIN
+from custom_components.nilan_connect.const import DOMAIN, SILENCE_TOLERATED
 from custom_components.nilan_connect.data import NilanData
 from custom_components.nilan_connect.number import value_range
 from custom_components.nilan_connect.select import levels
@@ -191,17 +193,51 @@ async def test_the_efficiency_is_unknown_while_extract_and_outdoor_air_are_equal
     assert state_of(hass, "sensor", "efficiency").state == STATE_UNKNOWN
 
 
+def silence_lasts(hass: HomeAssistant, seconds: float) -> None:
+    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=seconds))
+
+
 async def test_entities_are_unavailable_while_the_gateway_does_not_answer(
     hass: HomeAssistant, loaded: NilanData, gateway: SimulatedMicroNabtoDevice, clock: FakeClock
 ) -> None:
     outdoor = entity_id(hass, "sensor", "temp_outside")
     gateway.silent = True
     await refresh(hass, outdoor)
+    silence_lasts(hass, SILENCE_TOLERATED + 1)
+    await hass.async_block_till_done()
     assert state_of(hass, "sensor", "temp_outside").state == STATE_UNAVAILABLE
     gateway.silent = False
     clock.advance(60)  # past the client's wait before it tries the gateway again
     await refresh(hass, outdoor)
     assert state_of(hass, "sensor", "temp_outside").state == "15.2"
+
+
+async def test_entities_keep_their_values_while_the_gateway_misses_a_read(
+    hass: HomeAssistant, loaded: NilanData, gateway: SimulatedMicroNabtoDevice, clock: FakeClock
+) -> None:
+    outdoor = entity_id(hass, "sensor", "temp_outside")
+    gateway.silent = True
+    await refresh(hass, outdoor)
+    silence_lasts(hass, SILENCE_TOLERATED - 1)
+    await hass.async_block_till_done()
+    assert state_of(hass, "sensor", "temp_outside").state == "15.2"
+    gateway.silent = False
+    clock.advance(60)  # past the client's wait before it tries the gateway again
+    await refresh(hass, outdoor)
+    silence_lasts(hass, SILENCE_TOLERATED + 1)
+    await hass.async_block_till_done()
+    assert state_of(hass, "sensor", "temp_outside").state == "15.2"
+
+
+async def test_entities_keep_their_values_when_the_gateway_answers_only_zeros(
+    hass: HomeAssistant, loaded: NilanData, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    for register in gateway.datapoint_registers:
+        gateway.datapoint_registers[register] = 0
+    await loaded.client.refresh(PollRate.FAST)
+    await hass.async_block_till_done()
+    assert state_of(hass, "sensor", "temp_outside").state == "15.2"
+    assert state_of(hass, "sensor", "temp_extract").state == "23.1"
 
 
 @pytest.mark.parametrize(
