@@ -24,6 +24,12 @@ DEFAULT_PORT: Final = 5570
 DISCOVERY_TIMEOUT: Final = 2.0
 """Seconds to wait for gateways to answer a discovery."""
 
+SILENCE_TOLERATED: Final = 60.0
+"""Seconds the gateway may leave reads unanswered before its unit's entities are unavailable.
+
+A gateway was seen leaving one read unanswered every 33 minutes, and answering the next.
+"""
+
 POLL_TICK: Final = 1.0
 """Longest wait, in seconds, between two calls to the client's poll.
 

@@ -53,7 +53,7 @@ Each platform describes its entities once per point, and creates one where the u
 point. A CTS400 has every entity it had with version 1 of this integration, on the same platform,
 with the same unique id, disabled or hidden by default as it was: a test holds the whole list.
 
-An entity subscribes to its keys and to the client's `CONNECTED` status, and sets its `_attr_`
+An entity subscribes to its keys and to whether the gateway answers, and sets its `_attr_`
 values in `_show` on every change. It sets them in its constructor too: Home Assistant reads
 capability attributes such as a thermostat's `hvac_modes` when it adds the entity, before
 `async_added_to_hass`.
@@ -63,7 +63,13 @@ capability attributes such as a thermostat's `hvac_modes` when it adds the entit
 | `GOOD` | shows it |
 | `NO_DATA` | is unknown |
 | `STALE` | shows the last good value |
-| `OFFLINE`, `MISSING`, or the gateway does not answer | is unavailable |
+| `OFFLINE`, `MISSING`, or the gateway has not answered for `SILENCE_TOLERATED` | is unavailable |
+
+The client's `CONNECTED` status turns false as soon as one read goes unanswered. A gateway was
+seen doing that every 33 minutes and answering the next read, ten seconds later. The entities
+would go unavailable and come back each time, which fills the history. So an entry counts its
+gateway as answering until it has been silent for `SILENCE_TOLERATED`, a minute. Meanwhile the
+values the client cannot read are `STALE`, and the entities show their last good ones.
 
 - Device classes follow Home Assistant's: a fan level or a fan preset has none; a dead band,
   a difference of temperatures, is `temperature_delta` (`number/const.py`).
