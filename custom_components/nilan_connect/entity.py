@@ -17,7 +17,6 @@ from nilan_connect import (
     InvalidValueError,
     Key,
     Quality,
-    Status,
     certainty,
 )
 
@@ -29,7 +28,7 @@ _LOGGER = logging.getLogger(__name__)
 _USABLE = frozenset({Quality.GOOD, Quality.NO_DATA, Quality.STALE})
 """Qualities an entity shows: a value, "unknown" for no reading, or the last good value.
 
-OFFLINE and MISSING leave the entity unavailable, as does a gateway that stopped answering.
+OFFLINE and MISSING leave the entity unavailable, as does a gateway that has stopped answering.
 """
 
 
@@ -89,6 +88,7 @@ class NilanEntity(Entity):
     def __init__(self, data: NilanData, unique_key: str) -> None:
         """`unique_key` follows the unit's name in the unique id."""
         self._client = data.client
+        self._answers = data.answers
         self._attr_unique_id = f"{data.name}_{unique_key}"
         self._attr_device_info = device_info(data)
         data.unique_ids.add(self._attr_unique_id)
@@ -114,9 +114,7 @@ class NilanEntity(Entity):
         """Follow the watched keys and whether the gateway answers."""
         for key in self._watched():
             self.async_on_remove(self._client.subscribe(key, self._on_value))
-        self.async_on_remove(
-            self._client.subscribe_status(Status.CONNECTED, self._on_status)
-        )
+        self.async_on_remove(self._answers.subscribe(self._changed))
         # Each subscription has told its current value; HA writes the state once this returns.
         self._added = True
 
@@ -127,16 +125,10 @@ class NilanEntity(Entity):
         self._changed()
 
     @callback
-    def _on_status(
-        self, status: Status, old: DataValue[bool] | None, new: DataValue[bool]
-    ) -> None:
-        self._changed()
-
-    @callback
     def _changed(self) -> None:
         """Recompute the state: available while the gateway answers and every required value
         can be shown."""
-        self._attr_available = self._client.status(Status.CONNECTED).value is True and all(
+        self._attr_available = self._answers.answering and all(
             usable(self._client.value(key)) for key in self._required()
         )
         self._show()

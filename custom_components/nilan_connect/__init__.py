@@ -26,7 +26,7 @@ from nilan_connect import (
 
 from . import const
 from .const import CONF_EMAIL, CONF_GATEWAY_ID, CONF_SHOW_INFERRED, DEFAULT_PORT, DOMAIN, POLL_TICK
-from .data import NilanConfigEntry, NilanData, identity_text, new_client
+from .data import GatewayAnswers, NilanConfigEntry, NilanData, identity_text, new_client
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -98,8 +98,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> boo
 
     try:
         await _identify_gateway(hass, entry)
+        answers = GatewayAnswers(hass, client)
+        entry.async_on_unload(answers.close)
         entry.runtime_data = NilanData(
             client=client,
+            answers=answers,
             name=name,
             show_inferred=bool(entry.options.get(CONF_SHOW_INFERRED, False)),
         )
