@@ -191,11 +191,14 @@ async def test_the_efficiency_is_unknown_while_extract_and_outdoor_air_are_equal
     assert state_of(hass, "sensor", "efficiency").state == STATE_UNKNOWN
 
 
-async def test_entities_are_unavailable_while_the_gateway_does_not_answer(
+async def test_entities_keep_their_values_through_one_missed_read_and_are_unavailable_after_ten_seconds(
     hass: HomeAssistant, loaded: NilanData, gateway: SimulatedMicroNabtoDevice, clock: FakeClock
 ) -> None:
     outdoor = entity_id(hass, "sensor", "temp_outside")
     gateway.silent = True
+    await refresh(hass, outdoor)
+    assert state_of(hass, "sensor", "temp_outside").state == "15.2"
+    clock.advance(10)
     await refresh(hass, outdoor)
     assert state_of(hass, "sensor", "temp_outside").state == STATE_UNAVAILABLE
     gateway.silent = False

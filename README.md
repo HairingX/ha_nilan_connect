@@ -51,7 +51,8 @@ the outdoor, supply and extract air temperatures.
 ## How data is updated
 
 The library reads each value at its own rate, and only what an enabled entity shows; a setting
-is read again after it is written.
+is read again after it is written. One read the gateway misses leaves the entities their last
+values; once it has not answered for 10 seconds, they are unavailable until it answers again.
 
 ## Known limitations
 

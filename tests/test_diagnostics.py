@@ -40,7 +40,9 @@ async def test_diagnostics_hold_how_the_gateway_has_answered_and_the_library_ver
     assert found["libraries"] == {
         "nilan_connect": metadata.version("nilan_connect"),
         "modbus_event_connect": metadata.version("modbus_event_connect"),
+        "event_connect": metadata.version("event_connect"),
     }
+    assert (found["silent"], found["silent_for"]) == (False, 0.0)
     gateway = found["gateway"]
     assert gateway["connected"] is True and gateway["answered"] > 0
     for counter in ("average_latency", "max_latency", "silences", "refusals", "answers_of_only_zeros",
@@ -57,4 +59,4 @@ async def test_a_library_not_installed_has_no_version(
 
     monkeypatch.setattr(metadata, "version", missing)
     found = await async_get_config_entry_diagnostics(hass, config_entry)
-    assert found["libraries"] == {"nilan_connect": None, "modbus_event_connect": None}
+    assert found["libraries"] == {"nilan_connect": None, "modbus_event_connect": None, "event_connect": None}

@@ -17,7 +17,7 @@ REDACTED = "**REDACTED**"
 REDACTED_SETTINGS = frozenset({CONF_EMAIL, CONF_HOST, CONF_GATEWAY_ID})
 """The credential, and what locates or identifies the gateway."""
 
-LIBRARIES = ("nilan_connect", "modbus_event_connect")
+LIBRARIES = ("nilan_connect", "modbus_event_connect", "event_connect")
 """The libraries whose installed versions a report names."""
 
 
@@ -46,6 +46,8 @@ async def async_get_config_entry_diagnostics(
         "identity": dict(client.identity),
         "status": {status.name: client.status(status).value for status in Status},
         "seconds_until_next_poll": client.seconds_until_next_poll(),
+        "silent": client.silent,
+        "silent_for": client.silent_for,
         "gateway": dict(client.diagnostics()),
         "values": {
             str(key): {
