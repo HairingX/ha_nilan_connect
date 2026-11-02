@@ -63,7 +63,11 @@ capability attributes such as a thermostat's `hvac_modes` when it adds the entit
 | `GOOD` | shows it |
 | `NO_DATA` | is unknown |
 | `STALE` | shows the last good value |
-| `OFFLINE`, `MISSING`, or the gateway does not answer | is unavailable |
+| `OFFLINE`, `MISSING`, or the gateway has not answered for 10 s | is unavailable |
+
+The client's `CONNECTED` status turns false only once the gateway has left reads unanswered for
+the model's `offline_after`, 10 s for every Nilan model: one missed read leaves the entities their
+last values, as `STALE`, and a gateway that stays silent makes them unavailable.
 
 - Device classes follow Home Assistant's: a fan level or a fan preset has none; a dead band,
   a difference of temperatures, is `temperature_delta` (`number/const.py`).
