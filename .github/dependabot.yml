@@ -1,28 +1,34 @@
-# Proposes updates to the pinned actions and test tools as pull requests, which the tests then
-# check before anything is merged.
+# Proposes updates to the test tools as pull requests: those that are no new major version
+# together, one pull request a week, and each version only once it is three days old. Merge
+# Dependabot's updates merges them once every check passes, so they are assigned to no one; one
+# that needs the owner is assigned to them then. The actions are those of the template, kept up
+# to date in HairingX/workflows.
 #
 # Shared by every integration of the owner, from HairingX/workflows; this file is a copy of its
 # template and is checked to stay so.
 version: 2
 updates:
-  - package-ecosystem: github-actions
-    directory: /
-    schedule:
-      interval: weekly
-    labels:
-      - dependencies
-    assignees:
-      - HairingX
-
   - package-ecosystem: pip
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 3
     labels:
       - dependencies
-    assignees:
-      - HairingX
+    groups:
+      test-tools:
+        update-types: [minor, patch]
+        exclude-patterns:
+          - pytest-homeassistant-custom-component
     ignore:
-      # Home Assistant's package constraints decide pymodbus, so it moves with the pinned Home
-      # Assistant release; the tests fail when the two disagree.
+      # Home Assistant decides these, through its package constraints or the version its own
+      # integrations pin, and the tests follow it.
+      - dependency-name: aiohttp
+      - dependency-name: beautifulsoup4
+      - dependency-name: lxml
+      - dependency-name: pycryptodomex
       - dependency-name: pymodbus
+      - dependency-name: qrcode
+      # The owner's own libraries, pinned by hand once released.
+      - dependency-name: "*_connect"
