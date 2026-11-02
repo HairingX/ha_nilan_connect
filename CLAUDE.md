@@ -78,15 +78,18 @@ obvious from the name - one or two lines, no narrative.
 - Every problem found gets a test that fails without the fix.
 - A test fails when Home Assistant reports this integration using something deprecated.
 - Test tools, Home Assistant and the libraries are pinned in `requirements-test.txt`:
-  `pip install -r requirements-test.txt`. They need Python 3.14, as the pinned Home Assistant
-  does, on Linux or WSL.
+  `pip install -r requirements-test.txt`. They need the Python the pinned Home Assistant
+  requires, on Linux or WSL; the tests set it up from what Home Assistant states on PyPI.
 - The requirements follow hassfest's rules for a custom integration, which shares Home
   Assistant's Python environment, and the tests enforce them: a package Home Assistant itself
   installs is not listed; one Home Assistant's own integrations pin is required at a minimum
   version that admits theirs, and the tests run Home Assistant's version; any other is pinned
   with `==`, and the tests run that version. `requirements-test.txt` pins what the tests run.
-  `hacs.json` requires the Home Assistant version the tests run, and names the zip after the
-  domain.
+  `hacs.json` names the zip after the domain, and requires the oldest Home Assistant the
+  integration supports, no newer than the one pinned. The tests run on both: where `hacs.json`
+  names an older one, they run pyright, the tests and the requirements' rules again with it,
+  with the harness made for it and its own integrations' pins, each on the Python it requires.
+  It is raised only when the integration needs something newer.
 - `quality_scale.yaml` states every rule of the Integration Quality Scale, with a reason for each
   exemption and each rule not yet met; the tests check it.
 - Translations live in `translations/en.json` and `translations/da.json`, which hold the same
@@ -99,9 +102,11 @@ obvious from the name - one or two lines, no narrative.
 Best practice is what Home Assistant and HACS require and recommend now; it moves with every
 release. After any change to the integration or to the libraries it uses:
 
-1. Test against the newest Home Assistant release: pin it in `requirements-test.txt` (through
-   pytest-homeassistant-custom-component) and `hacs.json`, then run the tests, pyright and
-   hassfest. A deprecation Home Assistant reports fails the tests.
+1. Test against the newest Home Assistant release: Dependabot proposes each release of
+   pytest-homeassistant-custom-component, which pins it, and the update is merged by itself
+   when every check passes. When one fails, the integration follows Home Assistant in that pull
+   request: a deprecation Home Assistant reports fails the tests. Where following it takes
+   something the oldest Home Assistant in `hacs.json` lacks, raise `hacs.json` with it.
 2. Read the Integration Quality Scale rules and HACS's publishing requirements again, and bring
    `quality_scale.yaml` up to date.
 3. Read the Home Assistant developer blog since the last check for changes to what integrations
@@ -151,7 +156,9 @@ The libraries come from PyPI at the version the manifest pins. **Release a libra
 pin its version here in the manifest and `requirements-test.txt`.
 
 Actions are referred to by their major version where they publish one; Dependabot proposes a new
-major, and updates to the test tools, as pull requests.
+major, and updates to the test tools, as pull requests. Its update of the test harness is merged
+by **Merge the test harness** once every check of the pull request passes, which then updates
+the release draft.
 
 ## Testing a branch on a real Home Assistant
 
