@@ -67,6 +67,24 @@ is read again after it is written.
 - The diagnostics, downloaded from the integration's entry, hold every value without the email or
   where the gateway is.
 
+### Reporting a problem
+
+A report is answered fastest with the log and the diagnostics from the time it happened:
+
+1. Settings > Devices & services > Nilan Connect > the three dots > **Enable debug logging**.
+2. Leave it on until the problem has happened, for a problem that comes and goes a few hours.
+3. The three dots > **Disable debug logging**: Home Assistant downloads the log.
+4. The three dots > **Download diagnostics**.
+
+Without debug logging, the warnings alone say when the gateway stopped answering and answered
+again, why each session with it began, and when it answered with only zeros and how long that
+lasted: Settings > System > Logs. Neither the log nor the diagnostics hold the email or the
+gateway's id; the log can hold its address, which you may remove before sharing it.
+
+The diagnostics hold the installed library versions, how the gateway has answered - requests,
+resends, response times, silences, refused sessions, answers of only zeros and how each ended -
+and every value with its quality, when it was read and how many reads of it have failed in a row.
+
 ## Removal
 
 Settings > Devices & services > Nilan Connect > the three dots > Delete; then remove it in HACS.
