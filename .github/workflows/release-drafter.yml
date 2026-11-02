@@ -1,7 +1,8 @@
 name: Release Drafter
 
 # Keeps a draft release proposing the next version, and labels pull requests by their branch's
-# name. The draft is never published by hand: the Release workflow publishes it.
+# name. The draft is never published by hand: the Release workflow publishes it. A merge made with
+# a workflow's token starts no push run, so that workflow starts this one by hand.
 #
 # The workflows and the tools are shared by every repository of the owner, from
 # HairingX/workflows; this file is a copy of its template and is checked to stay so.
@@ -11,6 +12,7 @@ on:
       - main
   pull_request:
     types: [opened, reopened, synchronize]
+  workflow_dispatch:
 
 permissions: {}
 
