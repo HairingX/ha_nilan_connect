@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from importlib import metadata
 
+import pytest
 from homeassistant.core import HomeAssistant
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -46,3 +47,14 @@ async def test_diagnostics_hold_how_the_gateway_has_answered_and_the_library_ver
                     "zeros_ended", "largest_read_with_values"):
         assert counter in gateway
     assert found["entry"]["polling_disabled"] is False and "options" in found["entry"]
+
+
+async def test_a_library_not_installed_has_no_version(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def missing(name: str) -> str:
+        raise metadata.PackageNotFoundError(name)
+
+    monkeypatch.setattr(metadata, "version", missing)
+    found = await async_get_config_entry_diagnostics(hass, config_entry)
+    assert found["libraries"] == {"nilan_connect": None, "modbus_event_connect": None}
