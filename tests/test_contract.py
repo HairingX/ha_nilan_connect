@@ -238,3 +238,12 @@ def test_nothing_imports_modbus_event_connect_itself() -> None:
             )
             found += [f"{path.name}: {m}" for m in modules if m.startswith("modbus_event_connect")]
     assert found == []
+
+
+def test_the_manifest_names_the_logger_of_every_library_that_logs_about_the_unit() -> None:
+    """An outage is logged by event_connect, which modbus_event_connect requires."""
+    requires = importlib.metadata.requires("modbus_event_connect") or []
+    libraries = {"modbus_event_connect", "nilan_connect"} | {
+        "event_connect" for line in requires if line.startswith("event_connect")
+    }
+    assert libraries <= set(_manifest()["loggers"])
