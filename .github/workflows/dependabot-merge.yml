@@ -1,0 +1,27 @@
+name: Merge Dependabot's updates
+
+# Merges each of Dependabot's updates once every check passes, so that the owner hears only of
+# one that needs them: a new major version, or one a check fails, is assigned to them.
+#
+# The workflows and the tools are shared by every repository of the owner, from
+# HairingX/workflows; this file is a copy of its template and is checked to stay so.
+on:
+  pull_request:
+
+permissions: {}
+
+# The shell given explicitly, so GitHub runs every step with pipefail.
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  merge:
+    name: Merge Dependabot's update
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    permissions:
+      actions: write
+      contents: write
+      issues: write
+      pull-requests: write
+    uses: HairingX/workflows/.github/workflows/dependabot-merge.yml@v2

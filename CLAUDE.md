@@ -104,9 +104,10 @@ release. After any change to the integration or to the libraries it uses:
 
 1. Test against the newest Home Assistant release: Dependabot proposes each release of
    pytest-homeassistant-custom-component, which pins it, and the update is merged by itself
-   when every check passes. When one fails, the integration follows Home Assistant in that pull
-   request: a deprecation Home Assistant reports fails the tests. Where following it takes
-   something the oldest Home Assistant in `hacs.json` lacks, raise `hacs.json` with it.
+   when every check passes; one made for a Home Assistant beta is closed. When a check fails,
+   the integration follows Home Assistant in that pull request, which is assigned to the owner:
+   a deprecation Home Assistant reports fails the tests. Where following it takes something the
+   oldest Home Assistant in `hacs.json` lacks, raise `hacs.json` with it.
 2. Read the Integration Quality Scale rules and HACS's publishing requirements again, and bring
    `quality_scale.yaml` up to date.
 3. Read the Home Assistant developer blog since the last check for changes to what integrations
@@ -155,10 +156,12 @@ release it already created. **Re-run all jobs** is refused once the version is t
 The libraries come from PyPI at the version the manifest pins. **Release a library first**, then
 pin its version here in the manifest and `requirements-test.txt`.
 
-Actions are referred to by their major version where they publish one; Dependabot proposes a new
-major, and updates to the test tools, as pull requests. Its update of the test harness is merged
-by **Merge the test harness** once every check of the pull request passes, which then updates
-the release draft.
+Actions are referred to by their major version where they publish one. Dependabot proposes each update of the test tools once it is three days old, all
+that are no new major version in one pull request a week, and **Merge Dependabot's updates**
+merges it once every check passes, then updates the release draft. It assigns the owner only an
+update that needs them: a new major version, or one a check fails. The actions are the
+template's, kept up to date in HairingX/workflows.
+Packages Home Assistant decides, and the owner's own libraries, are left out.
 
 ## Testing a branch on a real Home Assistant
 
