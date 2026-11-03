@@ -844,6 +844,9 @@
       "heat_pump_water_heating": {
         "name": "Varmepumpe, vandopvarmning"
       },
+      "humidity_average_ok": {
+        "name": "24-timers fugtgennemsnit OK"
+      },
       "humidity_high_active": {
         "name": "Høj luftfugtighed"
       },

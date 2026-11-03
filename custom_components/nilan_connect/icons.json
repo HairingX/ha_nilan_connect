@@ -57,6 +57,9 @@
       "filter_ok": {
         "default": "mdi:air-filter"
       },
+      "humidity_average_ok": {
+        "default": "mdi:water-percent"
+      },
       "winter_mode_active": {
         "default": "mdi:sun-snowflake-variant"
       }

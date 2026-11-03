@@ -34,6 +34,7 @@ def _state(
     *,
     on: bool = True,
     enabled: bool = True,
+    category: EntityCategory | None = None,
 ) -> NilanBinarySensorDescription:
     return NilanBinarySensorDescription(
         key=str(point),
@@ -41,6 +42,7 @@ def _state(
         point=point,
         device_class=device_class,
         on=on,
+        entity_category=category,
         entity_registry_enabled_default=enabled,
     )
 
@@ -75,6 +77,7 @@ BINARY_SENSORS: tuple[NilanBinarySensorDescription, ...] = (
     # A problem when the filter must be changed.
     _state(PointKey.FILTER_OK, BinarySensorDeviceClass.PROBLEM, on=False),
     _state(PointKey.HUMIDITY_HIGH_ACTIVE, BinarySensorDeviceClass.MOISTURE),
+    _state(PointKey.HUMIDITY_AVERAGE_OK, None, category=EntityCategory.DIAGNOSTIC),
     _state(PointKey.WINTER_MODE_ACTIVE, None),
     _state(PointKey.RUNNING, BinarySensorDeviceClass.RUNNING),
     # No register says whether an after-heating element is fitted.

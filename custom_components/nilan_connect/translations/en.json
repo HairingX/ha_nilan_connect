@@ -844,6 +844,9 @@
       "heat_pump_water_heating": {
         "name": "Heat pump water heating"
       },
+      "humidity_average_ok": {
+        "name": "24 hour humidity average OK"
+      },
       "humidity_high_active": {
         "name": "High humidity"
       },
