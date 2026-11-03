@@ -826,6 +826,9 @@
       "digital_input_3": {
         "name": "Digital input 3"
       },
+      "fan_level_overridden": {
+        "name": "Fan level overridden"
+      },
       "filter_ok": {
         "name": "Filter change"
       },

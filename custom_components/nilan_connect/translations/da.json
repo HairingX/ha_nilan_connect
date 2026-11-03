@@ -826,6 +826,9 @@
       "digital_input_3": {
         "name": "Digital indgang 3"
       },
+      "fan_level_overridden": {
+        "name": "Ventilationstrin overstyret"
+      },
       "filter_ok": {
         "name": "Filterskift"
       },

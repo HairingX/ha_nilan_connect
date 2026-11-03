@@ -71,6 +71,7 @@ BINARY_SENSORS: tuple[NilanBinarySensorDescription, ...] = (
     _state(PointKey.ALARM_STATUS, BinarySensorDeviceClass.PROBLEM),
     _state(PointKey.BYPASS_ACTIVE, BinarySensorDeviceClass.OPENING),
     _state(PointKey.DEFROST_ACTIVE, BinarySensorDeviceClass.RUNNING),
+    _state(PointKey.FAN_LEVEL_OVERRIDDEN, None),
     # A problem when the filter must be changed.
     _state(PointKey.FILTER_OK, BinarySensorDeviceClass.PROBLEM, on=False),
     _state(PointKey.HUMIDITY_HIGH_ACTIVE, BinarySensorDeviceClass.MOISTURE),

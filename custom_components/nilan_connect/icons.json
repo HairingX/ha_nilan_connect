@@ -51,6 +51,9 @@
       "defrost_active": {
         "default": "mdi:snowflake-melt"
       },
+      "fan_level_overridden": {
+        "default": "mdi:fan-chevron-up"
+      },
       "filter_ok": {
         "default": "mdi:air-filter"
       },
