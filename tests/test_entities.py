@@ -9,7 +9,13 @@ from typing import Any
 
 import pytest
 from homeassistant.components.climate.const import HVACAction, HVACMode
-from homeassistant.const import STATE_OFF, STATE_ON, STATE_UNAVAILABLE, STATE_UNKNOWN
+from homeassistant.const import (
+    STATE_OFF,
+    STATE_ON,
+    STATE_UNAVAILABLE,
+    STATE_UNKNOWN,
+    EntityCategory,
+)
 from homeassistant.core import HomeAssistant, State
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import device_registry as dr
@@ -153,6 +159,8 @@ async def test_the_unit_is_one_device_identified_by_its_name(
         ("binary_sensor", "bypass_active", STATE_ON),
         ("binary_sensor", "filter_ok", STATE_ON),
         ("binary_sensor", "humidity_high_active", STATE_OFF),
+        ("binary_sensor", "fan_level_overridden", STATE_OFF),
+        ("binary_sensor", "humidity_average_ok", STATE_ON),
         ("binary_sensor", "winter_mode_active", STATE_OFF),
         ("number", "temp_target", "23.0"),
         ("select", "fan_level", "1"),
@@ -287,8 +295,8 @@ async def test_a_write_the_unit_does_not_take_is_an_error(
     [
         ({}, HVACAction.COOLING),
         ({(0, 23): 0}, HVACAction.FAN),
-        ({(0, 23): 0, (0, 64): 0}, HVACAction.DRYING),
-        ({(0, 91): 1, (0, 64): 0}, HVACAction.DEFROSTING),
+        ({(0, 23): 0, (0, 70): 95}, HVACAction.DRYING),
+        ({(0, 91): 1, (0, 70): 95}, HVACAction.DEFROSTING),
     ],
     ids=["bypass open", "ventilating", "high humidity", "de-icing"],
 )
@@ -299,12 +307,38 @@ async def test_the_thermostat_says_what_the_unit_is_doing(
     changes: dict[tuple[int, int], int],
     action: HVACAction,
 ) -> None:
-    """IR64 is the manual's "average level humidity 24 hours OK": 0 while it is high."""
+    """High humidity runs while IR 70, the time of high humidity, counts."""
     gateway.datapoint_registers.update(changes)
     await refresh(hass, entity_id(hass, "climate", "hvac"))
     state = state_of(hass, "climate", "hvac")
     assert state.state == HVACMode.AUTO
     assert state.attributes["hvac_action"] == action
+
+
+@pytest.mark.parametrize(
+    ("register", "key"),
+    [(70, "humidity_high_active"), (65, "fan_level_overridden")],
+    ids=["high humidity", "fan level overridden"],
+)
+async def test_a_state_turns_on_while_its_register_is_set(
+    hass: HomeAssistant,
+    loaded: NilanData,
+    gateway: SimulatedMicroNabtoDevice,
+    register: int,
+    key: str,
+) -> None:
+    """High humidity follows IR 70, the time it has run, whatever IR 64 says."""
+    gateway.datapoint_registers.update({(0, 64): 1, (0, register): 95})
+    await refresh(hass, entity_id(hass, "binary_sensor", key))
+    assert state_of(hass, "binary_sensor", key).state == STATE_ON
+
+
+async def test_the_24_hour_humidity_average_status_is_diagnostic(
+    hass: HomeAssistant, loaded: NilanData
+) -> None:
+    entry = er.async_get(hass).async_get(entity_id(hass, "binary_sensor", "humidity_average_ok"))
+    assert entry is not None
+    assert entry.entity_category is EntityCategory.DIAGNOSTIC
 
 
 async def test_the_thermostat_shows_the_unit_it_is(
