@@ -20,7 +20,7 @@ updates:
       test-tools:
         update-types: [minor, patch]
         exclude-patterns:
-          - pytest-homeassistant-custom-component
+          - pytest-homeassistant
     ignore:
       # Home Assistant decides these, through its package constraints or the version its own
       # integrations pin, and the tests follow it.

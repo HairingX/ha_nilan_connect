@@ -13,7 +13,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 from nilan_connect import Client, DiscoveredDevice, Key, Status
 from nilan_connect.testing import SimulatedMicroNabtoDevice
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 import custom_components.nilan_connect as integration
 from custom_components.nilan_connect.const import (

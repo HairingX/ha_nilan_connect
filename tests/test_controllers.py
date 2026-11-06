@@ -17,7 +17,7 @@ from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.helpers import entity_registry as er
 from nilan_connect import PointKey
 from nilan_connect.testing import SimulatedMicroNabtoDevice
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.nilan_connect.climate import THERMOSTAT
 from custom_components.nilan_connect.const import CONF_SHOW_INFERRED, DOMAIN
