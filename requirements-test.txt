@@ -1,9 +1,11 @@
 # What the tests and the type check run with. Pinned, so a new release cannot turn a build red by
 # itself; Dependabot proposes each update as a pull request.
 #
-# pytest-homeassistant-custom-component pins the Home Assistant release it tests against;
-# hacs.json requires that release.
-pytest-homeassistant-custom-component==0.13.375
+# pytest-homeassistant, Home Assistant's own test harness, is released with the Home Assistant
+# of the same version and pins it; hacs.json requires that release.
+pytest-homeassistant==2026.11.0
+# The coverage the tests are held to, which the harness does not install.
+pytest-cov==7.1.0
 pyright==1.1.414
 # The integration's requirement, as the manifest pins it.
 nilan_connect==0.6.6

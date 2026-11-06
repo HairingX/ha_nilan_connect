@@ -67,8 +67,8 @@ obvious from the name - one or two lines, no narrative.
 - pyright strict must report 0 errors (`pyright`); the configuration is in `pyproject.toml`.
   No `# type: ignore` and no rule turned off: where Home Assistant's own types force a choice,
   take the typed route (`_attr_` values rather than overridden properties).
-- The tests are pytest with pytest-homeassistant-custom-component, in `tests/`, and cover every
-  line of the integration; the build fails below 100%. Tests that need a real device are marked
+- The tests are pytest with pytest-homeassistant, Home Assistant's own test harness, in
+  `tests/`, and cover every line of the integration; the build fails below 100%. Tests that need a real device are marked
   `live`, skip themselves without one, and never run in CI.
 - A repository on its way to this standard says so under `[tool.hairingx-workflows]` in
   `pyproject.toml`: `transition` says why, and `coverage` the percentage its tests must reach
@@ -89,7 +89,8 @@ obvious from the name - one or two lines, no narrative.
   integration supports, no newer than the one pinned. The tests run on both: where `hacs.json`
   names an older one, they run pyright, the tests and the requirements' rules again with it,
   with the harness made for it and its own integrations' pins, each on the Python it requires.
-  It is raised only when the integration needs something newer.
+  It is raised only when the integration needs something newer; the harness exists from Home
+  Assistant 2026.11.0, the oldest the tests can run.
 - `quality_scale.yaml` states every rule of the Integration Quality Scale, with a reason for each
   exemption and each rule not yet met; the tests check it.
 - Translations live in `translations/en.json` and `translations/da.json`, which hold the same
@@ -103,7 +104,8 @@ Best practice is what Home Assistant and HACS require and recommend now; it move
 release. After any change to the integration or to the libraries it uses:
 
 1. Test against the newest Home Assistant release: Dependabot proposes each release of
-   pytest-homeassistant-custom-component, which pins it, and the update is merged by itself
+   pytest-homeassistant, released with the Home Assistant of the same version, and the update
+   is merged by itself
    when every check passes; one made for a Home Assistant beta is closed. When a check fails,
    the integration follows Home Assistant in that pull request, which is assigned to the owner:
    a deprecation Home Assistant reports fails the tests. Where following it takes something the

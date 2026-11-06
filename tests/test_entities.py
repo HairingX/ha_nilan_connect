@@ -24,7 +24,7 @@ from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.setup import async_setup_component
 from nilan_connect import Client, Point, PointKey
 from nilan_connect.testing import FakeClock, SimulatedMicroNabtoDevice
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.nilan_connect.const import DOMAIN
 from custom_components.nilan_connect.data import NilanData

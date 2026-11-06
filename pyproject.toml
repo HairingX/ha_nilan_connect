@@ -2,9 +2,14 @@
 # the settings of the tools the repository is checked with.
 
 [tool.pytest.ini_options]
-# pytest-homeassistant-custom-component runs every async test in Home Assistant's own loop.
+# pytest-homeassistant runs every async test in Home Assistant's own loop.
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
+# Home Assistant installs its httpx alias before respx is imported; the harness's own HTTP
+# mocks use respx directly.
+addopts = "-p no:respx"
+# custom_components/ is imported from the repository's root.
+pythonpath = ["."]
 testpaths = ["tests"]
 markers = ["live: reads a real controller; skipped unless one is configured"]
 
