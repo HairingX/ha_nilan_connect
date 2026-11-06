@@ -66,7 +66,7 @@ class NilanClimate(NilanEntity, ClimateEntity):
     # The unit itself: the entity is named after its device.
     _attr_name = None
     _attr_translation_key = THERMOSTAT
-    _attr_temperature_unit = UnitOfTemperature.CELSIUS
+    _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
 
     def __init__(self, data: NilanData) -> None:
         client = data.client
@@ -106,8 +106,8 @@ class NilanClimate(NilanEntity, ClimateEntity):
         self._attr_hvac_action = self._action(running)
         level = self._current(PointKey.FAN_LEVEL)
         self._attr_fan_mode = str(level) if level is not None else None
-        self._attr_target_temperature = self._current(PointKey.TEMP_TARGET)
-        self._attr_current_temperature = self._current(PointKey.TEMP_EXTRACT)
+        self._attr_native_target_temperature = self._current(PointKey.TEMP_TARGET)
+        self._attr_native_current_temperature = self._current(PointKey.TEMP_EXTRACT)
         self._attr_current_humidity = self._current(PointKey.HUMIDITY)
 
     def _action(self, running: bool | None) -> HVACAction | None:
