@@ -18,7 +18,6 @@ from nilan_connect import (
     Key,
     Quality,
     Status,
-    certainty,
 )
 
 from .const import DOMAIN
@@ -46,7 +45,7 @@ def shown(data: NilanData, key: Key[Any]) -> bool:
     if not data.client.has(key):
         return False
     (point,) = data.client.select([key])
-    return data.show_inferred or certainty(point) is not Certainty.INFERRED
+    return data.show_inferred or point.certainty is not Certainty.INFERRED
 
 
 def state_name(state: IntEnum) -> str:

@@ -134,6 +134,11 @@ def test_the_manifest_pins_the_library_version_the_tests_run() -> None:
     assert _manifest()["requirements"] == [f"nilan_connect=={installed}"]
 
 
+def test_the_test_requirements_pin_what_the_manifest_requires() -> None:
+    lines = (REPOSITORY / "requirements-test.txt").read_text(encoding="utf-8").splitlines()
+    assert [line for line in lines if line.startswith("nilan_connect==")] == _manifest()["requirements"]
+
+
 def test_the_tests_run_the_pymodbus_home_assistant_installs() -> None:
     """Home Assistant installs requirements under its package constraints, pymodbus among them;
     the library needs pymodbus."""

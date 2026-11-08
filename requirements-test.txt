@@ -8,6 +8,6 @@ pytest-homeassistant==2026.11.0
 pytest-cov==7.1.0
 pyright==1.1.414
 # The integration's requirement, as the manifest pins it.
-nilan_connect==0.6.8
+nilan_connect==0.7.0
 # Home Assistant's own integrations pin some packages that the requirements install; the tests
 # install Home Assistant's version of those, so they follow the Home Assistant pinned above.
