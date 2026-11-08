@@ -58,6 +58,8 @@ values in `_show` on every change. It sets them in its constructor too: Home Ass
 capability attributes such as a thermostat's `hvac_modes` when it adds the entity, before
 `async_added_to_hass`.
 
+An entity shows a value whose quality has something to show (`Quality.shows_a_value`):
+
 | Quality of the value | The entity |
 |---|---|
 | `GOOD` | shows it |

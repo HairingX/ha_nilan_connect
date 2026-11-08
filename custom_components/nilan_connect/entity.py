@@ -16,7 +16,6 @@ from nilan_connect import (
     DataValue,
     InvalidValueError,
     Key,
-    Quality,
     Status,
 )
 
@@ -24,13 +23,6 @@ from .const import DOMAIN
 from .data import NilanData, value
 
 _LOGGER = logging.getLogger(__name__)
-
-_USABLE = frozenset({Quality.GOOD, Quality.NO_DATA, Quality.STALE})
-"""Qualities an entity shows: a value, "unknown" for no reading, or the last good value.
-
-OFFLINE and MISSING leave the entity unavailable, as does a gateway that stopped answering.
-"""
-
 
 @dataclass(frozen=True, kw_only=True)
 class NilanEntityDescription(EntityDescription):
@@ -70,8 +62,9 @@ def device_info(data: NilanData) -> DeviceInfo:
 
 
 def usable(current: DataValue[Any] | None) -> bool:
-    """Whether a value may be shown: a reading, no reading, or the last good one."""
-    return current is not None and current.quality in _USABLE
+    """Whether a value was read and its quality has something to show: a reading, that there is
+    none, or the last good one."""
+    return current is not None and current.quality.shows_a_value
 
 
 class NilanEntity(Entity):

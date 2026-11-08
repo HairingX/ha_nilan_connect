@@ -22,12 +22,14 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.setup import async_setup_component
-from nilan_connect import Client, Point, PointKey
+from homeassistant.util import dt as dt_util
+from nilan_connect import Client, DataValue, Point, PointKey, Quality
 from nilan_connect.testing import FakeClock, SimulatedMicroNabtoDevice
 from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.nilan_connect.const import DOMAIN
 from custom_components.nilan_connect.data import NilanData
+from custom_components.nilan_connect.entity import usable
 from custom_components.nilan_connect.number import value_range
 from custom_components.nilan_connect.select import levels
 
@@ -371,6 +373,19 @@ async def test_the_thermostat_shows_nothing_it_does_not_know(
 ) -> None:
     thermostat = entity_of(hass, "climate", "hvac")
     assert thermostat._action(None) is None
+
+
+def test_a_value_is_shown_when_the_library_says_its_quality_has_something_to_show(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def only_missing(self: Quality) -> bool:
+        return self is Quality.MISSING
+
+    monkeypatch.setattr(Quality, "shows_a_value", property(only_missing))
+    now = dt_util.utcnow()
+    assert usable(DataValue(None, Quality.MISSING, now))
+    assert not usable(DataValue(15.2, Quality.GOOD, now))
+    assert not usable(None)
 
 
 async def test_a_setting_without_limits_has_no_range(loaded: NilanData) -> None:
