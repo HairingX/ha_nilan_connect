@@ -83,8 +83,9 @@ lasted: Settings > System > Logs. Neither the log nor the diagnostics hold the e
 gateway's id; the log can hold its address, which you may remove before sharing it.
 
 The diagnostics hold the installed library versions, how the gateway has answered - requests,
-resends, response times, silences, refused sessions, answers of only zeros and how each ended -
-and every value with its quality, when it was read and how many reads of it have failed in a row.
+resends, response times, silences, refused sessions, answers of only zeros and how each ended,
+and whether the client is waiting before it tries the gateway again - and every value with its
+quality, when it was read and how many reads of it have failed in a row.
 
 ## Removal
 
