@@ -1,7 +1,7 @@
 # Design
 
 How the integration is built, and the facts each choice rests on. Home Assistant facts are from
-its 2026.9.3 source, the release the tests run; the unit's from Nilan's CTS400 Modbus manual, as
+its 2026.11.0 source, the release the tests run; the unit's from Nilan's CTS400 Modbus manual, as
 modelled by `nilan_connect`.
 
 ## A client, not a coordinator
@@ -58,6 +58,8 @@ values in `_show` on every change. It sets them in its constructor too: Home Ass
 capability attributes such as a thermostat's `hvac_modes` when it adds the entity, before
 `async_added_to_hass`.
 
+An entity shows a value whose quality has something to show (`Quality.shows_a_value`):
+
 | Quality of the value | The entity |
 |---|---|
 | `GOOD` | shows it |
@@ -66,8 +68,8 @@ capability attributes such as a thermostat's `hvac_modes` when it adds the entit
 | `OFFLINE`, `MISSING`, or the gateway has not answered for 10 s | is unavailable |
 
 The client's `CONNECTED` status turns false only once the gateway has left reads unanswered for
-the model's `offline_after`, 10 s for every Nilan model: one missed read leaves the entities their
-last values, as `STALE`, and a gateway that stays silent makes them unavailable.
+the `offline_after` of the model's timing, 10 s for every Nilan model: one missed read leaves the
+entities their last values, as `STALE`, and a gateway that stays silent makes them unavailable.
 
 - Device classes follow Home Assistant's: a fan level or a fan preset has none; a dead band,
   a difference of temperatures, is `temperature_delta` (`number/const.py`).
@@ -95,6 +97,11 @@ last values, as `STALE`, and a gateway that stays silent makes them unavailable.
 The client sends writes in order and folds a queued setting into a newer one, so every platform
 has `PARALLEL_UPDATES = 0` and passes actions straight on. A value outside the manual's limits is
 refused before it is sent; a write the unit does not take is an error the user reads.
+
+A number, and the thermostat's target temperature, offer the values their point can be written
+with, as the library's `Point.write_range()` gives them: the manual's limits, and its step, or else
+what one step of the register is worth. A setting the manual gives no lowest and highest value
+for has no number, rather than one offering every value its register can carry.
 
 ## Dependencies
 
