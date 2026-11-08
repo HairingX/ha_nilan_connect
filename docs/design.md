@@ -98,6 +98,11 @@ The client sends writes in order and folds a queued setting into a newer one, so
 has `PARALLEL_UPDATES = 0` and passes actions straight on. A value outside the manual's limits is
 refused before it is sent; a write the unit does not take is an error the user reads.
 
+A number, and the thermostat's target temperature, offer the values their point can be written
+with, as the library's `Point.write_range()` gives them: the manual's limits, and its step, or else
+what one step of the register is worth. A setting the manual gives no lowest and highest value
+for has no number, rather than one offering every value its register can carry.
+
 ## Dependencies
 
 - `manifest.json` pins the library with `==`, as the manifest documentation asks.

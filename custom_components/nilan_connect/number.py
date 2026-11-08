@@ -133,7 +133,11 @@ async def async_setup_entry(
 
 
 def has_range(point: Point[Any]) -> bool:
-    """Whether a source gives the lowest and highest value `point` can be written with."""
+    """Whether Nilan's manual gives the lowest and highest value `point` can be written with.
+
+    A setting it gives none for is offered by no number, rather than with every value its
+    register can carry.
+    """
     limits = point.limits
     return limits is not None and limits.min is not None and limits.max is not None
 
@@ -142,24 +146,23 @@ DURATION_UNITS = frozenset({Unit.SECONDS, Unit.MINUTES, Unit.HOURS, Unit.DAYS})
 """The units Home Assistant accepts for a duration."""
 
 
-def value_range(point: Point[Any]) -> tuple[float, float, float]:
-    """The lowest and highest value `point` can be written with, and its step: the limits
-    Nilan's manual gives, which every setting has."""
-    limits = point.limits
-    if limits is None or limits.min is None or limits.max is None:
-        raise ValueError(f"{point.key} has no limits")
-    return limits.min, limits.max, limits.step if limits.step is not None else point.scale
-
-
 class NilanNumber(NilanPointEntity, NumberEntity):
     """One number setting, written to the unit."""
 
     def __init__(self, data: NilanData, description: NilanNumberDescription) -> None:
+        """Offer the values the point can be written with.
+
+        Raises:
+            ValueError: the point cannot be written within a range.
+        """
         (point,) = data.client.select([description.point])
-        lowest, highest, step = value_range(point)
-        self._attr_native_min_value = lowest
-        self._attr_native_max_value = highest
-        self._attr_native_step = step
+        span = point.write_range()
+        if span is None:
+            raise ValueError(f"{description.point} has no range to be written within")
+        self._attr_native_min_value = span.min
+        self._attr_native_max_value = span.max
+        if span.step is not None:
+            self._attr_native_step = span.step
         self._attr_native_unit_of_measurement = ha_unit(data.client, description.point)
         if description.device_class is NumberDeviceClass.DURATION and point.unit not in DURATION_UNITS:
             # A filter interval in months is no duration Home Assistant can convert.

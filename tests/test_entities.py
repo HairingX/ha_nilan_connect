@@ -23,14 +23,15 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.setup import async_setup_component
 from homeassistant.util import dt as dt_util
-from nilan_connect import Client, DataValue, Point, PointKey, Quality
+from nilan_connect import Client, DataValue, Point, PointKey, Quality, WriteRange
 from nilan_connect.testing import FakeClock, SimulatedMicroNabtoDevice
 from pytest_homeassistant.common import MockConfigEntry
 
+from custom_components.nilan_connect.climate import NilanClimate
 from custom_components.nilan_connect.const import DOMAIN
 from custom_components.nilan_connect.data import NilanData
-from custom_components.nilan_connect.entity import usable
-from custom_components.nilan_connect.number import value_range
+from custom_components.nilan_connect.entity import describe, usable
+from custom_components.nilan_connect.number import NUMBERS, NilanNumber, has_range
 from custom_components.nilan_connect.select import levels
 
 from .conftest import NAME
@@ -388,10 +389,64 @@ def test_a_value_is_shown_when_the_library_says_its_quality_has_something_to_sho
     assert not usable(None)
 
 
-async def test_a_setting_without_limits_has_no_range(loaded: NilanData) -> None:
-    (point,) = loaded.client.select([PointKey.TEMP_TARGET])
-    with pytest.raises(ValueError):
-        value_range(dataclasses.replace(point, limits=None))
+def _offering(monkeypatch: pytest.MonkeyPatch, client: Client, span: WriteRange | None) -> None:
+    """Make every point of the unit say it can be written with `span`."""
+    (point,) = client.select([PointKey.TEMP_TARGET])
+
+    def offered(self: Point[Any]) -> WriteRange | None:
+        return span
+
+    monkeypatch.setattr(type(point), "write_range", offered)
+
+
+async def test_a_number_offers_the_values_its_point_can_be_written_with(loaded: NilanData) -> None:
+    client: Client = loaded.client
+    checked = 0
+    for description in describe(loaded, NUMBERS):
+        (point,) = client.select([description.point])
+        span = point.write_range()
+        if not has_range(point) or span is None:
+            continue
+        number = NilanNumber(loaded, description)
+        offered = (number.native_min_value, number.native_max_value, number.native_step)
+        assert offered == (span.min, span.max, span.step), description.point
+        checked += 1
+    assert checked
+
+
+async def test_a_number_of_a_point_written_with_any_value_in_its_range_has_no_step_of_its_own(
+    loaded: NilanData, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _offering(monkeypatch, loaded.client, WriteRange(15.0, 25.0, None))
+    number = NilanNumber(loaded, NUMBERS[0])
+    assert (number.native_min_value, number.native_max_value) == (15.0, 25.0)
+    assert not hasattr(number, "_attr_native_step")
+
+
+async def test_a_number_of_a_point_without_a_range_to_write_is_refused(
+    loaded: NilanData, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _offering(monkeypatch, loaded.client, None)
+    with pytest.raises(ValueError, match="temp_target"):
+        NilanNumber(loaded, NUMBERS[0])
+
+
+@pytest.mark.parametrize("step", [0.1, None])
+async def test_the_thermostat_offers_the_temperatures_its_target_can_be_written_with(
+    loaded: NilanData, monkeypatch: pytest.MonkeyPatch, step: float | None
+) -> None:
+    _offering(monkeypatch, loaded.client, WriteRange(12.0, 28.0, step))
+    thermostat = NilanClimate(loaded)
+    assert (thermostat.min_temp, thermostat.max_temp) == (12.0, 28.0)
+    assert getattr(thermostat, "_attr_target_temperature_step", None) == step
+
+
+async def test_a_thermostat_whose_target_has_no_range_to_write_is_refused(
+    loaded: NilanData, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _offering(monkeypatch, loaded.client, None)
+    with pytest.raises(ValueError, match="temp_target"):
+        NilanClimate(loaded)
 
 
 async def test_a_level_without_limits_has_no_levels(

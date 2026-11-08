@@ -69,6 +69,11 @@ class NilanClimate(NilanEntity, ClimateEntity):
     _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
 
     def __init__(self, data: NilanData) -> None:
+        """Offer what the unit's shown points let it set.
+
+        Raises:
+            ValueError: the target temperature is shown but cannot be written within a range.
+        """
         client = data.client
         self._shown = tuple(key for key in SHOWN if shown(data, key))
         features = ClimateEntityFeature(0)
@@ -82,13 +87,13 @@ class NilanClimate(NilanEntity, ClimateEntity):
         if PointKey.TEMP_TARGET in self._shown and client.can_write(PointKey.TEMP_TARGET):
             features |= ClimateEntityFeature.TARGET_TEMPERATURE
             (point,) = client.select([PointKey.TEMP_TARGET])
-            if point.limits is not None:
-                if point.limits.min is not None:
-                    self._attr_min_temp = point.limits.min
-                if point.limits.max is not None:
-                    self._attr_max_temp = point.limits.max
-                if point.limits.step is not None:
-                    self._attr_target_temperature_step = point.limits.step
+            span = point.write_range()
+            if span is None:
+                raise ValueError(f"{PointKey.TEMP_TARGET} has no range to be written within")
+            self._attr_min_temp = span.min
+            self._attr_max_temp = span.max
+            if span.step is not None:
+                self._attr_target_temperature_step = span.step
         self._attr_supported_features = features
         super().__init__(data, THERMOSTAT)
 
