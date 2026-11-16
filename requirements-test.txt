@@ -3,7 +3,7 @@
 #
 # pytest-homeassistant, Home Assistant's own test harness, is released with the Home Assistant
 # of the same version and pins it; hacs.json requires that release.
-pytest-homeassistant==2026.11.0
+pytest-homeassistant==2026.11.1
 # The coverage the tests are held to, which the harness does not install.
 pytest-cov==7.1.0
 pyright==1.1.414
