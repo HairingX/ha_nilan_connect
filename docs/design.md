@@ -69,11 +69,12 @@ An entity shows a value whose quality has something to show (`Quality.shows_a_va
 | `GOOD` | shows it |
 | `NO_DATA` | is unknown |
 | `STALE` | shows the last good value |
-| `OFFLINE`, `MISSING`, or the gateway has not answered for 10 s | is unavailable |
+| `OFFLINE`, `MISSING`, or the gateway counts as not answering | is unavailable |
 
-The client's `CONNECTED` status turns false only once the gateway has left reads unanswered for
-the `offline_after` of the model's timing, 10 s for every Nilan model: one missed read leaves the
-entities their last values, as `STALE`, and a gateway that stays silent makes them unavailable.
+The client's `CONNECTED` status turns false only once the gateway has left a read unanswered and
+then the next one too, as the library makes the client for every Nilan model: one missed read
+leaves the entities their last values, as `STALE`, and a gateway that stays silent makes them
+unavailable.
 
 - Device classes follow Home Assistant's: a fan level or a fan preset has none; a dead band,
   a difference of temperatures, is `temperature_delta` (`number/const.py`).

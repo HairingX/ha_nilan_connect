@@ -52,7 +52,7 @@ the outdoor, supply and extract air temperatures.
 
 The library reads each value at its own rate, and only what an enabled entity shows; a setting
 is read again after it is written. One read the gateway misses leaves the entities their last
-values; once it has not answered for 10 seconds, they are unavailable until it answers again.
+values; if it leaves the next one unanswered too, they are unavailable until it answers again.
 
 ## Known limitations
 
