@@ -24,7 +24,6 @@ from nilan_connect import (
     discover,
 )
 
-from . import const
 from .const import (
     CONF_EMAIL,
     CONF_GATEWAY_ID,
@@ -71,7 +70,7 @@ async def connect_once(
 
 async def gateway_at(host: str, port: int) -> str | None:
     """The id of the gateway answering discovery at `host`, or None if it does not answer."""
-    found = await discover(timeout=const.DISCOVERY_TIMEOUT, target=(host, port))
+    found = await discover(target=host, port=port)
     return found[0].device_id if len(found) == 1 else None
 
 
@@ -107,7 +106,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
             configured = self._async_current_ids(include_ignore=False)
             self._gateways = {
                 gateway.device_id: gateway
-                for gateway in await discover(timeout=const.DISCOVERY_TIMEOUT)
+                for gateway in await discover()
                 if gateway.device_id not in configured
             }
             if not self._gateways:

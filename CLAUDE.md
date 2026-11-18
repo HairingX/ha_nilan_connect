@@ -19,8 +19,8 @@ How and why it is built as it is: `docs/design.md`.
   key, and a test holds every entity a CTS400 had, with its platform and defaults. Removing or
   moving one is agreed with the user first.
 - Discovery needs a real network: try it with a test build.
-- The libraries developed alongside it are `modbus_event_connect` and `nilan_connect`, in that
-  order, listed in `pyproject.toml` for test builds and CI.
+- The libraries developed alongside it are `event_connect`, `modbus_event_connect` and
+  `nilan_connect`, in that order, listed in `pyproject.toml` for test builds and CI.
 
 <!-- BEGIN HairingX/workflows: shared; edit it there -->
 ## Shared by every integration

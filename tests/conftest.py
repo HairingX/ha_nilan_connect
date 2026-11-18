@@ -15,11 +15,10 @@ import pytest
 import pytest_socket
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT
 from homeassistant.core import HomeAssistant
-from nilan_connect import Client, DiscoveredDevice, create_client, discover
-from nilan_connect.testing import FakeClock, SimulatedMicroNabtoDevice
+from nilan_connect import PORT, Client, Clock, DiscoveredDevice, create_client
+from nilan_connect.testing import FakeClock, SimulatedMicroNabtoDevice, client_for
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.nilan_connect import const
 from custom_components.nilan_connect.const import CONF_EMAIL, CONF_GATEWAY_ID, DOMAIN
 from custom_components.nilan_connect.data import NilanData
 
@@ -97,35 +96,40 @@ def simulated_network(
 ) -> list[Client]:
     """The network the integration sees holds only the simulated gateway.
 
-    Discovery broadcasts reach it, and so does a client that finds it by its id; discovery and
-    requests sent to its address reach it as they are. Returns the clients made, in order.
+    A discovery broadcast finds it, and so does one sent to its address; a client that finds it
+    by its id or by its address reaches it, and requests sent elsewhere go out as they are.
+    Returns the clients made, in order.
     """
     made: list[Client] = []
-    monkeypatch.setattr(const, "DISCOVERY_TIMEOUT", 0.3)
+    fake = clock
 
-    async def broadcast(
-        device_id: str | None = None,
-        *,
-        timeout: float = 2.0,
-        resend: float = 0.5,
-        target: tuple[str, int] | None = None,
-    ) -> list[DiscoveredDevice]:
-        return await discover(
-            device_id, timeout=timeout, resend=resend, target=target or gateway.address
-        )
+    async def discovery(*, target: str | None = None, port: int = PORT) -> list[DiscoveredDevice]:
+        answers = not gateway.silent and (target is None or (target, port) == gateway.address)
+        return [DiscoveredDevice(*gateway.address, gateway.device_id)] if answers else []
 
     def found_by_id(
-        email: str, *, host: str | None, port: int, device_id: str | None, read_only: bool
+        *,
+        email: str,
+        host: str | None = None,
+        device_id: str | None = None,
+        port: int = PORT,
+        read_only: bool = False,
+        clock: Clock | None = None,
     ) -> Client:
-        if host is None and device_id == gateway.device_id:
-            host, port = gateway.address
-        client = create_client(
-            email, host=host, port=port, device_id=device_id, read_only=read_only, clock=clock
-        )
+        if (host, port) == gateway.address or (host is None and device_id == gateway.device_id):
+            client = client_for(
+                gateway, email=email, timeout=0.2, retries=1, clock=clock or fake, read_only=read_only
+            )
+        else:
+            client = create_client(
+                email=email, host=host, device_id=device_id, port=port, read_only=read_only,
+                clock=clock or fake,
+            )
         made.append(client)
         return client
 
-    monkeypatch.setattr("custom_components.nilan_connect.config_flow.discover", broadcast)
+    monkeypatch.setattr("custom_components.nilan_connect.discover", discovery)
+    monkeypatch.setattr("custom_components.nilan_connect.config_flow.discover", discovery)
     monkeypatch.setattr("custom_components.nilan_connect.data.create_client", found_by_id)
     return made
 

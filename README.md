@@ -52,7 +52,7 @@ the outdoor, supply and extract air temperatures.
 
 The library reads each value at its own rate, and only what an enabled entity shows; a setting
 is read again after it is written. One read the gateway misses leaves the entities their last
-values; once it has not answered for 10 seconds, they are unavailable until it answers again.
+values; if it leaves the next one unanswered too, they are unavailable until it answers again.
 
 ## Known limitations
 
@@ -83,8 +83,9 @@ lasted: Settings > System > Logs. Neither the log nor the diagnostics hold the e
 gateway's id; the log can hold its address, which you may remove before sharing it.
 
 The diagnostics hold the installed library versions, how the gateway has answered - requests,
-resends, response times, silences, refused sessions, answers of only zeros and how each ended -
-and every value with its quality, when it was read and how many reads of it have failed in a row.
+resends, response times, silences, refused sessions, answers of only zeros and how each ended,
+and whether the client is waiting before it tries the gateway again - and every value with its
+quality, when it was read and how many reads of it have failed in a row.
 
 ## Removal
 

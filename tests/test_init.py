@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from collections.abc import Callable
 from typing import Any
 
@@ -12,7 +13,7 @@ from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 from nilan_connect import Client, DiscoveredDevice, Key, Status
-from nilan_connect.testing import SimulatedMicroNabtoDevice
+from nilan_connect.testing import FakeClock, SimulatedMicroNabtoDevice
 from pytest_homeassistant.common import MockConfigEntry
 
 import custom_components.nilan_connect as integration
@@ -26,6 +27,9 @@ from custom_components.nilan_connect.data import NilanData
 
 from .conftest import EMAIL, GATEWAY_ID, HOST, NAME, entry_data, simulated_gateway
 
+LIBRARIES = ("custom_components.nilan_connect", "nilan_connect", "modbus_event_connect", "event_connect")
+"""The loggers of the integration and of the libraries it runs."""
+
 
 async def set_up(hass: HomeAssistant, entry: MockConfigEntry) -> None:
     entry.add_to_hass(hass)
@@ -36,6 +40,27 @@ async def set_up(hass: HomeAssistant, entry: MockConfigEntry) -> None:
 async def unload(hass: HomeAssistant, entry: MockConfigEntry) -> None:
     assert await hass.config_entries.async_unload(entry.entry_id)
     await hass.async_block_till_done()
+
+
+def shown(hass: HomeAssistant, platform: str, key: str) -> str | None:
+    """The state of the unit's entity of `key`; None while it has none."""
+    entity_id = er.async_get(hass).async_get_entity_id(platform, DOMAIN, f"{NAME}_{key}")
+    state = hass.states.get(entity_id) if entity_id is not None else None
+    return state.state if state is not None else None
+
+
+def advance_to_the_next_poll(entry: MockConfigEntry, clock: FakeClock) -> None:
+    data: NilanData = entry.runtime_data
+    due = data.client.seconds_until_next_poll()
+    assert due is not None
+    clock.advance(due)
+
+
+async def until(condition: Callable[[], bool]) -> None:
+    """Let the entry's background task run until `condition` holds."""
+    async with asyncio.timeout(5):
+        while not condition():
+            await asyncio.sleep(0.01)
 
 
 async def test_a_gateway_that_does_not_answer_is_retried_later(
@@ -79,8 +104,39 @@ async def test_unloading_stops_reading_and_lets_go_of_the_gateway(
     data: NilanData = config_entry.runtime_data
     assert data.poller is not None
     await unload(hass, config_entry)
-    assert data.poller.done()
+    assert data.poller.cancelled()
     assert data.client.status(Status.CONNECTED).value is False
+
+
+async def test_unloading_does_not_log_that_the_gateway_stopped_answering(
+    hass: HomeAssistant, config_entry: MockConfigEntry, caplog: pytest.LogCaptureFixture
+) -> None:
+    caplog.set_level(logging.INFO)
+    await set_up(hass, config_entry)
+    data: NilanData = config_entry.runtime_data
+    assert await hass.config_entries.async_reload(config_entry.entry_id)
+    await hass.async_block_till_done()
+    await unload(hass, config_entry)
+    assert data.client.status(Status.CONNECTED).value is False
+    assert [
+        record.getMessage()
+        for record in caplog.records
+        if record.levelno >= logging.INFO and record.name.startswith(LIBRARIES)
+    ] == []
+
+
+async def test_the_unit_is_read_by_itself_when_its_values_are_due(
+    hass: HomeAssistant,
+    config_entry: MockConfigEntry,
+    gateway: SimulatedMicroNabtoDevice,
+    clock: FakeClock,
+) -> None:
+    await set_up(hass, config_entry)
+    assert shown(hass, "sensor", "temp_supply") == "16.4"
+    gateway.datapoint_registers[(0, 28)] = 192  # supply air 19.2 °C
+    advance_to_the_next_poll(config_entry, clock)
+    await until(lambda: shown(hass, "sensor", "temp_supply") == "19.2")
+    await unload(hass, config_entry)
 
 
 async def test_a_failure_after_connecting_lets_go_of_the_gateway(
@@ -150,31 +206,6 @@ async def test_the_entry_reloads_once_when_the_unit_gains_or_loses_points(
     await unload(hass, config_entry)
 
 
-async def test_a_failing_poll_is_logged_and_polling_goes_on(
-    hass: HomeAssistant,
-    config_entry: MockConfigEntry,
-    monkeypatch: pytest.MonkeyPatch,
-    caplog: pytest.LogCaptureFixture,
-) -> None:
-    polls = 0
-
-    async def failing(client: Client) -> None:
-        nonlocal polls
-        polls += 1
-        raise RuntimeError("broken")
-
-    monkeypatch.setattr(integration, "POLL_TICK", 0.01)
-    monkeypatch.setattr(Client, "poll", failing)
-    await set_up(hass, config_entry)
-    for _ in range(100):
-        if polls >= 2:
-            break
-        await asyncio.sleep(0.01)
-    assert polls >= 2
-    assert "Reading the unit failed" in caplog.text
-    await unload(hass, config_entry)
-
-
 async def test_with_polling_disabled_nothing_is_read_on_a_schedule(
     hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
 ) -> None:
@@ -188,6 +219,27 @@ async def test_with_polling_disabled_nothing_is_read_on_a_schedule(
     await set_up(hass, entry)
     data: NilanData = entry.runtime_data
     assert data.client.seconds_until_next_poll() is None
+    await unload(hass, entry)
+
+
+async def test_with_polling_disabled_what_a_write_changes_is_still_read_back(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, clock: FakeClock
+) -> None:
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        unique_id=GATEWAY_ID,
+        data=entry_data(gateway),
+        version=2,
+        pref_disable_polling=True,
+    )
+    await set_up(hass, entry)
+    target = er.async_get(hass).async_get_entity_id("number", DOMAIN, f"{NAME}_temp_target")
+    await hass.services.async_call(
+        "number", "set_value", {"entity_id": target, "value": 21.5}, blocking=True
+    )
+    gateway.setpoint_registers[(0, 37)] = 220  # the unit settles on 22.0 °C
+    advance_to_the_next_poll(entry, clock)
+    await until(lambda: shown(hass, "number", "temp_target") == "22.0")
     await unload(hass, entry)
 
 

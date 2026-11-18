@@ -8,10 +8,13 @@ import pytest
 from homeassistant.core import HomeAssistant
 from pytest_homeassistant.common import MockConfigEntry
 
+from nilan_connect.testing import FakeClock, SimulatedMicroNabtoDevice
+
 from custom_components.nilan_connect.data import NilanData
 from custom_components.nilan_connect.diagnostics import async_get_config_entry_diagnostics
 
 from .conftest import EMAIL, GATEWAY_ID, HOST, NAME
+from .test_entities import entity_id, refresh
 
 
 async def test_diagnostics_hold_every_value_but_not_the_email_or_where_the_gateway_is(
@@ -48,6 +51,8 @@ async def test_diagnostics_hold_how_the_gateway_has_answered_and_the_library_ver
     for counter in ("average_latency", "max_latency", "silences", "refusals", "answers_of_only_zeros",
                     "zeros_ended", "largest_read_with_values"):
         assert counter in gateway
+    breaker = ("open", "open_for", "openings", "gave_up", "refused_while_open")
+    assert [gateway[key] for key in breaker] == [False, 0.0, 0, False, 0]
     assert found["entry"]["polling_disabled"] is False and "options" in found["entry"]
 
 
@@ -60,3 +65,26 @@ async def test_a_library_not_installed_has_no_version(
     monkeypatch.setattr(metadata, "version", missing)
     found = await async_get_config_entry_diagnostics(hass, config_entry)
     assert found["libraries"] == {"nilan_connect": None, "modbus_event_connect": None, "event_connect": None}
+
+
+async def test_a_values_failed_reads_are_counted_afresh_once_the_gateway_answers_again(
+    hass: HomeAssistant,
+    loaded: NilanData,
+    config_entry: MockConfigEntry,
+    gateway: SimulatedMicroNabtoDevice,
+    clock: FakeClock,
+) -> None:
+    """The gateway answers a setting's read, held in other registers than the outdoor
+    temperature's."""
+    outdoor = entity_id(hass, "sensor", "temp_outside")
+    gateway.silent = True
+    for _ in range(2):
+        await refresh(hass, outdoor)
+        clock.advance(10)
+    found = await async_get_config_entry_diagnostics(hass, config_entry)
+    assert found["values"]["temp_outside"]["consecutive_failures"] == 2
+    gateway.silent = False
+    clock.advance(60)  # past the client's wait before it tries the gateway again
+    await refresh(hass, entity_id(hass, "number", "temp_target"))
+    found = await async_get_config_entry_diagnostics(hass, config_entry)
+    assert found["values"]["temp_outside"]["consecutive_failures"] == 0

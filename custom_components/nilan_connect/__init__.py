@@ -18,14 +18,12 @@ from homeassistant.helpers import entity_registry as er
 from nilan_connect import (
     AuthenticationError,
     CannotConnectError,
-    Client,
     Key,
     UnsupportedDeviceError,
     discover,
 )
 
-from . import const
-from .const import CONF_EMAIL, CONF_GATEWAY_ID, CONF_SHOW_INFERRED, DEFAULT_PORT, DOMAIN, POLL_TICK
+from .const import CONF_EMAIL, CONF_GATEWAY_ID, CONF_SHOW_INFERRED, DEFAULT_PORT, DOMAIN
 from .data import NilanConfigEntry, NilanData, identity_text, new_client
 
 _LOGGER = logging.getLogger(__name__)
@@ -115,7 +113,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> boo
     client.set_scheduled_polling(not entry.pref_disable_polling)
     # Polling starts once the entities have subscribed: the client reads what is wanted.
     entry.runtime_data.poller = entry.async_create_background_task(
-        hass, _poll(client), f"{DOMAIN} poll {entry.title}"
+        hass, client.run(), f"{DOMAIN} poll {entry.title}"
     )
     return True
 
@@ -141,10 +139,7 @@ async def _identify_gateway(hass: HomeAssistant, entry: NilanConfigEntry) -> Non
     """
     gateway_id: str | None = entry.data[CONF_GATEWAY_ID]
     if gateway_id is None:
-        found = await discover(
-            timeout=const.DISCOVERY_TIMEOUT,
-            target=(entry.data[CONF_HOST], entry.data[CONF_PORT]),
-        )
+        found = await discover(target=entry.data[CONF_HOST], port=entry.data[CONF_PORT])
         if len(found) != 1:
             return
         gateway_id = found[0].device_id
@@ -183,15 +178,3 @@ def _reload_when_the_unit_changes(hass: HomeAssistant, entry: NilanConfigEntry) 
 
     entry.async_on_unload(entry.runtime_data.client.subscribe_points(points_changed))
 
-
-async def _poll(client: Client) -> None:
-    """Read whatever the client has due, for as long as the entry is loaded."""
-    while True:
-        try:
-            await client.poll()
-        except Exception:
-            _LOGGER.exception("Reading the unit failed")
-            delay = POLL_TICK
-        else:
-            delay = client.seconds_until_next_poll()
-        await asyncio.sleep(POLL_TICK if delay is None else min(delay, POLL_TICK))

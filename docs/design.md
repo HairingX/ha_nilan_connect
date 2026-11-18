@@ -1,23 +1,27 @@
 # Design
 
 How the integration is built, and the facts each choice rests on. Home Assistant facts are from
-its 2026.9.3 source, the release the tests run; the unit's from Nilan's CTS400 Modbus manual, as
+its 2026.11.0 source, the release the tests run; the unit's from Nilan's CTS400 Modbus manual, as
 modelled by `nilan_connect`.
 
 ## A client, not a coordinator
 
 The library's client plans every read itself: each point has a poll rate, only what is subscribed
 to is read, and a poll with nothing due sends nothing. The integration therefore owns no update
-interval. It runs one background task per config entry that calls `client.poll()` and sleeps
-until the client has something due, at most `POLL_TICK`, as a new subscription or a write's
-read-back can make a point due while it sleeps.
+interval and no loop. It runs the client's `run()` as one background task per config entry, which
+polls whenever the client has something due; a new subscription, a refresh or a write wakes it at
+once.
 
 - The task is made with `ConfigEntry.async_create_background_task`, which Home Assistant cancels
   when the entry unloads. That cancellation runs after `async_unload_entry` returns, so unloading
   cancels the task itself and awaits it before disconnecting: no read runs against a closing
   connection.
-- A poll that raises is logged and the loop goes on; the client reports a gateway that does not
-  answer through its status, not by raising.
+- A poll that raises is logged by the client, and polling goes on; the client reports a gateway
+  that does not answer through its status, not by raising. A disconnect turns that status too, so
+  the integration logs nothing on it: an unload or a reload says nothing of the gateway answering.
+- With polling disabled in the entry's system options, the client reads nothing on its schedule:
+  only what is asked for, by `homeassistant.update_entity`, and what a write asks to be read back.
+  The task still runs, as it makes that read-back. Changing it reloads the entry.
 
 ## A unit's name, and its gateway's id
 
@@ -58,16 +62,19 @@ values in `_show` on every change. It sets them in its constructor too: Home Ass
 capability attributes such as a thermostat's `hvac_modes` when it adds the entity, before
 `async_added_to_hass`.
 
+An entity shows a value whose quality has something to show (`Quality.shows_a_value`):
+
 | Quality of the value | The entity |
 |---|---|
 | `GOOD` | shows it |
 | `NO_DATA` | is unknown |
 | `STALE` | shows the last good value |
-| `OFFLINE`, `MISSING`, or the gateway has not answered for 10 s | is unavailable |
+| `OFFLINE`, `MISSING`, or the gateway counts as not answering | is unavailable |
 
-The client's `CONNECTED` status turns false only once the gateway has left reads unanswered for
-the model's `offline_after`, 10 s for every Nilan model: one missed read leaves the entities their
-last values, as `STALE`, and a gateway that stays silent makes them unavailable.
+The client's `CONNECTED` status turns false only once the gateway has left a read unanswered and
+then the next one too, as the library makes the client for every Nilan model: one missed read
+leaves the entities their last values, as `STALE`, and a gateway that stays silent makes them
+unavailable.
 
 - Device classes follow Home Assistant's: a fan level or a fan preset has none; a dead band,
   a difference of temperatures, is `temperature_delta` (`number/const.py`).
@@ -95,6 +102,11 @@ last values, as `STALE`, and a gateway that stays silent makes them unavailable.
 The client sends writes in order and folds a queued setting into a newer one, so every platform
 has `PARALLEL_UPDATES = 0` and passes actions straight on. A value outside the manual's limits is
 refused before it is sent; a write the unit does not take is an error the user reads.
+
+A number, and the thermostat's target temperature, offer the values their point can be written
+with, as the library's `Point.write_range()` gives them: the manual's limits, and its step, or else
+what one step of the register is worth. A setting the manual gives no lowest and highest value
+for has no number, rather than one offering every value its register can carry.
 
 ## Dependencies
 
