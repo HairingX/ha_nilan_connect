@@ -55,9 +55,11 @@ def real_network(monkeypatch: pytest.MonkeyPatch) -> Iterator[list[Client]]:
     made: list[Client] = []
 
     def read_only(
-        email: str, *, host: str | None, port: int, device_id: str | None, read_only: bool
+        *, email: str, host: str | None, port: int, device_id: str | None, read_only: bool
     ) -> Client:
-        client = create_client(email, host=host, port=port, device_id=device_id, read_only=True)
+        client = create_client(
+            email=email, host=host, port=port, device_id=device_id, read_only=True
+        )
         made.append(client)
         return client
 

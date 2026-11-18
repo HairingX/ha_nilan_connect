@@ -92,7 +92,7 @@ async def test_without_an_answering_gateway_one_can_look_again_or_enter_the_addr
     assert (await configure(hass, menu, {"next_step_id": "manual"})).get("step_id") == "manual"
 
     menu = await start(hass, "discover")
-    found.append(DiscoveredDevice(GATEWAY_ID, HOST, gateway.address[1]))
+    found.append(DiscoveredDevice(HOST, gateway.address[1], GATEWAY_ID))
     again = await configure(hass, menu, {"next_step_id": "discover"})
     assert again.get("type") is FlowResultType.FORM
     assert again.get("step_id") == "discover"

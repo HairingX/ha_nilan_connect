@@ -24,7 +24,6 @@ from nilan_connect import (
     discover,
 )
 
-from . import const
 from .const import CONF_EMAIL, CONF_GATEWAY_ID, CONF_SHOW_INFERRED, DEFAULT_PORT, DOMAIN, POLL_TICK
 from .data import NilanConfigEntry, NilanData, identity_text, new_client
 
@@ -141,10 +140,7 @@ async def _identify_gateway(hass: HomeAssistant, entry: NilanConfigEntry) -> Non
     """
     gateway_id: str | None = entry.data[CONF_GATEWAY_ID]
     if gateway_id is None:
-        found = await discover(
-            timeout=const.DISCOVERY_TIMEOUT,
-            target=(entry.data[CONF_HOST], entry.data[CONF_PORT]),
-        )
+        found = await discover(target=entry.data[CONF_HOST], port=entry.data[CONF_PORT])
         if len(found) != 1:
             return
         gateway_id = found[0].device_id

@@ -36,7 +36,7 @@ def new_client(
 ) -> Client:
     """A client for the gateway at `host`, or found by `gateway_id`; not yet connected."""
     return create_client(
-        email, host=host, port=port, device_id=gateway_id, read_only=read_only
+        email=email, host=host, port=port, device_id=gateway_id, read_only=read_only
     )
 
 
