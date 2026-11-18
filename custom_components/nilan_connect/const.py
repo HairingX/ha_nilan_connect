@@ -23,10 +23,3 @@ entities keep theirs when the unit is replaced."""
 DEFAULT_PORT: Final = PORT
 """The UDP port a Nilan gateway answers micro_nabto on."""
 
-POLL_TICK: Final = 1.0
-"""Longest wait, in seconds, between two calls to the client's poll.
-
-The client plans every read itself, and a poll with nothing due sends nothing. The wait is
-capped because a new subscription or a write's read-back can make a point due while the
-loop sleeps.
-"""
