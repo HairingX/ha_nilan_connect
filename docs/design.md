@@ -79,6 +79,14 @@ register behind it changes.
   that shows several points, such as the thermostat or the efficiency, has the least certain of
   them, in that order. It is translated per entity, as Home Assistant translates a state attribute
   by the entity's translation key, and not recorded, as it changes only with a reload.
+- **Repairs.** At `test`, a unit with a point under test - a candidate, or an inferred point -
+  raises the issue `testing_points_<entry id>`, not fixable, of severity warning (the lowest
+  Home Assistant has), asking the user to report whether the values match the unit's panel, with
+  the test report form as its link. It is removed when the entry unloads, which a change of level
+  does too, and not raised at another level or for a unit with nothing under test.
+- **Diagnostics.** The library's `level`, `certainty` and `candidates` are lifted out of `gateway`:
+  `level`, `certainty` per point, and `test`, which lists each candidate used with its value,
+  certainty and the key it replaces, and each inferred point used with its value.
 
 ## Entities
 

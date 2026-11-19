@@ -28,6 +28,9 @@ ATTR_CERTAINTY: Final = "certainty"
 TEST_CANDIDATE: Final = "test-candidate"
 """The certainty of a point tried only at the Test level."""
 
+TESTING_ISSUE: Final = "testing_points"
+"""The Repairs issue asking a user at the Test level to report what the unit shows."""
+
 TEST_REPORT_URL: Final = "https://github.com/HairingX/ha_nilan_connect/issues/new?template=test-report.yml"
 """Where a user reports whether the points tried match the unit's panel."""
 

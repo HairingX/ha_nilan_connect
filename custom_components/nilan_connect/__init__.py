@@ -15,12 +15,15 @@ from homeassistant.exceptions import (
     ConfigEntryNotReady,
 )
 from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import issue_registry as ir
 from nilan_connect import (
     OPTIMA_301,
     OPTIMA_312,
     OPTIMA_314,
     AuthenticationError,
     CannotConnectError,
+    Certainty,
+    Client,
     Key,
     Level,
     PointKey,
@@ -36,6 +39,8 @@ from .const import (
     DEFAULT_PORT,
     DOMAIN,
     SHOW_INFERRED,
+    TEST_REPORT_URL,
+    TESTING_ISSUE,
 )
 from .data import NilanConfigEntry, NilanData, identity_text, new_client
 
@@ -139,6 +144,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> boo
         entry.runtime_data = NilanData(client=client, name=name)
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
         _remove_lost_entities(hass, entry)
+        _ask_testers_to_report(hass, entry, client)
     except BaseException:
         await client.disconnect()
         raise
@@ -165,6 +171,37 @@ async def async_unload_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> bo
         await asyncio.wait([data.poller])
     await data.client.disconnect()
     return True
+
+
+@callback
+def _ask_testers_to_report(hass: HomeAssistant, entry: NilanConfigEntry, client: Client) -> None:
+    """At the Test level, raise an issue asking the user to report whether the points not
+    confirmed on the unit's model match its panel, for as long as the entry is loaded; at any
+    other level, or with no such point, remove it."""
+    issue_id = f"{TESTING_ISSUE}_{entry.entry_id}"
+    testing = any(
+        point.candidate is not None or point.certainty is Certainty.INFERRED
+        for point in client.points.values()
+    )
+    if client.level is not Level.TEST or not testing:
+        ir.async_delete_issue(hass, DOMAIN, issue_id)
+        return
+    ir.async_create_issue(
+        hass,
+        DOMAIN,
+        issue_id,
+        config_entry_id=entry.entry_id,
+        is_fixable=False,
+        learn_more_url=TEST_REPORT_URL,
+        severity=ir.IssueSeverity.WARNING,
+        translation_key=TESTING_ISSUE,
+        translation_placeholders={
+            "name": entry.title,
+            "model": client.model.name,
+            "report_url": TEST_REPORT_URL,
+        },
+    )
+    entry.async_on_unload(lambda: ir.async_delete_issue(hass, DOMAIN, issue_id))
 
 
 async def _identify_gateway(hass: HomeAssistant, entry: NilanConfigEntry) -> None:

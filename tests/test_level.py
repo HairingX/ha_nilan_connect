@@ -1,5 +1,5 @@
-"""The level of values an entry shows: the entities of each level, and how certain each entity
-is."""
+"""The level of values an entry shows: the entities of each level, how certain each entity is,
+the Repairs issue asking a tester to report, and what the diagnostics say of the points tried."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.const import STATE_OFF, STATE_ON
 from homeassistant.core import HomeAssistant, State
 from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import issue_registry as ir
 from nilan_connect import MODELS, Certainty, PointKey
 from nilan_connect.testing import SimulatedMicroNabtoDevice
 from pytest_homeassistant.common import MockConfigEntry
@@ -24,8 +25,10 @@ from custom_components.nilan_connect.const import (
     CONF_LEVEL,
     DOMAIN,
     TEST_REPORT_URL,
+    TESTING_ISSUE,
 )
 from custom_components.nilan_connect.data import NilanData
+from custom_components.nilan_connect.diagnostics import async_get_config_entry_diagnostics
 from custom_components.nilan_connect.entity import CERTAINTIES
 
 from .conftest import CTS400, GATEWAY_ID, NAME, entry_data, simulated_gateway
@@ -93,6 +96,10 @@ def _state(hass: HomeAssistant, platform: str, key: str) -> State:
 
 def _attributes(hass: HomeAssistant, platform: str, key: str) -> dict[str, Any]:
     return dict(_state(hass, platform, key).attributes)
+
+
+def _issue(hass: HomeAssistant, entry: MockConfigEntry) -> ir.IssueEntry | None:
+    return ir.async_get(hass).async_get_issue(DOMAIN, f"{TESTING_ISSUE}_{entry.entry_id}")
 
 
 # ================================================================================ entities
@@ -212,6 +219,107 @@ def test_every_entity_translates_its_certainty_and_each_of_its_values(language: 
     assert certainty["name"] == {"en": "Certainty", "da": "Sikkerhed"}[language]
 
 
+# ================================================================================= repairs
+
+
+async def test_at_the_test_level_the_user_is_asked_to_report_whether_the_points_tried_match_the_panel(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    entry = _entry(gateway, "test")
+    await _set_up(hass, entry)
+    issue = _issue(hass, entry)
+    assert issue is not None
+    assert (issue.is_fixable, issue.severity, issue.learn_more_url) == (
+        False, ir.IssueSeverity.WARNING, TEST_REPORT_URL)
+    assert issue.translation_key == TESTING_ISSUE
+    assert issue.translation_placeholders == {
+        "name": NAME, "model": "Optima 250", "report_url": TEST_REPORT_URL}
+    await _unload(hass, entry)
+    assert _issue(hass, entry) is None
+
+
+async def test_choosing_another_level_than_test_removes_the_request_to_report(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    entry = _entry(gateway, "test")
+    await _set_up(hass, entry)
+    assert _issue(hass, entry) is not None
+    # HA declares the options manager's user input as a bare `dict`.
+    options: Any = hass.config_entries.options
+    flow: ConfigFlowResult = await options.async_init(entry.entry_id)
+    await options.async_configure(flow["flow_id"], {CONF_LEVEL: "documented"})
+    await hass.async_block_till_done()
+    assert _issue(hass, entry) is None
+    await _unload(hass, entry)
+
+
+@pytest.mark.parametrize("level", ["verified", "documented"])
+async def test_below_the_test_level_nobody_is_asked_to_report(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, level: str
+) -> None:
+    entry = _entry(gateway, level)
+    await _set_up(hass, entry)
+    assert _issue(hass, entry) is None
+    await _unload(hass, entry)
+
+
+@pytest.mark.parametrize("gateway", [CTS400], indirect=True, ids=["cts400"])
+async def test_a_unit_with_nothing_under_test_is_not_asked_to_report_at_the_test_level(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    """Every point of a CTS400 is verified, and it has no candidate."""
+    entry = _entry(gateway, "test")
+    await _set_up(hass, entry)
+    assert _issue(hass, entry) is None
+    await _unload(hass, entry)
+
+
+# ============================================================================= diagnostics
+
+
+async def test_the_diagnostics_list_each_candidate_used_with_what_it_replaces(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    gateway.datapoint_registers[(0, 107)] = 1
+    entry = _entry(gateway, "test")
+    await _set_up(hass, entry)
+    found = await async_get_config_entry_diagnostics(hass, entry)
+    assert found["level"] == "test"
+    assert found["test"]["candidates"] == {
+        "bypass_active": {"value": True, "certainty": "reported", "replaces": "bypass_active"}}
+    assert found["test"]["inferred"] == {}
+    assert found["certainty"]["temp_supply"] == "reported"
+    assert not {"level", "certainty", "candidates"} & set(found["gateway"])
+    await _unload(hass, entry)
+
+
+@pytest.mark.parametrize("gateway", [CTS602], indirect=True, ids=["cts602"])
+async def test_the_diagnostics_list_each_inferred_point_used_at_the_test_level(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    entry = _entry(gateway, "test")
+    data = await _set_up(hass, entry)
+    found = await async_get_config_entry_diagnostics(hass, entry)
+    inferred = {str(key) for key, point in data.client.points.items() if point.certainty is Certainty.INFERRED}
+    assert set(found["test"]["inferred"]) == inferred and inferred
+    assert found["test"]["inferred"]["enable"] == {"value": False}
+    assert found["test"]["candidates"] == {}
+    await _unload(hass, entry)
+
+
+@pytest.mark.parametrize("gateway", [CTS400], indirect=True, ids=["cts400"])
+async def test_the_diagnostics_list_nothing_under_test_below_the_test_level(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    entry = _entry(gateway, "documented")
+    await _set_up(hass, entry)
+    found = await async_get_config_entry_diagnostics(hass, entry)
+    assert found["level"] == "documented"
+    assert found["test"] == {"candidates": {}, "inferred": {}}
+    assert set(found["certainty"].values()) == {"verified"}
+    await _unload(hass, entry)
+
+
 # ================================================================================= options
 
 
@@ -232,10 +340,13 @@ async def test_the_options_offer_each_level_by_its_translated_name_with_where_to
 
 
 @pytest.mark.parametrize("language", ["en", "da"])
-def test_the_level_is_translated_with_where_to_report(language: str) -> None:
+def test_the_level_and_the_request_to_report_are_translated_with_their_placeholders(language: str) -> None:
     translations = json.loads((TRANSLATIONS / f"{language}.json").read_text(encoding="utf-8"))
     assert set(translations["selector"][CONF_LEVEL]["options"]) == {"verified", "documented", "test"}
     assert "{report_url}" in translations["options"]["step"]["init"]["description"]
+    issue = translations["issues"][TESTING_ISSUE]
+    assert "{name}" in issue["title"] and "{model}" in issue["title"]
+    assert "{report_url}" in issue["description"]
 
 
 def test_the_test_report_form_is_the_one_the_request_links_to_and_offers_every_model() -> None:

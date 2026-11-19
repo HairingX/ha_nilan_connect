@@ -88,8 +88,10 @@ rules:
   icon-translations: done
   reconfiguration-flow: done
   repair-issues:
-    status: todo
-    comment: A candidate is a gateway that refuses writes.
+    status: done
+    comment: >-
+      At the Test level a unit with values under test raises a non-fixable issue asking the user
+      to report whether they match its panel. A gateway that refuses writes is not raised yet.
   stale-devices:
     status: exempt
     comment: An entry is one unit, which is one device; it goes with the entry.

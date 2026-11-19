@@ -3467,5 +3467,11 @@
         "test": "Test"
       }
     }
+  },
+  "issues": {
+    "testing_points": {
+      "title": "{name} tests values not confirmed on a {model}",
+      "description": "{name} uses the Test level: some of its values are inferred from the order of Nilan's manual or tried in place of others, and have not been confirmed on a {model}. Please [report]({report_url}) whether they match your unit's panel, and attach the diagnostics, which list them.\n\nTo stop testing, choose another level in the options of Nilan Connect; this message then goes away."
+    }
   }
 }

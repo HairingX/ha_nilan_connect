@@ -1,9 +1,10 @@
-"""What a bug report needs: the unit's model, every value with its quality, and what is missing."""
+"""What a bug report needs: the unit's model, every value with its quality, what is missing, and
+the points tried at the Test level."""
 
 from __future__ import annotations
 
 from importlib import metadata
-from typing import Any
+from typing import Any, cast
 
 from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant
@@ -27,9 +28,16 @@ async def async_get_config_entry_diagnostics(
     """The client's picture of the unit and how the gateway has answered, without the email or
     where the gateway is.
 
-    The entry's unique id is left out: it is the gateway's id.
+    The entry's unique id is left out: it is the gateway's id. `test` lists each candidate the
+    unit uses, with its value, its certainty and the key it replaces, and each inferred point,
+    with its value.
     """
     client = entry.runtime_data.client
+    library = dict(client.diagnostics())
+    level = library.pop("level")
+    certainty = cast(dict[str, str], library.pop("certainty", {}))
+    candidates = cast(dict[str, str | None], library.pop("candidates", {}))
+    read = {str(key): current.value for key, current in client.values.items()}
     return {
         "entry": {
             "version": entry.version,
@@ -48,7 +56,24 @@ async def async_get_config_entry_diagnostics(
         "seconds_until_next_poll": client.seconds_until_next_poll(),
         "silent": client.silent,
         "silent_for": client.silent_for,
-        "gateway": dict(client.diagnostics()),
+        "level": level,
+        "certainty": certainty,
+        "test": {
+            "candidates": {
+                key: {
+                    "value": read.get(key),
+                    "certainty": certainty[key],
+                    "replaces": replaces,
+                }
+                for key, replaces in candidates.items()
+            },
+            "inferred": {
+                key: {"value": read.get(key)}
+                for key, found in certainty.items()
+                if found == "inferred" and key not in candidates
+            },
+        },
+        "gateway": library,
         "values": {
             str(key): {
                 "value": current.value,

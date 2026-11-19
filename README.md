@@ -28,11 +28,11 @@ Nilan Connect > Configure > *Level*.
 | **Documented** (the default) | also values from the manufacturer's documentation |
 | **Test** | every value: also those inferred from the order of Nilan's manual, and values tried in place of others, or new, from a source not yet confirmed on a unit |
 
-Test values may be wrong, and changing one may change a different setting. Please tell whether
-they match your unit's panel in a
-[test report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=test-report.yml),
-with the diagnostics attached. A value confirmed this way is shown without Test in a later
-release.
+Test values may be wrong, and changing one may change a different setting. While a unit is on
+Test and uses such values, Settings > Repairs asks you to report whether they match your unit's
+panel, with a [test report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=test-report.yml):
+attach the diagnostics, which list each value under test. A value confirmed this way is shown
+without Test in a later release. The message goes when you choose another level.
 
 Every entity has the attribute *Certainty*: *Verified*, *Documented*, *Inferred* or *Test* (in the
 state attributes, `verified`, `reported`, `inferred` or `test-candidate`), the least certain of the
@@ -82,7 +82,8 @@ values; if it leaves the next one unanswered too, they are unavailable until it 
 - **No gateway is found**: discovery is a broadcast on the local network. Enter the gateway's
   address instead.
 - The diagnostics, downloaded from the integration's entry, hold every value without the email or
-  where the gateway is.
+  where the gateway is, the level, how certain each value is, and, under `test`, each value under
+  test with what it replaces.
 
 ### Reporting a problem
 

@@ -3467,5 +3467,11 @@
         "test": "Test"
       }
     }
+  },
+  "issues": {
+    "testing_points": {
+      "title": "{name} tester værdier, der ikke er bekræftet på en {model}",
+      "description": "{name} bruger niveauet Test: nogle af dens værdier er udledt af rækkefølgen i Nilans manual eller afprøves i stedet for andre, og de er ikke bekræftet på en {model}. [Fortæl os]({report_url}), om de passer med dit anlægs panel, og vedhæft diagnostikken, som viser dem.\n\nVælg et andet niveau i indstillingerne for Nilan Connect for at stoppe testen; så forsvinder beskeden."
+    }
   }
 }
