@@ -476,6 +476,14 @@
       "efficiency": {
         "name": "Heat recovery efficiency"
       },
+      "electric_coil": {
+        "name": "Electric heating coil",
+        "state": {
+          "none": "None",
+          "reheat": "After-heating",
+          "preheat": "Preheating"
+        }
+      },
       "fan_dutycycle_extract": {
         "name": "Extract fan speed"
       },
@@ -548,6 +556,9 @@
           "external_stop": "External stop",
           "forced_low_speed": "Forced low speed"
         }
+      },
+      "heat_pump_state_code": {
+        "name": "Heat pump state code"
       },
       "humidity": {
         "name": "Humidity"
@@ -637,6 +648,9 @@
       },
       "temp_before_condenser": {
         "name": "Temperature before condenser"
+      },
+      "temp_before_evaporator": {
+        "name": "Temperature before evaporator"
       },
       "temp_buffer_tank": {
         "name": "Buffer tank temperature"
@@ -850,8 +864,14 @@
       "humidity_high_active": {
         "name": "High humidity"
       },
+      "preheat_coil_fitted": {
+        "name": "Preheating coil fitted"
+      },
       "reheat_active": {
         "name": "After-heating"
+      },
+      "reheat_coil_fitted": {
+        "name": "After-heating coil fitted"
       },
       "running": {
         "name": "Running"
@@ -1116,18 +1136,6 @@
       },
       "heat_source": {
         "name": "Heat source",
-        "state": {
-          "off": "Off",
-          "electric": "Electric",
-          "heat_pump": "Heat pump",
-          "afterheat": "After-heating",
-          "heat_pump_then_afterheat": "Heat pump, then after-heating",
-          "afterheat_then_heat_pump": "After-heating, then heat pump",
-          "heat_pump_then_electric": "Heat pump, then electric"
-        }
-      },
-      "hotwater_supplement": {
-        "name": "Hot water supplement",
         "state": {
           "off": "Off",
           "electric": "Electric",

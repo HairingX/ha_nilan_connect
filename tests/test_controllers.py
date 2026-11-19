@@ -10,7 +10,14 @@ from typing import Any
 import pytest
 import pytest_socket
 from homeassistant.config_entries import ConfigEntryState, ConfigFlowResult
-from homeassistant.const import UnitOfTime
+from homeassistant.const import (
+    PERCENTAGE,
+    STATE_OFF,
+    STATE_ON,
+    EntityCategory,
+    UnitOfTemperature,
+    UnitOfTime,
+)
 from homeassistant.components.climate.const import HVACMode
 from homeassistant.core import HomeAssistant, State
 from homeassistant.data_entry_flow import FlowResultType
@@ -22,6 +29,7 @@ from pytest_homeassistant.common import MockConfigEntry
 from custom_components.nilan_connect.climate import THERMOSTAT
 from custom_components.nilan_connect.const import CONF_SHOW_INFERRED, DOMAIN
 from custom_components.nilan_connect.data import NilanData
+from custom_components.nilan_connect.sensor import EFFICIENCY
 
 from .conftest import GATEWAY_ID, NAME, entry_data, simulated_gateway
 
@@ -31,8 +39,14 @@ EVERY_REGISTER = {(0, address): 0 for address in range(300)}
 """A register at every address a controller's model reads, each holding 0."""
 
 OPTIMA_250 = {"device_number": 0, "device_model": 1040, "slave_device_number": 79250, "slave_device_model": 1}
+OPTIMA_260 = {"device_number": 0, "device_model": 1040, "slave_device_number": 70810, "slave_device_model": 26}
 OPTIMA_270 = {"device_number": 79265, "device_model": 2010, "slave_device_number": 0, "slave_device_model": 0}
+OPTIMA_301 = {"device_number": 0, "device_model": 1040, "slave_device_number": 79250, "slave_device_model": 5}
+OPTIMA_312 = {"device_number": 0, "device_model": 1040, "slave_device_number": 79250, "slave_device_model": 9}
+OPTIMA_314 = {"device_number": 79280, "device_model": 2020, "slave_device_number": 0, "slave_device_model": 0}
 CTS602 = {"device_number": 0, "device_model": 1140, "slave_device_number": 2763306, "slave_device_model": 0}
+CTS602_HEAT_PUMP = {**CTS602, "slave_device_model": 44}
+CTS602_LIGHT = {**CTS602, "slave_device_model": 2}
 
 
 @pytest.fixture(params=[OPTIMA_250, OPTIMA_270, CTS602], ids=["optima_250", "optima_270", "cts602"])
@@ -58,6 +72,30 @@ async def test_another_controller_is_set_up(
     assert config_entry.state is ConfigEntryState.LOADED
     assert _entity(hass, "sensor", PointKey.TEMP_SUPPLY) is not None
     assert _entity(hass, "select", PointKey.FAN_LEVEL) is not None
+
+
+async def _set_up(hass: HomeAssistant, entry: MockConfigEntry) -> None:
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+
+async def _unload(hass: HomeAssistant, entry: MockConfigEntry) -> None:
+    assert await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()
+
+
+def _with_inferred(gateway: SimulatedMicroNabtoDevice) -> MockConfigEntry:
+    """An entry whose user has chosen to see the values found only from the manual."""
+    return MockConfigEntry(
+        domain=DOMAIN, title=NAME, unique_id=GATEWAY_ID, data=entry_data(gateway),
+        options={CONF_SHOW_INFERRED: True}, version=2, minor_version=1,
+    )
+
+
+def _registered(hass: HomeAssistant, entry: MockConfigEntry, platform: str, key: str) -> er.RegistryEntry:
+    """An entity of `key` as an earlier version of the integration left it in the registry."""
+    return er.async_get(hass).async_get_or_create(platform, DOMAIN, f"{NAME}_{key}", config_entry=entry)
 
 
 def _state(hass: HomeAssistant, platform: str, key: str) -> State:
@@ -132,10 +170,17 @@ async def test_a_state_is_shown_by_its_name(hass: HomeAssistant, loaded: NilanDa
     assert _state(hass, "sensor", PointKey.OPERATION_STATE).state == "off"
 
 
-@pytest.mark.parametrize("gateway", [OPTIMA_270], indirect=True, ids=["optima_270"])
-async def test_a_setting_no_source_gives_a_range_for_gets_no_number(hass: HomeAssistant, loaded: NilanData) -> None:
-    assert loaded.client.has(PointKey.FILTER_REPLACE_INTERVAL)
-    assert _entity(hass, "number", PointKey.FILTER_REPLACE_INTERVAL) is None
+@pytest.mark.parametrize("gateway", [CTS602], indirect=True, ids=["cts602"])
+async def test_a_setting_no_source_gives_a_range_for_gets_no_number(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    """A CTS602's service capacity is placed by its manual, which gives it no range."""
+    entry = _with_inferred(gateway)
+    await _set_up(hass, entry)
+    data: NilanData = entry.runtime_data
+    assert data.client.has(PointKey.SERVICE_CAPACITY)
+    assert _entity(hass, "number", PointKey.SERVICE_CAPACITY) is None
+    await _unload(hass, entry)
 
 
 @pytest.mark.parametrize("gateway", [OPTIMA_270], indirect=True, ids=["optima_270"])
@@ -180,3 +225,177 @@ async def test_choosing_a_state_writes_the_units_code_for_it(
             break
         await asyncio.sleep(0.01)
     assert (0, 159, 2) in [item for command in gateway.received(SETPOINT_WRITE) for item in command.items]
+
+
+@pytest.mark.parametrize(
+    ("gateway", "old", "new"),
+    [
+        (OPTIMA_301, PointKey.TEMP_BEFORE_CONDENSER, PointKey.TEMP_BEFORE_EVAPORATOR),
+        (OPTIMA_312, PointKey.TEMP_BEFORE_CONDENSER, PointKey.TEMP_BEFORE_EVAPORATOR),
+        (OPTIMA_314, PointKey.TEMP_BEFORE_CONDENSER, PointKey.TEMP_BEFORE_EVAPORATOR),
+        (OPTIMA_301, PointKey.TEMP_ROOM, PointKey.TEMP_ROOM_PANEL),
+        (OPTIMA_312, PointKey.TEMP_ROOM, PointKey.TEMP_ROOM_PANEL),
+    ],
+    indirect=["gateway"],
+    ids=["optima_301_t5", "optima_312_t5", "optima_314_t5", "optima_301_t2", "optima_312_t2"],
+)
+async def test_the_entity_of_a_renamed_point_keeps_its_entity_id_and_history(
+    hass: HomeAssistant, config_entry: MockConfigEntry, old: str, new: str
+) -> None:
+    """The point reads the same register, with the same meaning, under a key that names it."""
+    config_entry.add_to_hass(hass)
+    before = _registered(hass, config_entry, "sensor", old)
+    await _set_up(hass, config_entry)
+    after = er.async_get(hass).async_get(before.entity_id)
+    assert after is not None and after.unique_id == f"{NAME}_{new}"
+    assert _entity(hass, "sensor", old) is None
+    assert hass.states.get(before.entity_id) is not None
+    await _unload(hass, config_entry)
+
+
+@pytest.mark.parametrize("gateway", [OPTIMA_301], indirect=True, ids=["optima_301"])
+async def test_a_renamed_points_old_entity_is_removed_where_its_new_one_exists(
+    hass: HomeAssistant, config_entry: MockConfigEntry
+) -> None:
+    config_entry.add_to_hass(hass)
+    old = _registered(hass, config_entry, "sensor", PointKey.TEMP_ROOM)
+    new = _registered(hass, config_entry, "sensor", PointKey.TEMP_ROOM_PANEL)
+    await _set_up(hass, config_entry)
+    registry = er.async_get(hass)
+    assert registry.async_get(old.entity_id) is None
+    kept = registry.async_get(new.entity_id)
+    assert kept is not None and kept.unique_id == f"{NAME}_{PointKey.TEMP_ROOM_PANEL}"
+    await _unload(hass, config_entry)
+
+
+@pytest.mark.parametrize("gateway", [CTS602_HEAT_PUMP], indirect=True, ids=["cts602_heat_pump"])
+async def test_a_cts602_keeps_its_temperatures_before_the_condenser_and_of_the_room(
+    hass: HomeAssistant, config_entry: MockConfigEntry
+) -> None:
+    """Only an Optima's T5 and T2 were renamed."""
+    config_entry.add_to_hass(hass)
+    kept = [_registered(hass, config_entry, "sensor", key)
+            for key in (PointKey.TEMP_BEFORE_CONDENSER, PointKey.TEMP_ROOM)]
+    await _set_up(hass, config_entry)
+    registry = er.async_get(hass)
+    found = [registry.async_get(entry.entity_id) for entry in kept]
+    assert [entry.unique_id if entry else None for entry in found] == [entry.unique_id for entry in kept]
+    assert _entity(hass, "sensor", PointKey.TEMP_BEFORE_EVAPORATOR) is None
+    await _unload(hass, config_entry)
+
+
+@pytest.mark.parametrize("gateway", [CTS602_HEAT_PUMP], indirect=True, ids=["cts602_heat_pump"])
+async def test_a_heat_pump_states_code_is_a_disabled_code_sensor(hass: HomeAssistant, loaded: NilanData) -> None:
+    """Several of a heat pump's codes share a state; the code tells them apart."""
+    code = _entity(hass, "sensor", PointKey.HEAT_PUMP_STATE_CODE)
+    assert code is not None and code.disabled_by is er.RegistryEntryDisabler.INTEGRATION
+
+
+@pytest.mark.parametrize("gateway", [OPTIMA_312], indirect=True, ids=["optima_312"])
+async def test_an_optima_312s_electric_coil_is_shown_and_never_switched(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, config_entry: MockConfigEntry
+) -> None:
+    """Its setpoint 21 is the coil fitted, 2 an electric preheater; the switch that wrote it is
+    removed, as it means something else."""
+    gateway.setpoint_registers[(0, 21)] = 2
+    config_entry.add_to_hass(hass)
+    switch = _registered(hass, config_entry, "switch", PointKey.REHEAT_ENABLE)
+    await _set_up(hass, config_entry)
+    assert er.async_get(hass).async_get(switch.entity_id) is None
+    assert _state(hass, "binary_sensor", PointKey.PREHEAT_COIL_FITTED).state == STATE_ON
+    assert _state(hass, "binary_sensor", PointKey.REHEAT_COIL_FITTED).state == STATE_OFF
+    coil = _entity(hass, "sensor", PointKey.ELECTRIC_COIL)
+    assert coil is not None and coil.disabled_by is er.RegistryEntryDisabler.INTEGRATION
+    assert coil.entity_category is EntityCategory.DIAGNOSTIC
+    await _unload(hass, config_entry)
+
+
+@pytest.mark.parametrize("gateway", [OPTIMA_312], indirect=True, ids=["optima_312"])
+async def test_an_optima_312s_electric_coil_is_shown_by_its_name(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, config_entry: MockConfigEntry
+) -> None:
+    gateway.setpoint_registers[(0, 21)] = 1
+    config_entry.add_to_hass(hass)
+    er.async_get(hass).async_get_or_create(
+        "sensor", DOMAIN, f"{NAME}_{PointKey.ELECTRIC_COIL}", config_entry=config_entry
+    )
+    await _set_up(hass, config_entry)
+    coil = _state(hass, "sensor", PointKey.ELECTRIC_COIL)
+    assert coil.state == "reheat"
+    assert coil.attributes["options"] == ["none", "reheat", "preheat"]
+    await _unload(hass, config_entry)
+
+
+@pytest.mark.parametrize("gateway", [OPTIMA_301], indirect=True, ids=["optima_301"])
+async def test_an_optima_301_has_no_preheat_switch_and_its_cooling_setting_is_in_c(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, config_entry: MockConfigEntry
+) -> None:
+    """Its setpoint 20 is the minimum air volume, which the preheat switch wrote."""
+    gateway.setpoint_registers[(0, 1)] = 55
+    config_entry.add_to_hass(hass)
+    switch = _registered(hass, config_entry, "switch", PointKey.PREHEAT_ENABLE)
+    cooling = _registered(hass, config_entry, "number", PointKey.COOLING_TEMPERATURE)
+    await _set_up(hass, config_entry)
+    registry = er.async_get(hass)
+    assert registry.async_get(switch.entity_id) is None
+    number = registry.async_get(cooling.entity_id)
+    assert number is not None and number.unit_of_measurement == UnitOfTemperature.CELSIUS
+    state = hass.states.get(cooling.entity_id)
+    assert state is not None and state.state == "5.5"
+    assert (state.attributes["min"], state.attributes["max"], state.attributes["step"]) == (3, 10, 0.1)
+    await _unload(hass, config_entry)
+
+
+@pytest.mark.parametrize("gateway", [OPTIMA_270, OPTIMA_314], indirect=True, ids=["optima_270", "optima_314"])
+async def test_an_optimas_days_since_the_filter_change_is_a_sensor(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, config_entry: MockConfigEntry
+) -> None:
+    """Setpoint 100 counts the days, and stays at 250 once a change is due."""
+    gateway.setpoint_registers[(0, 100)] = 250
+    await _set_up(hass, config_entry)
+    days = _state(hass, "sensor", PointKey.FILTER_REPLACE_TIME_AGO)
+    assert float(days.state) == 250
+    assert days.attributes["unit_of_measurement"] == UnitOfTime.DAYS
+    assert _entity(hass, "number", PointKey.FILTER_REPLACE_INTERVAL) is None
+    await _unload(hass, config_entry)
+
+
+@pytest.mark.parametrize("gateway", [OPTIMA_250, OPTIMA_260], indirect=True, ids=["optima_250", "optima_260"])
+async def test_an_optimas_bypass_opening_is_a_sensor_in_percent(
+    hass: HomeAssistant, loaded: NilanData
+) -> None:
+    position = _state(hass, "sensor", PointKey.BYPASS_POSITION)
+    assert position.attributes["unit_of_measurement"] == PERCENTAGE
+
+
+@pytest.mark.parametrize("gateway", [CTS602_LIGHT], indirect=True, ids=["cts602_light"])
+async def test_a_cts602_lights_supply_air_after_its_heater_is_a_new_entity(
+    hass: HomeAssistant, config_entry: MockConfigEntry
+) -> None:
+    """Its supply air was read after the heater, under the key of the air before it: that entity
+    goes, and so does the efficiency worked out from it."""
+    config_entry.add_to_hass(hass)
+    supply = _registered(hass, config_entry, "sensor", PointKey.TEMP_SUPPLY)
+    efficiency = _registered(hass, config_entry, "sensor", EFFICIENCY)
+    await _set_up(hass, config_entry)
+    registry = er.async_get(hass)
+    assert registry.async_get(supply.entity_id) is None
+    assert registry.async_get(efficiency.entity_id) is None
+    after_heater = _entity(hass, "sensor", PointKey.TEMP_SUPPLY_AFTER_HEATER)
+    assert after_heater is not None and after_heater.entity_id != supply.entity_id
+    await _unload(hass, config_entry)
+
+
+@pytest.mark.parametrize("gateway", [CTS602], indirect=True, ids=["cts602"])
+async def test_a_cts602s_electric_hot_water_supplement_is_a_switch(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    """HR 1704 HotWater.HeatType: "Use of electricity supplement: 0=OFF, 1=El"; it was a select."""
+    gateway.setpoint_registers[(0, 193)] = 1
+    entry = _with_inferred(gateway)
+    entry.add_to_hass(hass)
+    select = _registered(hass, entry, "select", "hotwater_supplement")
+    await _set_up(hass, entry)
+    assert er.async_get(hass).async_get(select.entity_id) is None
+    assert _state(hass, "switch", PointKey.HOTWATER_HEATER_ENABLE).state == STATE_ON
+    await _unload(hass, entry)

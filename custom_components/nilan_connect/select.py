@@ -58,7 +58,6 @@ STATE_SELECTS: tuple[NilanSelectDescription, ...] = (
     _choice(PointKey.CONTROL_SENSOR),
     _choice(PointKey.HEAT_SOURCE),
     _choice(PointKey.COMPRESSOR_PRIORITY),
-    _choice(PointKey.HOTWATER_SUPPLEMENT),
     _choice(PointKey.ANTILEGIONELLA_DAY),
     _choice(PointKey.CENTRAL_HEAT_MODE),
     _choice(PointKey.CENTRAL_HEAT_SOURCE),

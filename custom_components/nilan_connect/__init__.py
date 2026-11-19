@@ -16,9 +16,13 @@ from homeassistant.exceptions import (
 )
 from homeassistant.helpers import entity_registry as er
 from nilan_connect import (
+    OPTIMA_301,
+    OPTIMA_312,
+    OPTIMA_314,
     AuthenticationError,
     CannotConnectError,
     Key,
+    PointKey,
     UnsupportedDeviceError,
     discover,
 )
@@ -37,6 +41,23 @@ PLATFORMS: list[Platform] = [
     Platform.SENSOR,
     Platform.SWITCH,
 ]
+
+RENAMED: tuple[tuple[frozenset[str], Platform, Key[Any], Key[Any]], ...] = (
+    (
+        frozenset({OPTIMA_301.name, OPTIMA_312.name, OPTIMA_314.name}),
+        Platform.SENSOR,
+        PointKey.TEMP_BEFORE_CONDENSER,
+        PointKey.TEMP_BEFORE_EVAPORATOR,
+    ),
+    (
+        frozenset({OPTIMA_301.name, OPTIMA_312.name}),
+        Platform.SENSOR,
+        PointKey.TEMP_ROOM,
+        PointKey.TEMP_ROOM_PANEL,
+    ),
+)
+"""The points the models of these names give a new key, on the same platform, for the same
+register and meaning: on those models, the entity of the old key becomes the new key's."""
 
 
 async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -95,6 +116,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> boo
         ) from err
 
     try:
+        await _keep_renamed_entities(hass, entry, name, client.model.name)
         await _identify_gateway(hass, entry)
         entry.runtime_data = NilanData(
             client=client,
@@ -152,6 +174,33 @@ async def _identify_gateway(hass: HomeAssistant, entry: NilanConfigEntry) -> Non
         is None
     ):
         hass.config_entries.async_update_entry(entry, unique_id=gateway_id)
+
+
+async def _keep_renamed_entities(
+    hass: HomeAssistant, entry: NilanConfigEntry, name: str, model: str
+) -> None:
+    """Give the entity of a point the unit's model has renamed the new key's unique id, so that
+    it keeps its entity id and history.
+
+    Where the new key's entity exists already, the old one is left to be removed as lost.
+    """
+    renamed = {
+        (str(platform), f"{name}_{old}"): f"{name}_{new}"
+        for models, platform, old, new in RENAMED
+        if model in models
+    }
+    if not renamed:
+        return
+    registry = er.async_get(hass)
+
+    @callback
+    def rename(found: er.RegistryEntry) -> dict[str, Any] | None:
+        unique_id = renamed.get((found.domain, found.unique_id))
+        if unique_id is None or registry.async_get_entity_id(found.domain, DOMAIN, unique_id):
+            return None
+        return {"new_unique_id": unique_id}
+
+    await er.async_migrate_entries(hass, entry.entry_id, rename)
 
 
 @callback

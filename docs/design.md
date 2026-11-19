@@ -85,7 +85,22 @@ unavailable.
   University's course "Ventilation 7. Air to Air Heat Recovery" gives it (page 2), and as Svensk
   Ventilation's guidelines on temperature efficiency refer to EN 308:1997 section 5.5. It is
   worked out again whenever one of the three temperatures changes, and is unknown while the
-  extract and outdoor air are equally warm.
+  extract and outdoor air are equally warm. A unit that reads its supply air only after the
+  heater, such as a CTS602 Light, has none: the heater's warmth would count as recovered.
+
+### Points the library renames
+
+A unique id names what its entity shows, so a point whose meaning or platform changes gets a new
+entity, and the old one is removed with the other entities of points the unit no longer has.
+Where the library gives a model's point a new key for the same register and the same meaning, on
+the same platform, the entity keeps its entity id and its history: at setup, before the platforms
+create their entities, `er.async_migrate_entries` gives it the new key's unique id, on the models
+that renamed it. Where the new key's entity exists already, the old one is removed instead.
+
+| Models | Platform | Old key | New key |
+|---|---|---|---|
+| Optima 301, 312, 314 | sensor | `temp_before_condenser` | `temp_before_evaporator` |
+| Optima 301, 312 | sensor | `temp_room` | `temp_room_panel` |
 
 ### The thermostat
 

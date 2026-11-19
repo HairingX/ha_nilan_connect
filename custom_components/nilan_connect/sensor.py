@@ -60,7 +60,9 @@ def _code(point: Key[Any]) -> NilanSensorDescription:
     )
 
 
-def _state(point: Key[Any], *, diagnostic: bool = False) -> NilanSensorDescription:
+def _state(
+    point: Key[Any], *, diagnostic: bool = False, enabled: bool = True
+) -> NilanSensorDescription:
     """A state of the unit, shown by its name; its options are the states the unit's point has."""
     return NilanSensorDescription(
         key=str(point),
@@ -68,6 +70,7 @@ def _state(point: Key[Any], *, diagnostic: bool = False) -> NilanSensorDescripti
         point=point,
         device_class=SensorDeviceClass.ENUM,
         entity_category=EntityCategory.DIAGNOSTIC if diagnostic else None,
+        entity_registry_enabled_default=enabled,
     )
 
 
@@ -81,6 +84,7 @@ SENSORS: tuple[NilanSensorDescription, ...] = (
     _code(PointKey.ALARM_BITS),
     _code(PointKey.ALARM_BITS_HIGH),
     _code(PointKey.STATE_CODE),
+    _code(PointKey.HEAT_PUMP_STATE_CODE),
     _state(PointKey.ALARM_1),
     _state(PointKey.ALARM_2),
     _state(PointKey.ALARM_3),
@@ -89,6 +93,8 @@ SENSORS: tuple[NilanSensorDescription, ...] = (
     _state(PointKey.HEAT_PUMP_STATE),
     _state(PointKey.DAMPER_TEST_STATE, diagnostic=True),
     _state(PointKey.DAMPER_TEST_DAY, diagnostic=True),
+    # The coil fitted is shown by the binary sensors of each kind of coil.
+    _state(PointKey.ELECTRIC_COIL, diagnostic=True, enabled=False),
     NilanSensorDescription(
         key=str(PointKey.DAMPER_TEST_LAST_DATE),
         translation_key=str(PointKey.DAMPER_TEST_LAST_DATE),
@@ -140,6 +146,7 @@ SENSORS: tuple[NilanSensorDescription, ...] = (
     _temperature(PointKey.TEMP_CONDENSER),
     _temperature(PointKey.TEMP_EVAPORATOR),
     _temperature(PointKey.TEMP_BEFORE_CONDENSER),
+    _temperature(PointKey.TEMP_BEFORE_EVAPORATOR),
     _temperature(PointKey.TEMP_AFTER_CONDENSER),
     _temperature(PointKey.TEMP_PRESSURE_PIPE),
     _temperature(PointKey.TEMP_BUFFER_TANK),

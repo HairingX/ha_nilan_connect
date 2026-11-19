@@ -112,6 +112,8 @@ NUMBERS: tuple[NilanNumberDescription, ...] = (
     _setting(PointKey.TEMP_CENTRAL_HEAT_COMPENSATION, NumberDeviceClass.TEMPERATURE_DELTA),
     _setting(PointKey.CENTRAL_HEAT_CURVE, None),
     _setting(PointKey.CENTRAL_HEAT_REGULATION_TIME, NumberDeviceClass.DURATION),
+    # No source says whether it is a temperature or a difference of two, so it is converted as
+    # neither.
     _setting(PointKey.COOLING_TEMPERATURE, None),
     _setting(PointKey.FAN_LEVEL_COOLING, None),
     _setting(PointKey.SERVICE_CAPACITY, None),
