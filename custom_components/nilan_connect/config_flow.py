@@ -10,6 +10,7 @@ from typing import Any, cast
 import probatio
 from homeassistant.config_entries import (
     ConfigEntry,
+    ConfigEntryState,
     ConfigFlow,
     ConfigFlowResult,
     OptionsFlowWithReload,
@@ -36,7 +37,7 @@ from .const import (
     DOMAIN,
     TEST_REPORT_URL,
 )
-from .data import identity_text, new_client
+from .data import NilanConfigEntry, identity_text, new_client
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -336,16 +337,28 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class NilanOptionsFlow(OptionsFlowWithReload):
-    """The level of the values the unit shows; the entry reloads with the choice."""
+    """The level of the values the unit shows; the entry reloads with the choice.
+
+    Verified is offered only where the unit's model has a verified point, or while the entry is
+    not loaded and its model is not known.
+    """
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         if user_input is not None:
             return self.async_create_entry(data=user_input)
+        entry: NilanConfigEntry = self.config_entry
+        offered = [
+            level
+            for level in Level
+            if level is not Level.VERIFIED
+            or entry.state is not ConfigEntryState.LOADED
+            or entry.runtime_data.client.model.keys_at(Level.VERIFIED)
+        ]
         levels = _SELECT(
             selector.SelectSelectorConfig(
-                options=[str(level) for level in Level],
+                options=[str(level) for level in offered],
                 translation_key=CONF_LEVEL,
                 mode=selector.SelectSelectorMode.LIST,
             )

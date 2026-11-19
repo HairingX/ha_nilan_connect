@@ -298,15 +298,13 @@ async def test_an_entry_with_an_empty_address_is_found_by_discovery(
 
 
 @pytest.mark.parametrize(
-    ("options", "level"),
-    [({"show_inferred": True}, "test"), ({"show_inferred": False}, "documented"), ({}, "documented")],
-    ids=["shown", "not-shown", "never-chosen"],
+    "options", [{"show_inferred": True}, {"show_inferred": False}, {}], ids=["shown", "not-shown", "never-chosen"]
 )
-async def test_an_entry_that_chose_whether_to_show_estimated_values_gets_the_level_that_shows_the_same(
-    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, options: dict[str, bool], level: str
+async def test_a_cts400_entry_that_chose_whether_to_show_estimated_values_is_documented(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, options: dict[str, bool]
 ) -> None:
-    """Showing the values placed only by the manual is the Test level; not showing them the
-    Documented."""
+    """A CTS400 has no value placed only by the manual, so the option changed nothing."""
+    level = "documented"
     entry = MockConfigEntry(
         domain=DOMAIN, title=NAME, unique_id=GATEWAY_ID, data=entry_data(gateway),
         options=options, version=2, minor_version=1,

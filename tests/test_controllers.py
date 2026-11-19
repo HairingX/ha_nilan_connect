@@ -327,17 +327,20 @@ async def test_an_optima_312s_electric_coil_is_shown_by_its_name(
 
 
 @pytest.mark.parametrize("gateway", [OPTIMA_301], indirect=True, ids=["optima_301"])
-async def test_an_optima_301_has_no_preheat_switch_and_its_cooling_setting_is_in_c(
+async def test_an_optima_301_shows_no_preheat_switch_below_the_test_level_and_its_cooling_setting_is_in_c(
     hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, config_entry: MockConfigEntry
 ) -> None:
-    """Its setpoint 20 is the minimum air volume, which the preheat switch wrote."""
+    """Its setpoint 20 is the minimum air volume, which the preheat switch wrote; the switch's
+    entry stays for the preheat tried at setpoint 16 at the Test level."""
     gateway.setpoint_registers[(0, 1)] = 55
     config_entry.add_to_hass(hass)
     switch = _registered(hass, config_entry, "switch", PointKey.PREHEAT_ENABLE)
     cooling = _registered(hass, config_entry, "number", PointKey.COOLING_TEMPERATURE)
     await _set_up(hass, config_entry)
     registry = er.async_get(hass)
-    assert registry.async_get(switch.entity_id) is None
+    data: NilanData = config_entry.runtime_data
+    assert switch.unique_id not in data.unique_ids
+    assert registry.async_get(switch.entity_id) is not None
     number = registry.async_get(cooling.entity_id)
     assert number is not None and number.unit_of_measurement == UnitOfTemperature.CELSIUS
     state = hass.states.get(cooling.entity_id)

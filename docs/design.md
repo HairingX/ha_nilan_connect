@@ -56,7 +56,11 @@ email and the address, and takes the name as the gateway's id for an entry witho
 Minor version 1 had the option `show_inferred`: whether a point placed only by the order of its
 manual's registers got an entity. The level replaces it. `async_migrate_entry` gives an entry that
 showed them the Test level, which shows them too, and any other the Documented, which does not, so
-an existing installation keeps its entities.
+an existing installation keeps its entities. Only a model with such points was changed by the
+option: on any other, Test would add candidates and a Repairs issue the user never asked for. The
+migration does not connect to the unit, so it takes the model from the entry's device, registered
+under the model's name, and the library's `model_points` says whether that model has an inferred
+point.
 
 ## The level of values
 
@@ -70,9 +74,12 @@ The library chooses which of a model's points a unit has by the level the client
 | `test` | every certainty, and each candidate in place of the point it replaces |
 
 An entity is created for a point the client has, so the level alone decides the entities;
-changing it reloads the entry, and the entities of points the new level leaves out are removed as
-lost. A candidate that replaces a point of the same key keeps that entity and its id: only the
-register behind it changes.
+changing it reloads the entry. An entity the new level leaves out stays in the entity registry,
+unavailable, with the name, area and settings the user gave it, for a level that has it again;
+only an entity of a point the unit has at no level - not among its model's keys, or found missing
+by its scan - is removed as lost. A candidate that replaces a point of the same key keeps that
+entity and its id: only the register behind it changes. Verified is offered only for a model
+with a verified point: on any other it would leave no entity.
 
 - **Certainty attribute.** Every entity has the state attribute `certainty`: `test-candidate` for a
   candidate, otherwise its point's `Certainty`, `verified`, `reported` or `inferred`. An entity
@@ -82,8 +89,9 @@ register behind it changes.
 - **Repairs.** At `test`, a unit with a point under test - a candidate, or an inferred point -
   raises the issue `testing_points_<entry id>`, not fixable, of severity warning (the lowest
   Home Assistant has), asking the user to report whether the values match the unit's panel, with
-  the test report form as its link. It is removed when the entry unloads, which a change of level
-  does too, and not raised at another level or for a unit with nothing under test.
+  the test report form as its link. A setup at another level, or of a unit with nothing under
+  test, removes it. Unloading does not: removing it there would forget that the user ignored it,
+  and Home Assistant removes an entry's issues with the entry.
 - **Diagnostics.** The library's `level`, `certainty` and `candidates` are lifted out of `gateway`:
   `level`, `certainty` per point, and `test`, which lists each candidate used with its value,
   certainty and the key it replaces, and each inferred point used with its value.

@@ -14,6 +14,7 @@ import yaml
 from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.const import STATE_OFF, STATE_ON
 from homeassistant.core import HomeAssistant, State
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import issue_registry as ir
 from nilan_connect import MODELS, Certainty, PointKey
@@ -154,8 +155,93 @@ async def test_an_optima_301_has_a_preheat_switch_and_a_minimum_air_volume_only_
     hass.config_entries.async_update_entry(entry, options={CONF_LEVEL: "documented"})
     await hass.config_entries.async_reload(entry.entry_id)
     await hass.async_block_till_done()
+    data: NilanData = entry.runtime_data
+    assert {f"{NAME}_preheat_enable", f"{NAME}_min_air_volume"}.isdisjoint(data.unique_ids)
+    assert {("switch", "preheat_enable"), ("number", "min_air_volume")} <= _entities(hass, entry)
+    await _unload(hass, entry)
+
+
+@pytest.mark.parametrize(
+    ("gateway", "key"), [(CTS602, "temp_room"), (CTS400, "temp_supply")], indirect=["gateway"],
+    ids=["cts602", "cts400"],
+)
+async def test_an_entity_a_level_leaves_out_keeps_its_name_for_a_level_that_has_it_again(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, key: str
+) -> None:
+    """A CTS602's room temperature is documented, not verified."""
+    entry = _entry(gateway, "documented")
+    await _set_up(hass, entry)
+    registry = er.async_get(hass)
+    entity_id = registry.async_get_entity_id("sensor", DOMAIN, f"{NAME}_{key}")
+    assert entity_id is not None
+    registry.async_update_entity(entity_id, name="Living room")
+    options: Any = hass.config_entries.options
+    for level in ("verified", "documented"):
+        flow: ConfigFlowResult = await options.async_init(entry.entry_id)
+        await options.async_configure(flow["flow_id"], {CONF_LEVEL: level})
+        await hass.async_block_till_done()
+        kept = registry.async_get(entity_id)
+        assert kept is not None and kept.name == "Living room", level
+    assert hass.states.get(entity_id) is not None
+    await _unload(hass, entry)
+
+
+# ============================================================================== migration
+
+
+def _showed_estimated_values(hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, model: str | None
+                             ) -> MockConfigEntry:
+    """An entry of minor version 1 whose user chose to show estimated values, its device
+    registered under `model`'s name, or none."""
+    entry = MockConfigEntry(
+        domain=DOMAIN, title=NAME, unique_id=GATEWAY_ID, data=entry_data(gateway),
+        options={"show_inferred": True}, version=2, minor_version=1,
+    )
+    entry.add_to_hass(hass)
+    if model is not None:
+        dr.async_get(hass).async_get_or_create(
+            config_entry_id=entry.entry_id, identifiers={(DOMAIN, NAME)}, manufacturer="Nilan", model=model
+        )
+    return entry
+
+
+async def _set_up_added(hass: HomeAssistant, entry: MockConfigEntry) -> NilanData:
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    data: NilanData = entry.runtime_data
+    return data
+
+
+@pytest.mark.parametrize("gateway", [CTS602], indirect=True, ids=["cts602"])
+async def test_an_entry_that_showed_estimated_values_of_a_model_that_has_them_is_on_test(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    entry = _showed_estimated_values(hass, gateway, "CTS 602")
+    data = await _set_up_added(hass, entry)
+    assert dict(entry.options) == {CONF_LEVEL: "test"} and str(data.client.level) == "test"
+    assert ("switch", str(PointKey.ENABLE)) in _entities(hass, entry)
+    await _unload(hass, entry)
+
+
+@pytest.mark.parametrize(
+    ("gateway", "model"),
+    [(OPTIMA_301, "Optima 301"), (OPTIMA_250, "Optima 250"), (CTS602, None)],
+    indirect=["gateway"],
+    ids=["optima_301", "optima_250", "cts602-never-registered"],
+)
+async def test_an_entry_that_showed_estimated_values_of_a_model_without_them_is_on_documented(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, model: str | None
+) -> None:
+    """Only a model with estimated values was changed by the option, so it gains no candidate,
+    no entity and no request to report."""
+    gateway.datapoint_registers[(0, 104)] = 63
+    entry = _showed_estimated_values(hass, gateway, model)
+    data = await _set_up_added(hass, entry)
+    assert dict(entry.options) == {CONF_LEVEL: "documented"} and str(data.client.level) == "documented"
     found = _entities(hass, entry)
-    assert ("switch", "preheat_enable") not in found and ("number", "min_air_volume") not in found
+    assert {("switch", "preheat_enable"), ("number", "min_air_volume")}.isdisjoint(found)
+    assert not any(point.candidate is not None for point in data.client.points.values())
+    assert _issue(hass, entry) is None
     await _unload(hass, entry)
 
 
@@ -235,6 +321,28 @@ async def test_at_the_test_level_the_user_is_asked_to_report_whether_the_points_
     assert issue.translation_placeholders == {
         "name": NAME, "model": "Optima 250", "report_url": TEST_REPORT_URL}
     await _unload(hass, entry)
+
+
+async def test_an_ignored_request_to_report_stays_ignored_when_the_entry_reloads(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    entry = _entry(gateway, "test")
+    await _set_up(hass, entry)
+    ir.async_ignore_issue(hass, DOMAIN, f"{TESTING_ISSUE}_{entry.entry_id}", True)
+    assert await hass.config_entries.async_reload(entry.entry_id)
+    await hass.async_block_till_done()
+    issue = _issue(hass, entry)
+    assert issue is not None and issue.dismissed_version is not None
+    await _unload(hass, entry)
+
+
+async def test_the_request_to_report_goes_with_the_entry(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    entry = _entry(gateway, "test")
+    await _set_up(hass, entry)
+    assert await hass.config_entries.async_remove(entry.entry_id)
+    await hass.async_block_till_done()
     assert _issue(hass, entry) is None
 
 
@@ -323,20 +431,45 @@ async def test_the_diagnostics_list_nothing_under_test_below_the_test_level(
 # ================================================================================= options
 
 
-async def test_the_options_offer_each_level_by_its_translated_name_with_where_to_report(
-    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
-) -> None:
-    entry = _entry(gateway, "documented")
-    await _set_up(hass, entry)
+async def _offered(hass: HomeAssistant, entry: MockConfigEntry) -> list[str]:
+    """The levels the entry's options offer."""
     options: Any = hass.config_entries.options
     flow: ConfigFlowResult = await options.async_init(entry.entry_id)
     schema: Any = flow.get("data_schema")
     ((marker, field),) = schema.schema.items()
     assert str(marker) == CONF_LEVEL
-    assert field.config["options"] == ["verified", "documented", "test"]
     assert field.config["translation_key"] == CONF_LEVEL
     assert flow.get("description_placeholders") == {"report_url": TEST_REPORT_URL}
+    offered: list[str] = field.config["options"]
+    return offered
+
+
+@pytest.mark.parametrize("gateway", [CTS400], indirect=True, ids=["cts400"])
+async def test_the_options_offer_each_level_by_its_translated_name_with_where_to_report(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    entry = _entry(gateway, "documented")
+    await _set_up(hass, entry)
+    assert await _offered(hass, entry) == ["verified", "documented", "test"]
     await _unload(hass, entry)
+
+
+async def test_verified_is_not_offered_for_a_model_with_no_verified_value(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    """No value of an Optima 250 has been read on a unit: Verified would leave it no entity."""
+    entry = _entry(gateway, "documented")
+    await _set_up(hass, entry)
+    assert await _offered(hass, entry) == ["documented", "test"]
+    await _unload(hass, entry)
+
+
+async def test_every_level_is_offered_while_the_unit_is_not_loaded(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    entry = _entry(gateway, "documented")
+    entry.add_to_hass(hass)
+    assert await _offered(hass, entry) == ["verified", "documented", "test"]
 
 
 @pytest.mark.parametrize("language", ["en", "da"])

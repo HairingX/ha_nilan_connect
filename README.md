@@ -24,7 +24,7 @@ Nilan Connect > Configure > *Level*.
 
 | Level | Entities |
 |---|---|
-| **Verified** | only values read on a unit of the same model |
+| **Verified**, offered where the model has such values | only values read on a unit of the same model |
 | **Documented** (the default) | also values from the manufacturer's documentation |
 | **Test** | every value: also those inferred from the order of Nilan's manual, and values tried in place of others, or new, from a source not yet confirmed on a unit |
 
@@ -36,8 +36,10 @@ without Test in a later release. The message goes when you choose another level.
 
 Every entity has the attribute *Certainty*: *Verified*, *Documented*, *Inferred* or *Test* (in the
 state attributes, `verified`, `reported`, `inferred` or `test-candidate`), the least certain of the
-values it shows. An entry that showed the estimated entities before levels existed is on Test, any
-other on Documented, so no entity comes or goes with the change.
+values it shows. An entry of a unit with estimated entities (a CTS602 or a CTS602 Light) that
+showed them before levels existed is on Test; any other is on Documented, so no entity comes or
+goes with the change. An entity that a level leaves out is kept, unavailable, with its name and
+settings, for when you choose a level that has it again.
 
 ## Installation
 

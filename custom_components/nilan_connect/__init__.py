@@ -14,9 +14,11 @@ from homeassistant.exceptions import (
     ConfigEntryError,
     ConfigEntryNotReady,
 )
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import issue_registry as ir
 from nilan_connect import (
+    MODELS,
     OPTIMA_301,
     OPTIMA_312,
     OPTIMA_314,
@@ -29,6 +31,7 @@ from nilan_connect import (
     PointKey,
     UnsupportedDeviceError,
     discover,
+    model_points,
 )
 
 from .const import (
@@ -42,7 +45,15 @@ from .const import (
     TEST_REPORT_URL,
     TESTING_ISSUE,
 )
+from .binary_sensor import BINARY_SENSORS
+from .button import BUTTONS
+from .climate import CONTROLS, THERMOSTAT
 from .data import NilanConfigEntry, NilanData, identity_text, new_client
+from .entity import NilanEntityDescription
+from .number import NUMBERS
+from .select import SELECTS
+from .sensor import EFFICIENCY, EFFICIENCY_FROM, SENSORS
+from .switch import SWITCHES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -73,6 +84,23 @@ RENAMED: tuple[tuple[frozenset[str], Platform, Key[Any], Key[Any]], ...] = (
 """The points the models of these names give a new key, on the same platform, for the same
 register and meaning: on those models, the entity of the old key becomes the new key's."""
 
+DESCRIBED: dict[str, tuple[NilanEntityDescription, ...]] = {
+    Platform.BINARY_SENSOR: BINARY_SENSORS,
+    Platform.BUTTON: BUTTONS,
+    Platform.NUMBER: NUMBERS,
+    Platform.SELECT: SELECTS,
+    Platform.SENSOR: SENSORS,
+    Platform.SWITCH: SWITCHES,
+}
+"""The entity of each point, by platform."""
+
+PLATFORM_OF: dict[str, str] = {
+    str(description.point): platform
+    for platform, descriptions in DESCRIBED.items()
+    for description in descriptions
+}
+"""The platform of each point's entity."""
+
 
 async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Bring an entry of an earlier version to this one.
@@ -80,7 +108,8 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     Version 1 kept the unit's name as `device_id`, and the address only when it was entered by
     hand; without one, the name was the gateway's id, which it was found by. Minor version 1
     chose whether to show values placed only by the manual's register order where the level
-    is chosen now: showing them is the Test level, not showing them the Documented.
+    is chosen now: showing them on a unit that has them is the Test level; not showing them, or
+    a unit without them, where the option changed nothing, the Documented.
     """
     if entry.version == 1:
         old = entry.data
@@ -99,11 +128,24 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
     if entry.version == 2 and entry.minor_version == 1:
         options = {key: setting for key, setting in entry.options.items() if key != SHOW_INFERRED}
-        level = Level.TEST if entry.options.get(SHOW_INFERRED) else Level.DOCUMENTED
+        shown = bool(entry.options.get(SHOW_INFERRED)) and _has_inferred_points(hass, entry)
+        level = Level.TEST if shown else Level.DOCUMENTED
         hass.config_entries.async_update_entry(
             entry, options={**options, CONF_LEVEL: str(level)}, minor_version=2
         )
     return True
+
+
+def _has_inferred_points(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Whether the model the entry's device was registered with has a point placed only by its
+    manual's register order."""
+    names = {device.model for device in dr.async_entries_for_config_entry(dr.async_get(hass), entry.entry_id)}
+    return any(
+        point.certainty is Certainty.INFERRED
+        for model in MODELS
+        if model.name in names
+        for point in model_points(model)
+    )
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> bool:
@@ -176,8 +218,12 @@ async def async_unload_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> bo
 @callback
 def _ask_testers_to_report(hass: HomeAssistant, entry: NilanConfigEntry, client: Client) -> None:
     """At the Test level, raise an issue asking the user to report whether the points not
-    confirmed on the unit's model match its panel, for as long as the entry is loaded; at any
-    other level, or with no such point, remove it."""
+    confirmed on the unit's model match its panel; at any other level, or with no such point,
+    remove it.
+
+    It is not removed when the entry unloads, which would forget that the user ignored it; Home
+    Assistant removes it with the entry.
+    """
     issue_id = f"{TESTING_ISSUE}_{entry.entry_id}"
     testing = any(
         point.candidate is not None or point.certainty is Certainty.INFERRED
@@ -201,7 +247,6 @@ def _ask_testers_to_report(hass: HomeAssistant, entry: NilanConfigEntry, client:
             "report_url": TEST_REPORT_URL,
         },
     )
-    entry.async_on_unload(lambda: ir.async_delete_issue(hass, DOMAIN, issue_id))
 
 
 async def _identify_gateway(hass: HomeAssistant, entry: NilanConfigEntry) -> None:
@@ -256,12 +301,28 @@ async def _keep_renamed_entities(
 
 @callback
 def _remove_lost_entities(hass: HomeAssistant, entry: NilanConfigEntry) -> None:
-    """Remove the entities of points the unit no longer has."""
+    """Remove the entities of points the unit has at no level.
+
+    An entity the chosen level leaves out stays in the registry, with its name and settings, for
+    a level that has it again.
+    """
     registry = er.async_get(hass)
-    built = entry.runtime_data.unique_ids
+    data = entry.runtime_data
     for found in er.async_entries_for_config_entry(registry, entry.entry_id):
-        if found.unique_id not in built:
+        suffix = found.unique_id.removeprefix(f"{data.name}_")
+        if found.unique_id not in data.unique_ids and not _at_some_level(data.client, found.domain, suffix):
             registry.async_remove(found.entity_id)
+
+
+def _at_some_level(client: Client, platform: str, suffix: str) -> bool:
+    """Whether the unit has, at some level, the entity of `platform` whose unique id ends with
+    `suffix` after the unit's name."""
+    keys = client.model.keys - set(client.unavailable_reasons)
+    if (platform, suffix) == (Platform.CLIMATE, THERMOSTAT):
+        return any(key in keys for key in CONTROLS)
+    if (platform, suffix) == (Platform.SENSOR, EFFICIENCY):
+        return all(key in keys for key in EFFICIENCY_FROM)
+    return suffix in keys and PLATFORM_OF.get(suffix) == platform
 
 
 def _reload_when_the_unit_changes(hass: HomeAssistant, entry: NilanConfigEntry) -> None:
