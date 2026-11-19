@@ -234,6 +234,17 @@ def test_the_quality_scale_states_every_rule_and_explains_every_exemption() -> N
             assert entry.get("comment"), f"{rule} is {entry['status']} without a reason"
 
 
+def test_a_rule_the_quality_scale_states_done_has_nothing_left_to_do() -> None:
+    text = (INTEGRATION / "quality_scale.yaml").read_text(encoding="utf-8")
+    rules = cast(dict[str, Any], yaml.safe_load(text)["rules"])
+    comments = {
+        rule: str(cast(dict[str, Any], state).get("comment", ""))
+        for rule, state in rules.items()
+        if isinstance(state, dict) and cast(dict[str, Any], state)["status"] == "done"
+    }
+    assert {rule: comment for rule, comment in comments.items() if " yet" in comment} == {}
+
+
 @pytest.mark.parametrize("point", SHOWN)
 def test_everything_the_thermostat_shows_is_also_an_entity_of_its_own(point: str) -> None:
     """Each has a history of its own, and a plain action for scripts."""
