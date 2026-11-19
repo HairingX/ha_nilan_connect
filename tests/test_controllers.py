@@ -210,6 +210,63 @@ async def test_choosing_a_state_writes_the_units_code_for_it(
     assert (0, 159, 2) in [item for command in gateway.received(SETPOINT_WRITE) for item in command.items]
 
 
+@pytest.mark.parametrize(
+    ("gateway", "old", "new"),
+    [
+        (OPTIMA_301, PointKey.TEMP_BEFORE_CONDENSER, PointKey.TEMP_BEFORE_EVAPORATOR),
+        (OPTIMA_312, PointKey.TEMP_BEFORE_CONDENSER, PointKey.TEMP_BEFORE_EVAPORATOR),
+        (OPTIMA_314, PointKey.TEMP_BEFORE_CONDENSER, PointKey.TEMP_BEFORE_EVAPORATOR),
+        (OPTIMA_301, PointKey.TEMP_ROOM, PointKey.TEMP_ROOM_PANEL),
+        (OPTIMA_312, PointKey.TEMP_ROOM, PointKey.TEMP_ROOM_PANEL),
+    ],
+    indirect=["gateway"],
+    ids=["optima_301_t5", "optima_312_t5", "optima_314_t5", "optima_301_t2", "optima_312_t2"],
+)
+async def test_the_entity_of_a_renamed_point_keeps_its_entity_id_and_history(
+    hass: HomeAssistant, config_entry: MockConfigEntry, old: str, new: str
+) -> None:
+    """The point reads the same register, with the same meaning, under a key that names it."""
+    config_entry.add_to_hass(hass)
+    before = _registered(hass, config_entry, "sensor", old)
+    await _set_up(hass, config_entry)
+    after = er.async_get(hass).async_get(before.entity_id)
+    assert after is not None and after.unique_id == f"{NAME}_{new}"
+    assert _entity(hass, "sensor", old) is None
+    assert hass.states.get(before.entity_id) is not None
+    await _unload(hass, config_entry)
+
+
+@pytest.mark.parametrize("gateway", [OPTIMA_301], indirect=True, ids=["optima_301"])
+async def test_a_renamed_points_old_entity_is_removed_where_its_new_one_exists(
+    hass: HomeAssistant, config_entry: MockConfigEntry
+) -> None:
+    config_entry.add_to_hass(hass)
+    old = _registered(hass, config_entry, "sensor", PointKey.TEMP_ROOM)
+    new = _registered(hass, config_entry, "sensor", PointKey.TEMP_ROOM_PANEL)
+    await _set_up(hass, config_entry)
+    registry = er.async_get(hass)
+    assert registry.async_get(old.entity_id) is None
+    kept = registry.async_get(new.entity_id)
+    assert kept is not None and kept.unique_id == f"{NAME}_{PointKey.TEMP_ROOM_PANEL}"
+    await _unload(hass, config_entry)
+
+
+@pytest.mark.parametrize("gateway", [CTS602_HEAT_PUMP], indirect=True, ids=["cts602_heat_pump"])
+async def test_a_cts602_keeps_its_temperatures_before_the_condenser_and_of_the_room(
+    hass: HomeAssistant, config_entry: MockConfigEntry
+) -> None:
+    """Only an Optima's T5 and T2 were renamed."""
+    config_entry.add_to_hass(hass)
+    kept = [_registered(hass, config_entry, "sensor", key)
+            for key in (PointKey.TEMP_BEFORE_CONDENSER, PointKey.TEMP_ROOM)]
+    await _set_up(hass, config_entry)
+    registry = er.async_get(hass)
+    found = [registry.async_get(entry.entity_id) for entry in kept]
+    assert [entry.unique_id if entry else None for entry in found] == [entry.unique_id for entry in kept]
+    assert _entity(hass, "sensor", PointKey.TEMP_BEFORE_EVAPORATOR) is None
+    await _unload(hass, config_entry)
+
+
 @pytest.mark.parametrize("gateway", [CTS602_HEAT_PUMP], indirect=True, ids=["cts602_heat_pump"])
 async def test_a_heat_pump_states_code_is_a_disabled_code_sensor(hass: HomeAssistant, loaded: NilanData) -> None:
     """Several of a heat pump's codes share a state; the code tells them apart."""
