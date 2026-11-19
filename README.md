@@ -17,11 +17,29 @@ central heating and heat pump, its alarms and operating states - named, in Engli
 its settings. The thermostat shows the unit's fan level and target temperature, and turns it on
 and off where the unit's on/off setting is known.
 
-Some entities of units other than the CTS400 have an address estimated from Nilan's manual, never
-checked on a real unit. They are hidden unless you choose to see them: Settings > Devices &
-services > Nilan Connect > Configure > *Show estimated, untested entities*. They may show wrong
-values, and changing one may change a different setting; please report what your unit shows in an
-issue.
+## Level of values
+
+How certain a value must be to get an entity is your choice: Settings > Devices & services >
+Nilan Connect > Configure > *Level*.
+
+| Level | Entities |
+|---|---|
+| **Verified**, offered where the model has such values | only values read on a unit of the same model |
+| **Documented** (the default) | also values from the manufacturer's documentation |
+| **Test** | every value: also those inferred from the order of Nilan's manual, and values tried in place of others, or new, from a source not yet confirmed on a unit |
+
+Test values may be wrong, and changing one may change a different setting. While a unit is on
+Test and uses such values, Settings > Repairs asks you to report whether they match your unit's
+panel, with a [test report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=test-report.yml):
+attach the diagnostics, which list each value under test. A value confirmed this way is shown
+without Test in a later release. The message goes when you choose another level.
+
+Every entity has the attribute *Certainty*: *Verified*, *Documented*, *Inferred* or *Test* (in the
+state attributes, `verified`, `reported`, `inferred` or `test-candidate`), the least certain of the
+values it shows. An entry of a unit with estimated entities (a CTS602 or a CTS602 Light) that
+showed them before levels existed is on Test; any other is on Documented, so no entity comes or
+goes with the change. An entity that a level leaves out is kept, unavailable, with its name and
+settings, for when you choose a level that has it again.
 
 ## Installation
 
@@ -66,7 +84,8 @@ values; if it leaves the next one unanswered too, they are unavailable until it 
 - **No gateway is found**: discovery is a broadcast on the local network. Enter the gateway's
   address instead.
 - The diagnostics, downloaded from the integration's entry, hold every value without the email or
-  where the gateway is.
+  where the gateway is, the level, how certain each value is, and, under `test`, each value under
+  test with what it replaces.
 
 ### Reporting a problem
 

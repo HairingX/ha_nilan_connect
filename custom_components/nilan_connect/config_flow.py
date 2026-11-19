@@ -1,25 +1,28 @@
 """Set up a Nilan unit behind its gateway, change where it is reached, renew its email, and choose
-which values it shows."""
+the level of the values it shows."""
 
 from __future__ import annotations
 
 import logging
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, cast
 
 import probatio
 from homeassistant.config_entries import (
     ConfigEntry,
+    ConfigEntryState,
     ConfigFlow,
     ConfigFlowResult,
     OptionsFlowWithReload,
 )
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT
 from homeassistant.core import callback
+from homeassistant.helpers import selector
 from nilan_connect import (
     AuthenticationError,
     CannotConnectError,
     DiscoveredDevice,
+    Level,
     UnsupportedDeviceError,
     discover,
 )
@@ -27,16 +30,24 @@ from nilan_connect import (
 from .const import (
     CONF_EMAIL,
     CONF_GATEWAY_ID,
-    CONF_SHOW_INFERRED,
+    CONF_LEVEL,
+    DEFAULT_LEVEL,
     DEFAULT_NAME,
     DEFAULT_PORT,
     DOMAIN,
+    TEST_REPORT_URL,
 )
-from .data import identity_text, new_client
+from .data import NilanConfigEntry, identity_text, new_client
 
 _LOGGER = logging.getLogger(__name__)
 
 _PORT = probatio.All(int, probatio.Range(min=1, max=65535))
+
+# HA's selector registry declares the classes registered in it without their configuration's
+# type, so the class is taken by name and given that type here.
+_SELECT = cast(
+    type[selector.Selector[selector.SelectSelectorConfig]], getattr(selector, "SelectSelector")
+)
 
 
 class EmailRefusedError(Exception):
@@ -79,7 +90,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
     id, and named by the user."""
 
     VERSION = 2
-    MINOR_VERSION = 1
+    MINOR_VERSION = 2
 
     _gateways: dict[str, DiscoveredDevice]
     _identity: str = ""
@@ -88,7 +99,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> NilanOptionsFlow:
-        """Choose which values the unit shows."""
+        """Choose the level of the values the unit shows."""
         return NilanOptionsFlow()
 
     async def async_step_user(
@@ -326,16 +337,35 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class NilanOptionsFlow(OptionsFlowWithReload):
-    """Whether values whose address is known only from the order of the manual's registers get
-    entities; the entry reloads with the choice."""
+    """The level of the values the unit shows; the entry reloads with the choice.
+
+    Verified is offered only where the unit's model has a verified point, or while the entry is
+    not loaded and its model is not known.
+    """
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         if user_input is not None:
             return self.async_create_entry(data=user_input)
-        schema = probatio.Schema({probatio.Required(CONF_SHOW_INFERRED, default=False): bool})
+        entry: NilanConfigEntry = self.config_entry
+        offered = [
+            level
+            for level in Level
+            if level is not Level.VERIFIED
+            or entry.state is not ConfigEntryState.LOADED
+            or entry.runtime_data.client.model.keys_at(Level.VERIFIED)
+        ]
+        levels = _SELECT(
+            selector.SelectSelectorConfig(
+                options=[str(level) for level in offered],
+                translation_key=CONF_LEVEL,
+                mode=selector.SelectSelectorMode.LIST,
+            )
+        )
+        schema = probatio.Schema({probatio.Required(CONF_LEVEL, default=str(DEFAULT_LEVEL)): levels})
         return self.async_show_form(
             step_id="init",
             data_schema=self.add_suggested_values_to_schema(schema, self.config_entry.options),
+            description_placeholders={"report_url": TEST_REPORT_URL},
         )

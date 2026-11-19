@@ -1,0 +1,61 @@
+name: Test report
+description: On the Test level, tell whether the values under test match your unit's panel.
+labels: ["test report"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Thank you for testing. The values under test are listed in the diagnostics, under
+        "test": each with its value, how certain it is, and the value it takes the place of.
+        Danish is fine.
+  - type: dropdown
+    id: model
+    attributes:
+      label: Model
+      description: As the diagnostics say it, under "model".
+      options:
+        - CTS 400
+        - CTS 602
+        - CTS 602 Light
+        - Optima 250
+        - Optima 251
+        - Optima 260
+        - Optima 270
+        - Optima 301
+        - Optima 312
+        - Optima 314
+    validations:
+      required: true
+  - type: input
+    id: integration_version
+    attributes:
+      label: Version of Nilan Connect
+      description: Settings > Devices & services > Nilan Connect.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: >-
+        Settings > Devices & services > Nilan Connect > the three dots > Download
+        diagnostics. Attach the file here.
+    validations:
+      required: true
+  - type: textarea
+    id: points
+    attributes:
+      label: Each value under test against the panel
+      description: >-
+        One line per value listed under "test" in the diagnostics: its name, what Home
+        Assistant shows, what the unit's panel shows at the same time, and whether they match.
+      placeholder: |
+        bypass_active: Home Assistant off, panel bypass closed - matches
+        preheat_enable: Home Assistant on, panel item 20 ON - matches
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: What the unit was doing, a value that changed, a setting you tried.

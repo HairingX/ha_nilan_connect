@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 from homeassistant.components.button import ButtonEntity, ButtonEntityDescription
 from homeassistant.const import EntityCategory
@@ -56,6 +57,9 @@ class NilanButton(NilanEntity, ButtonEntity):
         self.entity_description = description
         self._command = description.point
         super().__init__(data, str(description.point))
+
+    def _shown_points(self) -> tuple[Key[Any], ...]:
+        return (self._command,)
 
     async def async_press(self) -> None:
         await self._write(self._command, True)

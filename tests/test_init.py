@@ -20,6 +20,7 @@ import custom_components.nilan_connect as integration
 from custom_components.nilan_connect.const import (
     CONF_EMAIL,
     CONF_GATEWAY_ID,
+    CONF_LEVEL,
     DEFAULT_PORT,
     DOMAIN,
 )
@@ -261,8 +262,9 @@ async def test_an_entry_set_up_by_address_keeps_its_name_and_learns_its_gateways
     )
     await set_up(hass, entry)
     assert entry.state is ConfigEntryState.LOADED
-    assert (entry.version, entry.minor_version) == (2, 1)
+    assert (entry.version, entry.minor_version) == (2, 2)
     assert dict(entry.data) == entry_data(gateway)
+    assert dict(entry.options) == {CONF_LEVEL: "documented"}
     assert entry.unique_id == GATEWAY_ID
     await unload(hass, entry)
 
@@ -292,6 +294,27 @@ async def test_an_entry_with_an_empty_address_is_found_by_discovery(
     await set_up(hass, entry)
     assert entry.data[CONF_HOST] is None
     assert entry.state is ConfigEntryState.LOADED
+    await unload(hass, entry)
+
+
+@pytest.mark.parametrize(
+    "options", [{"show_inferred": True}, {"show_inferred": False}, {}], ids=["shown", "not-shown", "never-chosen"]
+)
+async def test_a_cts400_entry_that_chose_whether_to_show_estimated_values_is_documented(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, options: dict[str, bool]
+) -> None:
+    """A CTS400 has no value placed only by the manual, so the option changed nothing."""
+    level = "documented"
+    entry = MockConfigEntry(
+        domain=DOMAIN, title=NAME, unique_id=GATEWAY_ID, data=entry_data(gateway),
+        options=options, version=2, minor_version=1,
+    )
+    await set_up(hass, entry)
+    assert entry.state is ConfigEntryState.LOADED
+    assert (entry.version, entry.minor_version) == (2, 2)
+    assert dict(entry.options) == {CONF_LEVEL: level}
+    data: NilanData = entry.runtime_data
+    assert str(data.client.level) == level
     await unload(hass, entry)
 
 

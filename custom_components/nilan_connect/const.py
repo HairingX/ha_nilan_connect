@@ -2,7 +2,7 @@
 
 from typing import Final
 
-from nilan_connect import PORT
+from nilan_connect import PORT, Level
 
 DOMAIN: Final = "nilan_connect"
 
@@ -12,9 +12,27 @@ CONF_EMAIL: Final = "email"
 CONF_GATEWAY_ID: Final = "gateway_id"
 """The id the gateway answers discovery with; None while it is not known."""
 
-CONF_SHOW_INFERRED: Final = "show_inferred"
-"""Whether a value whose address is known only from the order of its manual's registers gets an
-entity."""
+CONF_LEVEL: Final = "level"
+"""Which of the unit's points get an entity: a `Level`, stored by its text."""
+
+DEFAULT_LEVEL: Final = Level.DOCUMENTED
+"""The level of an entry whose user has not chosen one."""
+
+SHOW_INFERRED: Final = "show_inferred"
+"""The option an entry of minor version 1 had in place of the level: whether a value placed only
+by the order of its manual's registers got an entity."""
+
+ATTR_CERTAINTY: Final = "certainty"
+"""The state attribute saying how certain the points an entity shows are."""
+
+TEST_CANDIDATE: Final = "test-candidate"
+"""The certainty of a point tried only at the Test level."""
+
+TESTING_ISSUE: Final = "testing_points"
+"""The Repairs issue asking a user at the Test level to report what the unit shows."""
+
+TEST_REPORT_URL: Final = "https://github.com/HairingX/ha_nilan_connect/issues/new?template=test-report.yml"
+"""Where a user reports whether the points tried match the unit's panel."""
 
 DEFAULT_NAME: Final = "Nilan"
 """What a unit is called unless the user names it: every unique id starts with the name, so the

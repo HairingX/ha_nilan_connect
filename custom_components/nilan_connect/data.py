@@ -7,7 +7,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 
 from homeassistant.config_entries import ConfigEntry
-from nilan_connect import Client, Key, create_client
+from nilan_connect import Client, Key, Level, create_client
 
 type NilanConfigEntry = ConfigEntry[NilanData]
 
@@ -19,8 +19,6 @@ class NilanData:
     client: Client
     name: str
     """The unit's name, which every unique id and the device's identifier start with."""
-    show_inferred: bool = False
-    """Whether a value placed only by its manual's register order gets an entity."""
     poller: asyncio.Task[None] | None = field(default=None, repr=False)
     unique_ids: set[str] = field(default_factory=set[str])
     """The unique id of every entity built for the entry, disabled ones included."""
@@ -32,11 +30,13 @@ def new_client(
     port: int,
     gateway_id: str | None,
     *,
+    level: Level = Level.DOCUMENTED,
     read_only: bool = False,
 ) -> Client:
-    """A client for the gateway at `host`, or found by `gateway_id`; not yet connected."""
+    """A client for the gateway at `host`, or found by `gateway_id`, with the points of `level`;
+    not yet connected."""
     return create_client(
-        email=email, host=host, port=port, device_id=gateway_id, read_only=read_only
+        email=email, host=host, port=port, device_id=gateway_id, level=level, read_only=read_only
     )
 
 

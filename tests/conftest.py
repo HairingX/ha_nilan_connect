@@ -15,7 +15,7 @@ import pytest
 import pytest_socket
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT
 from homeassistant.core import HomeAssistant
-from nilan_connect import PORT, Client, Clock, DiscoveredDevice, create_client
+from nilan_connect import PORT, Client, Clock, DiscoveredDevice, Level, create_client
 from nilan_connect.testing import FakeClock, SimulatedMicroNabtoDevice, client_for
 from pytest_homeassistant.common import MockConfigEntry
 
@@ -113,17 +113,19 @@ def simulated_network(
         host: str | None = None,
         device_id: str | None = None,
         port: int = PORT,
+        level: Level = Level.DOCUMENTED,
         read_only: bool = False,
         clock: Clock | None = None,
     ) -> Client:
         if (host, port) == gateway.address or (host is None and device_id == gateway.device_id):
             client = client_for(
-                gateway, email=email, timeout=0.2, retries=1, clock=clock or fake, read_only=read_only
+                gateway, email=email, timeout=0.2, retries=1, clock=clock or fake, level=level,
+                read_only=read_only,
             )
         else:
             client = create_client(
-                email=email, host=host, device_id=device_id, port=port, read_only=read_only,
-                clock=clock or fake,
+                email=email, host=host, device_id=device_id, port=port, level=level,
+                read_only=read_only, clock=clock or fake,
             )
         made.append(client)
         return client

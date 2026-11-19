@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterable
 from dataclasses import dataclass
 from enum import IntEnum
 from typing import Any
@@ -13,16 +14,26 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import Entity, EntityDescription
 from nilan_connect import (
     Certainty,
+    Client,
     DataValue,
     InvalidValueError,
     Key,
     Status,
 )
 
-from .const import DOMAIN
+from .const import ATTR_CERTAINTY, DOMAIN, TEST_CANDIDATE
 from .data import NilanData, value
 
 _LOGGER = logging.getLogger(__name__)
+
+CERTAINTIES: tuple[str, ...] = (
+    TEST_CANDIDATE,
+    str(Certainty.INFERRED),
+    str(Certainty.REPORTED),
+    str(Certainty.VERIFIED),
+)
+"""Every value of an entity's certainty attribute, the least certain first."""
+
 
 @dataclass(frozen=True, kw_only=True)
 class NilanEntityDescription(EntityDescription):
@@ -32,12 +43,18 @@ class NilanEntityDescription(EntityDescription):
 
 
 def shown(data: NilanData, key: Key[Any]) -> bool:
-    """Whether the unit has `key` at an address read on a unit or found published, or placed by
-    its manual's register order when the user has chosen to see those too."""
-    if not data.client.has(key):
-        return False
-    (point,) = data.client.select([key])
-    return data.show_inferred or point.certainty is not Certainty.INFERRED
+    """Whether the unit has `key` at the level the user has chosen."""
+    return data.client.has(key)
+
+
+def certainty(client: Client, keys: Iterable[Key[Any]]) -> str:
+    """How certain the least certain point of `keys` is: `test-candidate` for a point tried only
+    at the Test level, otherwise its `Certainty`."""
+    found = [
+        TEST_CANDIDATE if point.candidate is not None else str(point.certainty)
+        for point in client.select(list(keys))
+    ]
+    return min(found, key=CERTAINTIES.index)
 
 
 def state_name(state: IntEnum) -> str:
@@ -70,6 +87,8 @@ def usable(current: DataValue[Any] | None) -> bool:
 class NilanEntity(Entity):
     """An entity kept current by the client's subscriptions; it is never polled by HA.
 
+    Its state attribute `certainty` is that of the least certain point it shows or writes.
+
     A subclass sets its `_attr_` values in `_show`, which runs here, before HA reads the
     entity's capabilities, and then on every change of a watched key and of whether the
     gateway answers. What `_show` uses is set before calling this constructor.
@@ -77,12 +96,15 @@ class NilanEntity(Entity):
 
     _attr_has_entity_name = True
     _attr_should_poll = False
+    # It changes only with the level, which reloads the entry.
+    _unrecorded_attributes = frozenset({ATTR_CERTAINTY})
 
     def __init__(self, data: NilanData, unique_key: str) -> None:
         """`unique_key` follows the unit's name in the unique id."""
         self._client = data.client
         self._attr_unique_id = f"{data.name}_{unique_key}"
         self._attr_device_info = device_info(data)
+        self._attr_extra_state_attributes = {ATTR_CERTAINTY: certainty(data.client, self._shown_points())}
         data.unique_ids.add(self._attr_unique_id)
         self._added = False
         self._changed()
@@ -90,6 +112,10 @@ class NilanEntity(Entity):
     def _watched(self) -> tuple[Key[Any], ...]:
         """Every key whose change changes this entity's state."""
         return ()
+
+    def _shown_points(self) -> tuple[Key[Any], ...]:
+        """Every key this entity shows or writes."""
+        return self._watched()
 
     def _required(self) -> tuple[Key[Any], ...]:
         """The watched keys without whose value the entity is unavailable."""

@@ -27,7 +27,7 @@ from nilan_connect.testing import SimulatedMicroNabtoDevice
 from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.nilan_connect.climate import THERMOSTAT
-from custom_components.nilan_connect.const import CONF_SHOW_INFERRED, DOMAIN
+from custom_components.nilan_connect.const import CONF_LEVEL, DOMAIN
 from custom_components.nilan_connect.data import NilanData
 from custom_components.nilan_connect.sensor import EFFICIENCY
 
@@ -85,11 +85,12 @@ async def _unload(hass: HomeAssistant, entry: MockConfigEntry) -> None:
     await hass.async_block_till_done()
 
 
-def _with_inferred(gateway: SimulatedMicroNabtoDevice) -> MockConfigEntry:
-    """An entry whose user has chosen to see the values found only from the manual."""
+def _at_test_level(gateway: SimulatedMicroNabtoDevice) -> MockConfigEntry:
+    """An entry whose user has chosen the Test level, which shows the values found only from the
+    manual."""
     return MockConfigEntry(
         domain=DOMAIN, title=NAME, unique_id=GATEWAY_ID, data=entry_data(gateway),
-        options={CONF_SHOW_INFERRED: True}, version=2, minor_version=1,
+        options={CONF_LEVEL: "test"}, version=2, minor_version=2,
     )
 
 
@@ -109,7 +110,7 @@ def _state(hass: HomeAssistant, platform: str, key: str) -> State:
 @pytest.mark.parametrize("gateway", [CTS602], indirect=True, ids=["cts602"])
 async def test_a_point_placed_only_by_the_manual_gets_no_entity(hass: HomeAssistant, loaded: NilanData) -> None:
     """A CTS602's run setting is placed by its manual's register order."""
-    assert loaded.client.has(PointKey.ENABLE)
+    assert not loaded.client.has(PointKey.ENABLE)
     assert _entity(hass, "switch", PointKey.ENABLE) is None
 
 
@@ -123,13 +124,10 @@ async def test_a_unit_without_a_shown_run_setting_has_a_thermostat_that_cannot_t
 
 
 @pytest.mark.parametrize("gateway", [CTS602], indirect=True, ids=["cts602"])
-async def test_the_user_can_choose_to_see_values_found_only_from_the_manual(
+async def test_at_the_test_level_a_value_found_only_from_the_manual_gets_an_entity(
     hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
 ) -> None:
-    entry = MockConfigEntry(
-        domain=DOMAIN, title=NAME, unique_id=GATEWAY_ID, data=entry_data(gateway),
-        options={CONF_SHOW_INFERRED: True}, version=2, minor_version=1,
-    )
+    entry = _at_test_level(gateway)
     entry.add_to_hass(hass)
     assert await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
@@ -139,17 +137,19 @@ async def test_the_user_can_choose_to_see_values_found_only_from_the_manual(
     await hass.async_block_till_done()
 
 
-async def test_the_choice_to_see_them_is_an_option_of_the_entry(
+async def test_the_level_is_an_option_of_the_entry(
     hass: HomeAssistant, config_entry: MockConfigEntry, loaded: NilanData
 ) -> None:
     # HA declares the options manager's user input as a bare `dict`.
     options: Any = hass.config_entries.options
     flow: ConfigFlowResult = await options.async_init(config_entry.entry_id)
     assert flow.get("type") is FlowResultType.FORM
-    result: ConfigFlowResult = await options.async_configure(flow["flow_id"], {CONF_SHOW_INFERRED: True})
+    result: ConfigFlowResult = await options.async_configure(flow["flow_id"], {CONF_LEVEL: "test"})
     await hass.async_block_till_done()
     assert result.get("type") is FlowResultType.CREATE_ENTRY
-    assert config_entry.options == {CONF_SHOW_INFERRED: True}
+    assert config_entry.options == {CONF_LEVEL: "test"}
+    data: NilanData = config_entry.runtime_data
+    assert str(data.client.level) == "test"
 
 
 @pytest.mark.parametrize("gateway", [CTS602], indirect=True, ids=["cts602"])
@@ -175,7 +175,7 @@ async def test_a_setting_no_source_gives_a_range_for_gets_no_number(
     hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
 ) -> None:
     """A CTS602's service capacity is placed by its manual, which gives it no range."""
-    entry = _with_inferred(gateway)
+    entry = _at_test_level(gateway)
     await _set_up(hass, entry)
     data: NilanData = entry.runtime_data
     assert data.client.has(PointKey.SERVICE_CAPACITY)
@@ -327,17 +327,20 @@ async def test_an_optima_312s_electric_coil_is_shown_by_its_name(
 
 
 @pytest.mark.parametrize("gateway", [OPTIMA_301], indirect=True, ids=["optima_301"])
-async def test_an_optima_301_has_no_preheat_switch_and_its_cooling_setting_is_in_c(
+async def test_an_optima_301_shows_no_preheat_switch_below_the_test_level_and_its_cooling_setting_is_in_c(
     hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, config_entry: MockConfigEntry
 ) -> None:
-    """Its setpoint 20 is the minimum air volume, which the preheat switch wrote."""
+    """Its setpoint 20 is the minimum air volume, which the preheat switch wrote; the switch's
+    entry stays for the preheat tried at setpoint 16 at the Test level."""
     gateway.setpoint_registers[(0, 1)] = 55
     config_entry.add_to_hass(hass)
     switch = _registered(hass, config_entry, "switch", PointKey.PREHEAT_ENABLE)
     cooling = _registered(hass, config_entry, "number", PointKey.COOLING_TEMPERATURE)
     await _set_up(hass, config_entry)
     registry = er.async_get(hass)
-    assert registry.async_get(switch.entity_id) is None
+    data: NilanData = config_entry.runtime_data
+    assert switch.unique_id not in data.unique_ids
+    assert registry.async_get(switch.entity_id) is not None
     number = registry.async_get(cooling.entity_id)
     assert number is not None and number.unit_of_measurement == UnitOfTemperature.CELSIUS
     state = hass.states.get(cooling.entity_id)
@@ -392,7 +395,7 @@ async def test_a_cts602s_electric_hot_water_supplement_is_a_switch(
 ) -> None:
     """HR 1704 HotWater.HeatType: "Use of electricity supplement: 0=OFF, 1=El"; it was a select."""
     gateway.setpoint_registers[(0, 193)] = 1
-    entry = _with_inferred(gateway)
+    entry = _at_test_level(gateway)
     entry.add_to_hass(hass)
     select = _registered(hass, entry, "select", "hotwater_supplement")
     await _set_up(hass, entry)

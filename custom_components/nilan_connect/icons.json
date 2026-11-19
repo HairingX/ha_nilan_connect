@@ -106,6 +106,9 @@
       "fan_level4_extract_preset": {
         "default": "mdi:fan"
       },
+      "min_air_volume": {
+        "default": "mdi:fan-minus"
+      },
       "fan_level_high_co2": {
         "default": "mdi:fan-chevron-up"
       },
