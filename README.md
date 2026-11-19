@@ -17,11 +17,27 @@ central heating and heat pump, its alarms and operating states - named, in Engli
 its settings. The thermostat shows the unit's fan level and target temperature, and turns it on
 and off where the unit's on/off setting is known.
 
-Some entities of units other than the CTS400 have an address estimated from Nilan's manual, never
-checked on a real unit. They are hidden unless you choose to see them: Settings > Devices &
-services > Nilan Connect > Configure > *Show estimated, untested entities*. They may show wrong
-values, and changing one may change a different setting; please report what your unit shows in an
-issue.
+## Level of values
+
+How certain a value must be to get an entity is your choice: Settings > Devices & services >
+Nilan Connect > Configure > *Level*.
+
+| Level | Entities |
+|---|---|
+| **Verified** | only values read on a unit of the same model |
+| **Documented** (the default) | also values from the manufacturer's documentation |
+| **Test** | every value: also those inferred from the order of Nilan's manual, and values tried in place of others, or new, from a source not yet confirmed on a unit |
+
+Test values may be wrong, and changing one may change a different setting. Please tell whether
+they match your unit's panel in a
+[test report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=test-report.yml),
+with the diagnostics attached. A value confirmed this way is shown without Test in a later
+release.
+
+Every entity has the attribute *Certainty*: *Verified*, *Documented*, *Inferred* or *Test* (in the
+state attributes, `verified`, `reported`, `inferred` or `test-candidate`), the least certain of the
+values it shows. An entry that showed the estimated entities before levels existed is on Test, any
+other on Documented, so no entity comes or goes with the change.
 
 ## Installation
 

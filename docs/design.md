@@ -51,11 +51,41 @@ Version 1 kept the name as `device_id`, the email as `authorized_email`, and the
 found by discovery, so its name was the gateway's id. `async_migrate_entry` keeps the name, the
 email and the address, and takes the name as the gateway's id for an entry without an address.
 
+### Entries of minor version 1
+
+Minor version 1 had the option `show_inferred`: whether a point placed only by the order of its
+manual's registers got an entity. The level replaces it. `async_migrate_entry` gives an entry that
+showed them the Test level, which shows them too, and any other the Documented, which does not, so
+an existing installation keeps its entities.
+
+## The level of values
+
+The library chooses which of a model's points a unit has by the level the client is made with
+(`nilan_connect.Level`), stored by its text as the entry's one option:
+
+| Level | Points |
+|---|---|
+| `verified` | `Certainty.VERIFIED` |
+| `documented`, the default | `VERIFIED` and `REPORTED` |
+| `test` | every certainty, and each candidate in place of the point it replaces |
+
+An entity is created for a point the client has, so the level alone decides the entities;
+changing it reloads the entry, and the entities of points the new level leaves out are removed as
+lost. A candidate that replaces a point of the same key keeps that entity and its id: only the
+register behind it changes.
+
+- **Certainty attribute.** Every entity has the state attribute `certainty`: `test-candidate` for a
+  candidate, otherwise its point's `Certainty`, `verified`, `reported` or `inferred`. An entity
+  that shows several points, such as the thermostat or the efficiency, has the least certain of
+  them, in that order. It is translated per entity, as Home Assistant translates a state attribute
+  by the entity's translation key, and not recorded, as it changes only with a reload.
+
 ## Entities
 
 Each platform describes its entities once per point, and creates one where the unit has that
-point. A CTS400 has every entity it had with version 1 of this integration, on the same platform,
-with the same unique id, disabled or hidden by default as it was: a test holds the whole list.
+point at the entry's level. A CTS400 has every entity it had with version 1 of this integration,
+on the same platform, with the same unique id, disabled or hidden by default as it was: a test
+holds the whole list, on an entry migrated from minor version 1.
 
 An entity subscribes to its keys and to the client's `CONNECTED` status, and sets its `_attr_`
 values in `_show` on every change. It sets them in its constructor too: Home Assistant reads

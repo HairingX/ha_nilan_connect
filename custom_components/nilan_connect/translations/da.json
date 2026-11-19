@@ -192,13 +192,46 @@
           "sensor_t9_error": "Fejl i føler T9",
           "sensor_t10_error": "Fejl i føler T10",
           "sensor_t11_error": "Fejl i føler T11"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "alarm_1_code": {
-        "name": "Alarmkode 1"
+        "name": "Alarmkode 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_1_info": {
-        "name": "Alarminfo 1"
+        "name": "Alarminfo 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_2": {
         "name": "Alarm 2",
@@ -307,13 +340,46 @@
           "sensor_t9_error": "Fejl i føler T9",
           "sensor_t10_error": "Fejl i føler T10",
           "sensor_t11_error": "Fejl i føler T11"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "alarm_2_code": {
-        "name": "Alarmkode 2"
+        "name": "Alarmkode 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_2_info": {
-        "name": "Alarminfo 2"
+        "name": "Alarminfo 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_3": {
         "name": "Alarm 3",
@@ -422,25 +488,102 @@
           "sensor_t9_error": "Fejl i føler T9",
           "sensor_t10_error": "Fejl i føler T10",
           "sensor_t11_error": "Fejl i føler T11"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "alarm_3_code": {
-        "name": "Alarmkode 3"
+        "name": "Alarmkode 3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_3_info": {
-        "name": "Alarminfo 3"
+        "name": "Alarminfo 3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_bits": {
-        "name": "Alarmbits"
+        "name": "Alarmbits",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_bits_high": {
-        "name": "Alarmbits, høje"
+        "name": "Alarmbits, høje",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "bypass_position": {
-        "name": "Bypass-spjældets stilling"
+        "name": "Bypass-spjældets stilling",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "co2_level": {
-        "name": "CO2-niveau"
+        "name": "CO2-niveau",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "damper_test_day": {
         "name": "Dag for spjældtest",
@@ -453,10 +596,32 @@
           "friday": "Fredag",
           "saturday": "Lørdag",
           "sunday": "Søndag"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "damper_test_last_date": {
-        "name": "Seneste spjældtest"
+        "name": "Seneste spjældtest",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "damper_test_state": {
         "name": "Spjældtest",
@@ -468,13 +633,46 @@
           "opening": "Åbner",
           "ok": "OK",
           "error": "Fejl"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "discharge_pressure": {
-        "name": "Afgangstryk"
+        "name": "Afgangstryk",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "efficiency": {
-        "name": "Varmegenvindingsgrad"
+        "name": "Varmegenvindingsgrad",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "electric_coil": {
         "name": "Elvarmeflade",
@@ -482,37 +680,158 @@
           "none": "Ingen",
           "reheat": "Eftervarme",
           "preheat": "Forvarme"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "fan_dutycycle_extract": {
-        "name": "Ventilatorhastighed, udsugning"
+        "name": "Ventilatorhastighed, udsugning",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_dutycycle_supply": {
-        "name": "Ventilatorhastighed, indblæsning"
+        "name": "Ventilatorhastighed, indblæsning",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_current": {
-        "name": "Aktuelt ventilationstrin"
+        "name": "Aktuelt ventilationstrin",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_extract": {
-        "name": "Ventilationstrin, udsugning"
+        "name": "Ventilationstrin, udsugning",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_supply": {
-        "name": "Ventilationstrin, indblæsning"
+        "name": "Ventilationstrin, indblæsning",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_rpm_extract": {
-        "name": "Omdrejninger, udsugning"
+        "name": "Omdrejninger, udsugning",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_rpm_supply": {
-        "name": "Omdrejninger, indblæsning"
+        "name": "Omdrejninger, indblæsning",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_replace_time_ago": {
-        "name": "Tid siden filterskift"
+        "name": "Tid siden filterskift",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_replace_time_remain": {
-        "name": "Tid til filterskift"
+        "name": "Tid til filterskift",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_capacity": {
-        "name": "Varmepumpens kapacitet"
+        "name": "Varmepumpens kapacitet",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_state": {
         "name": "Varmepumpens tilstand",
@@ -555,22 +874,88 @@
           "manual": "Manuel",
           "external_stop": "Eksternt stop",
           "forced_low_speed": "Tvungen lav hastighed"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "heat_pump_state_code": {
-        "name": "Varmepumpens tilstandskode"
+        "name": "Varmepumpens tilstandskode",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity": {
-        "name": "Luftfugtighed"
+        "name": "Luftfugtighed",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_average": {
-        "name": "Gennemsnitlig luftfugtighed"
+        "name": "Gennemsnitlig luftfugtighed",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_high_level": {
-        "name": "Højt fugtniveau"
+        "name": "Højt fugtniveau",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_high_level_time": {
-        "name": "Varighed af høj fugt"
+        "name": "Varighed af høj fugt",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "operation_mode_current": {
         "name": "Aktuel driftsform",
@@ -580,6 +965,17 @@
           "cool": "Køl",
           "auto": "Auto",
           "service": "Service"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "operation_state": {
@@ -623,421 +1019,1942 @@
           "manual": "Manuel",
           "external_stop": "Eksternt stop",
           "forced_low_speed": "Tvungen lav hastighed"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "preheat_output": {
-        "name": "Forvarmens effekt"
+        "name": "Forvarmens effekt",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "reheat_output": {
-        "name": "Eftervarmens effekt"
+        "name": "Eftervarmens effekt",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "rotor_speed": {
-        "name": "Rotorens omdrejninger"
+        "name": "Rotorens omdrejninger",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "state_code": {
-        "name": "Tilstandskode"
+        "name": "Tilstandskode",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "suction_pressure": {
-        "name": "Sugetryk"
+        "name": "Sugetryk",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_after_condenser": {
-        "name": "Temperatur efter kondensator"
+        "name": "Temperatur efter kondensator",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_aux": {
-        "name": "Ekstra temperatur"
+        "name": "Ekstra temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_before_condenser": {
-        "name": "Temperatur før kondensator"
+        "name": "Temperatur før kondensator",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_before_evaporator": {
-        "name": "Temperatur før fordamper"
+        "name": "Temperatur før fordamper",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_buffer_tank": {
-        "name": "Buffertankens temperatur"
+        "name": "Buffertankens temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_return": {
-        "name": "Centralvarme, returløb"
+        "name": "Centralvarme, returløb",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_supply": {
-        "name": "Centralvarme, fremløb"
+        "name": "Centralvarme, fremløb",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_condenser": {
-        "name": "Kondensatorens temperatur"
+        "name": "Kondensatorens temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_controller": {
-        "name": "Styringens temperatur"
+        "name": "Styringens temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_evaporator": {
-        "name": "Fordamperens temperatur"
+        "name": "Fordamperens temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_exhaust": {
-        "name": "Afkastluftens temperatur"
+        "name": "Afkastluftens temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_extract": {
-        "name": "Udsugningsluftens temperatur"
+        "name": "Udsugningsluftens temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_frost_protection": {
-        "name": "Frostsikringens temperatur"
+        "name": "Frostsikringens temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_heat_pump_outdoor": {
-        "name": "Varmepumpens udetemperatur"
+        "name": "Varmepumpens udetemperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_heater": {
-        "name": "Varmefladens temperatur"
+        "name": "Varmefladens temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater_bottom": {
-        "name": "Varmtvand, bund"
+        "name": "Varmtvand, bund",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater_top": {
-        "name": "Varmtvand, top"
+        "name": "Varmtvand, top",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_intake": {
-        "name": "Indtagsluftens temperatur"
+        "name": "Indtagsluftens temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_outside": {
-        "name": "Udeluftens temperatur"
+        "name": "Udeluftens temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_preheat_intake": {
-        "name": "Temperatur før forvarme"
+        "name": "Temperatur før forvarme",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_pressure_pipe": {
-        "name": "Trykrørets temperatur"
+        "name": "Trykrørets temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_room": {
-        "name": "Rumtemperatur"
+        "name": "Rumtemperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_room_panel": {
-        "name": "Rumtemperatur ved panel"
+        "name": "Rumtemperatur ved panel",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_supply": {
-        "name": "Indblæsningsluftens temperatur"
+        "name": "Indblæsningsluftens temperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_supply_after_heater": {
-        "name": "Indblæsningstemperatur efter varmeflade"
+        "name": "Indblæsningstemperatur efter varmeflade",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "time_in_state": {
-        "name": "Tid i tilstand"
+        "name": "Tid i tilstand",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "voc_level": {
-        "name": "VOC-niveau"
+        "name": "VOC-niveau",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       }
     },
     "binary_sensor": {
       "alarm_external_filter": {
-        "name": "Ekstern filteralarm"
+        "name": "Ekstern filteralarm",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_external_stop": {
-        "name": "Eksternt stop"
+        "name": "Eksternt stop",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_extract_fan_error": {
-        "name": "Fejl i udsugningsventilator"
+        "name": "Fejl i udsugningsventilator",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fan_error": {
-        "name": "Ventilatorfejl"
+        "name": "Ventilatorfejl",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_box_1_error": {
-        "name": "Fejl i brandboks 1"
+        "name": "Fejl i brandboks 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_box_2_error": {
-        "name": "Fejl i brandboks 2"
+        "name": "Fejl i brandboks 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_damper_1_error": {
-        "name": "Fejl i brandspjæld 1"
+        "name": "Fejl i brandspjæld 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_damper_2_error": {
-        "name": "Fejl i brandspjæld 2"
+        "name": "Fejl i brandspjæld 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_damper_3_error": {
-        "name": "Fejl i brandspjæld 3"
+        "name": "Fejl i brandspjæld 3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_damper_4_error": {
-        "name": "Fejl i brandspjæld 4"
+        "name": "Fejl i brandspjæld 4",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_test_error": {
-        "name": "Fejl i brandtest"
+        "name": "Fejl i brandtest",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_flow_temperature_error": {
-        "name": "Fejl i fremløbstemperatur"
+        "name": "Fejl i fremløbstemperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_frost_failure": {
-        "name": "Frostsikringsfejl"
+        "name": "Frostsikringsfejl",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_high_pressure": {
-        "name": "Højtryk"
+        "name": "Højtryk",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_humidity_sensor_error": {
-        "name": "Fejl i fugtføler"
+        "name": "Fejl i fugtføler",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_internal_modbus": {
-        "name": "Intern Modbus"
+        "name": "Intern Modbus",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_low_pressure": {
-        "name": "Lavtryk"
+        "name": "Lavtryk",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_panel_communication": {
-        "name": "Panelkommunikation"
+        "name": "Panelkommunikation",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_return_temperature_error": {
-        "name": "Fejl i returtemperatur"
+        "name": "Fejl i returtemperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_rotor": {
-        "name": "Rotor"
+        "name": "Rotor",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_error": {
-        "name": "Følerfejl"
+        "name": "Følerfejl",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t10_error": {
-        "name": "Fejl i føler T10"
+        "name": "Fejl i føler T10",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t11_error": {
-        "name": "Fejl i føler T11"
+        "name": "Fejl i føler T11",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t1_error": {
-        "name": "Fejl i føler T1"
+        "name": "Fejl i føler T1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t2_error": {
-        "name": "Fejl i føler T2"
+        "name": "Fejl i føler T2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t3_error": {
-        "name": "Fejl i føler T3"
+        "name": "Fejl i føler T3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t4_error": {
-        "name": "Fejl i føler T4"
+        "name": "Fejl i føler T4",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t5_error": {
-        "name": "Fejl i føler T5"
+        "name": "Fejl i føler T5",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t6_error": {
-        "name": "Fejl i føler T6"
+        "name": "Fejl i føler T6",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t7_error": {
-        "name": "Fejl i føler T7"
+        "name": "Fejl i føler T7",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t8_error": {
-        "name": "Fejl i føler T8"
+        "name": "Fejl i føler T8",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t9_error": {
-        "name": "Fejl i føler T9"
+        "name": "Fejl i føler T9",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_status": {
-        "name": "Alarm"
+        "name": "Alarm",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_supply_fan_error": {
-        "name": "Fejl i indblæsningsventilator"
+        "name": "Fejl i indblæsningsventilator",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "bypass_active": {
-        "name": "Bypass-spjæld"
+        "name": "Bypass-spjæld",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "defrost_active": {
-        "name": "Afisning"
+        "name": "Afisning",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "digital_input_1": {
-        "name": "Digital indgang 1"
+        "name": "Digital indgang 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "digital_input_2": {
-        "name": "Digital indgang 2"
+        "name": "Digital indgang 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "digital_input_3": {
-        "name": "Digital indgang 3"
+        "name": "Digital indgang 3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_overridden": {
-        "name": "Ventilationstrin overstyret"
+        "name": "Ventilationstrin overstyret",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_ok": {
-        "name": "Filterskift"
+        "name": "Filterskift",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_active": {
-        "name": "Varmepumpe"
+        "name": "Varmepumpe",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_heater_active": {
-        "name": "Varmepumpens elvarme"
+        "name": "Varmepumpens elvarme",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_room_heating": {
-        "name": "Varmepumpe, rumopvarmning"
+        "name": "Varmepumpe, rumopvarmning",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_water_heating": {
-        "name": "Varmepumpe, vandopvarmning"
+        "name": "Varmepumpe, vandopvarmning",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_average_ok": {
-        "name": "24-timers fugtgennemsnit OK"
+        "name": "24-timers fugtgennemsnit OK",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_high_active": {
-        "name": "Høj luftfugtighed"
+        "name": "Høj luftfugtighed",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "preheat_coil_fitted": {
-        "name": "Forvarmeflade monteret"
+        "name": "Forvarmeflade monteret",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "reheat_active": {
-        "name": "Eftervarme"
+        "name": "Eftervarme",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "reheat_coil_fitted": {
-        "name": "Eftervarmeflade monteret"
+        "name": "Eftervarmeflade monteret",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "running": {
-        "name": "Kører"
+        "name": "Kører",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "sacrificial_anode_ok": {
-        "name": "Udskiftning af anode"
+        "name": "Udskiftning af anode",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "winter_mode_active": {
-        "name": "Vintertilstand"
+        "name": "Vintertilstand",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       }
     },
     "button": {
       "alarm_reset": {
-        "name": "Nulstil alarm"
+        "name": "Nulstil alarm",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_replace_reset": {
-        "name": "Nulstil filtertimer"
+        "name": "Nulstil filtertimer",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       }
     },
     "number": {
       "boost_time": {
-        "name": "Varighed af boost"
+        "name": "Varighed af boost",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "bypass_fan_increase": {
-        "name": "Bypass, øget ventilation"
+        "name": "Bypass, øget ventilation",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "central_heat_curve": {
-        "name": "Centralvarmekurve"
+        "name": "Centralvarmekurve",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "central_heat_regulation_time": {
-        "name": "Centralvarme, reguleringstid"
+        "name": "Centralvarme, reguleringstid",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "co2_threshold": {
-        "name": "Højt CO2-niveau"
+        "name": "Højt CO2-niveau",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "cooling_temperature": {
-        "name": "Køletemperatur"
+        "name": "Køletemperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "defrost_break_time": {
-        "name": "Tid mellem afisninger"
+        "name": "Tid mellem afisninger",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "defrost_max_time": {
-        "name": "Længste afisning"
+        "name": "Længste afisning",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level1_extract_preset": {
-        "name": "Udsugning, trin 1"
+        "name": "Udsugning, trin 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level1_supply_preset": {
-        "name": "Indblæsning, trin 1"
+        "name": "Indblæsning, trin 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level2_extract_preset": {
-        "name": "Udsugning, trin 2"
+        "name": "Udsugning, trin 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level2_supply_preset": {
-        "name": "Indblæsning, trin 2"
+        "name": "Indblæsning, trin 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level3_extract_preset": {
-        "name": "Udsugning, trin 3"
+        "name": "Udsugning, trin 3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level3_supply_preset": {
-        "name": "Indblæsning, trin 3"
+        "name": "Indblæsning, trin 3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level4_extract_preset": {
-        "name": "Udsugning, trin 4"
+        "name": "Udsugning, trin 4",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level4_supply_preset": {
-        "name": "Indblæsning, trin 4"
+        "name": "Indblæsning, trin 4",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_cooling": {
-        "name": "Ventilationstrin ved køling"
+        "name": "Ventilationstrin ved køling",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
+      },
+      "min_air_volume": {
+        "name": "Minimum luftmængde",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_high_co2": {
-        "name": "Ventilationstrin ved højt CO2"
+        "name": "Ventilationstrin ved højt CO2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_high_humidity": {
-        "name": "Ventilationstrin ved høj fugt"
+        "name": "Ventilationstrin ved høj fugt",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_high_humidity_time": {
-        "name": "Længste tid ved høj fugt"
+        "name": "Længste tid ved høj fugt",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_low_humidity": {
-        "name": "Ventilationstrin ved lav fugt"
+        "name": "Ventilationstrin ved lav fugt",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_replace_interval": {
-        "name": "Interval mellem filterskift"
+        "name": "Interval mellem filterskift",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_low_threshold": {
-        "name": "Lavt fugtniveau"
+        "name": "Lavt fugtniveau",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "service_capacity": {
-        "name": "Servicekapacitet"
+        "name": "Servicekapacitet",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_bypass_close_offset": {
-        "name": "Bypass, lukkeoffset"
+        "name": "Bypass, lukkeoffset",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_bypass_fan_increase_offset": {
-        "name": "Bypass, offset for øget ventilation"
+        "name": "Bypass, offset for øget ventilation",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_bypass_open_offset": {
-        "name": "Bypass, åbningsoffset"
+        "name": "Bypass, åbningsoffset",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_compensation": {
-        "name": "Udetemperaturkompensering"
+        "name": "Udetemperaturkompensering",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_offset": {
-        "name": "Centralvarme, offset"
+        "name": "Centralvarme, offset",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_supply_max": {
-        "name": "Højeste fremløbstemperatur, centralvarme"
+        "name": "Højeste fremløbstemperatur, centralvarme",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_supply_min": {
-        "name": "Laveste fremløbstemperatur, centralvarme"
+        "name": "Laveste fremløbstemperatur, centralvarme",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_defrost_high_threshold": {
-        "name": "Afisning stopper ved"
+        "name": "Afisning stopper ved",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_defrost_low_threshold": {
-        "name": "Afisning starter ved"
+        "name": "Afisning starter ved",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater": {
-        "name": "Varmtvandstemperatur"
+        "name": "Varmtvandstemperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater_boost": {
-        "name": "Varmtvand top, el"
+        "name": "Varmtvand top, el",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater_bypass_offset": {
-        "name": "Varmtvand, bypass-offset"
+        "name": "Varmtvand, bypass-offset",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater_scald_protection": {
-        "name": "Skoldningsbeskyttelse"
+        "name": "Skoldningsbeskyttelse",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_night_cooling_day_limit": {
-        "name": "Natkøling, dagsgrænse"
+        "name": "Natkøling, dagsgrænse",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_night_cooling_target": {
-        "name": "Natkøling, mål"
+        "name": "Natkøling, mål",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_regulation_dead_band": {
-        "name": "Reguleringens dødbånd"
+        "name": "Reguleringens dødbånd",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_summer_supply_max": {
-        "name": "Højeste indblæsningstemperatur, sommer"
+        "name": "Højeste indblæsningstemperatur, sommer",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_summer_supply_min": {
-        "name": "Laveste indblæsningstemperatur, sommer"
+        "name": "Laveste indblæsningstemperatur, sommer",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_supply_max": {
-        "name": "Højeste indblæsningstemperatur"
+        "name": "Højeste indblæsningstemperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_supply_min": {
-        "name": "Laveste indblæsningstemperatur"
+        "name": "Laveste indblæsningstemperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_target": {
-        "name": "Måltemperatur"
+        "name": "Måltemperatur",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_winter_mode_threshold": {
-        "name": "Skift mellem sommer og vinter"
+        "name": "Skift mellem sommer og vinter",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_winter_supply_max": {
-        "name": "Højeste indblæsningstemperatur, vinter"
+        "name": "Højeste indblæsningstemperatur, vinter",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_winter_supply_min": {
-        "name": "Laveste indblæsningstemperatur, vinter"
+        "name": "Laveste indblæsningstemperatur, vinter",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "voc_threshold": {
-        "name": "Højt VOC-niveau"
+        "name": "Højt VOC-niveau",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       }
     },
     "select": {
@@ -1047,6 +2964,17 @@
           "energy": "Energi",
           "comfort": "Komfort",
           "comfort_water": "Komfort vand"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "antilegionella_day": {
@@ -1060,6 +2988,17 @@
           "friday": "Fredag",
           "saturday": "Lørdag",
           "sunday": "Søndag"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "central_heat_mode": {
@@ -1068,6 +3007,17 @@
           "frost_protection_only": "Kun frostsikring",
           "always": "Altid",
           "when_room_cold": "Når rummet er koldt"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "central_heat_pump_mode": {
@@ -1075,6 +3025,17 @@
         "state": {
           "when_heating": "Ved opvarmning",
           "continuous": "Konstant"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "central_heat_source": {
@@ -1087,6 +3048,17 @@
           "heat_pump_then_afterheat": "Varmepumpe, derefter eftervarme",
           "afterheat_then_heat_pump": "Eftervarme, derefter varmepumpe",
           "heat_pump_then_electric": "Varmepumpe, derefter el"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "compressor_priority": {
@@ -1094,6 +3066,17 @@
         "state": {
           "hot_water": "Varmt vand",
           "inlet_air": "Indblæsningsluft"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "control_sensor": {
@@ -1103,6 +3086,17 @@
           "external": "Ekstern føler",
           "inlet": "Indblæsning",
           "exhaust": "Udsugning"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "extra_sensor": {
@@ -1111,6 +3105,17 @@
           "none": "Ingen",
           "voc": "VOC",
           "co2": "CO2"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "fan_level": {
@@ -1121,6 +3126,17 @@
           "2": "Trin 2",
           "3": "Trin 3",
           "4": "Trin 4"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "filter_replace_interval_choice": {
@@ -1132,6 +3148,17 @@
           "days_180": "180 dage",
           "days_360": "360 dage",
           "days_70_and_pressure_guard": "70 dage og trykvagt"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "heat_source": {
@@ -1144,6 +3171,17 @@
           "heat_pump_then_afterheat": "Varmepumpe, derefter eftervarme",
           "afterheat_then_heat_pump": "Eftervarme, derefter varmepumpe",
           "heat_pump_then_electric": "Varmepumpe, derefter el"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "operation_mode": {
@@ -1154,6 +3192,17 @@
           "cool": "Køl",
           "auto": "Auto",
           "service": "Service"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "service_mode": {
@@ -1168,6 +3217,17 @@
           "heating": "Opvarmning",
           "hot_water": "Varmt vand",
           "central_heat": "Centralvarme"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "temp_cooling_start_offset": {
@@ -1182,54 +3242,186 @@
           "plus_5": "Ønsket + 5 °C",
           "plus_7": "Ønsket + 7 °C",
           "plus_10": "Ønsket + 10 °C"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
         }
       }
     },
     "switch": {
       "boost_enable": {
-        "name": "Boost"
+        "name": "Boost",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "cooling_enable": {
-        "name": "Køling"
+        "name": "Køling",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "defrost_supply_fan": {
-        "name": "Indblæsning under afisning"
+        "name": "Indblæsning under afisning",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "enable": {
-        "name": "Tænd"
+        "name": "Tænd",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_alarm_on_panel": {
-        "name": "Filteralarm på panel"
+        "name": "Filteralarm på panel",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "hotwater_heater_enable": {
-        "name": "Elvarme til varmt vand"
+        "name": "Elvarme til varmt vand",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_control_enable": {
-        "name": "Fugtstyring"
+        "name": "Fugtstyring",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "panel_lock_fan_level": {
-        "name": "Lås panelets trinknap"
+        "name": "Lås panelets trinknap",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "panel_lock_on_off": {
-        "name": "Lås panelets tænd/sluk"
+        "name": "Lås panelets tænd/sluk",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "preheat_enable": {
-        "name": "Forvarme"
+        "name": "Forvarme",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "reheat_enable": {
-        "name": "Eftervarme"
+        "name": "Eftervarme",
+        "state_attributes": {
+          "certainty": {
+            "name": "Sikkerhed",
+            "state": {
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
+            }
+          }
+        }
       }
     },
     "climate": {
       "hvac": {
         "state_attributes": {
-          "fan_mode": {
+          "certainty": {
+            "name": "Sikkerhed",
             "state": {
-              "0": "Slukket",
-              "1": "Trin 1",
-              "2": "Trin 2",
-              "3": "Trin 3",
-              "4": "Trin 4"
+              "verified": "Verificeret",
+              "reported": "Dokumenteret",
+              "inferred": "Udledt",
+              "test-candidate": "Test"
             }
           }
         }
@@ -1256,13 +3448,23 @@
   "options": {
     "step": {
       "init": {
-        "title": "Anslåede værdier",
+        "title": "Niveau for værdier",
+        "description": "Vælg, hvilke af anlæggets værdier der får en entitet.\n\n- **Verificeret**: kun værdier, der er læst på et anlæg af denne model.\n- **Dokumenteret**: også værdier fra producentens dokumentation. Det er standard.\n- **Test**: alle værdier, også dem, der er udledt af rækkefølgen i Nilans manual, og værdier, der afprøves i stedet for andre eller er nye. De er ikke bekræftet på et anlæg af denne model: de kan være forkerte, og ændrer du én, kan det ændre en anden indstilling. Tester du, så [fortæl os]({report_url}), om de passer med dit anlægs panel.",
         "data": {
-          "show_inferred": "Vis anslåede, utestede entiteter"
+          "level": "Niveau"
         },
         "data_description": {
-          "show_inferred": "Nogle entiteter på andre anlæg end CTS400 har en adresse, der er anslået ud fra Nilans manual og aldrig tjekket på et rigtigt anlæg. De kan vise forkerte værdier, og en ændring kan ramme en anden indstilling."
+          "level": "Hver entitets attribut Sikkerhed fortæller, hvor sikker dens værdi er."
         }
+      }
+    }
+  },
+  "selector": {
+    "level": {
+      "options": {
+        "verified": "Verificeret",
+        "documented": "Dokumenteret",
+        "test": "Test"
       }
     }
   }

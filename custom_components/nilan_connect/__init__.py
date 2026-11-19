@@ -22,12 +22,21 @@ from nilan_connect import (
     AuthenticationError,
     CannotConnectError,
     Key,
+    Level,
     PointKey,
     UnsupportedDeviceError,
     discover,
 )
 
-from .const import CONF_EMAIL, CONF_GATEWAY_ID, CONF_SHOW_INFERRED, DEFAULT_PORT, DOMAIN
+from .const import (
+    CONF_EMAIL,
+    CONF_GATEWAY_ID,
+    CONF_LEVEL,
+    DEFAULT_LEVEL,
+    DEFAULT_PORT,
+    DOMAIN,
+    SHOW_INFERRED,
+)
 from .data import NilanConfigEntry, NilanData, identity_text, new_client
 
 _LOGGER = logging.getLogger(__name__)
@@ -64,7 +73,9 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Bring an entry of an earlier version to this one.
 
     Version 1 kept the unit's name as `device_id`, and the address only when it was entered by
-    hand; without one, the name was the gateway's id, which it was found by.
+    hand; without one, the name was the gateway's id, which it was found by. Minor version 1
+    chose whether to show values placed only by the manual's register order where the level
+    is chosen now: showing them is the Test level, not showing them the Documented.
     """
     if entry.version == 1:
         old = entry.data
@@ -81,6 +92,12 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             version=2,
             minor_version=1,
         )
+    if entry.version == 2 and entry.minor_version == 1:
+        options = {key: setting for key, setting in entry.options.items() if key != SHOW_INFERRED}
+        level = Level.TEST if entry.options.get(SHOW_INFERRED) else Level.DOCUMENTED
+        hass.config_entries.async_update_entry(
+            entry, options={**options, CONF_LEVEL: str(level)}, minor_version=2
+        )
     return True
 
 
@@ -92,6 +109,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> boo
         entry.data[CONF_HOST],
         entry.data[CONF_PORT],
         entry.data[CONF_GATEWAY_ID],
+        level=Level(entry.options.get(CONF_LEVEL, DEFAULT_LEVEL)),
     )
     try:
         await client.connect()
@@ -118,11 +136,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> boo
     try:
         await _keep_renamed_entities(hass, entry, name, client.model.name)
         await _identify_gateway(hass, entry)
-        entry.runtime_data = NilanData(
-            client=client,
-            name=name,
-            show_inferred=bool(entry.options.get(CONF_SHOW_INFERRED, False)),
-        )
+        entry.runtime_data = NilanData(client=client, name=name)
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
         _remove_lost_entities(hass, entry)
     except BaseException:

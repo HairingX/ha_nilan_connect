@@ -192,13 +192,46 @@
           "sensor_t9_error": "Sensor T9 error",
           "sensor_t10_error": "Sensor T10 error",
           "sensor_t11_error": "Sensor T11 error"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "alarm_1_code": {
-        "name": "Alarm code 1"
+        "name": "Alarm code 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_1_info": {
-        "name": "Alarm info 1"
+        "name": "Alarm info 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_2": {
         "name": "Alarm 2",
@@ -307,13 +340,46 @@
           "sensor_t9_error": "Sensor T9 error",
           "sensor_t10_error": "Sensor T10 error",
           "sensor_t11_error": "Sensor T11 error"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "alarm_2_code": {
-        "name": "Alarm code 2"
+        "name": "Alarm code 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_2_info": {
-        "name": "Alarm info 2"
+        "name": "Alarm info 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_3": {
         "name": "Alarm 3",
@@ -422,25 +488,102 @@
           "sensor_t9_error": "Sensor T9 error",
           "sensor_t10_error": "Sensor T10 error",
           "sensor_t11_error": "Sensor T11 error"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "alarm_3_code": {
-        "name": "Alarm code 3"
+        "name": "Alarm code 3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_3_info": {
-        "name": "Alarm info 3"
+        "name": "Alarm info 3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_bits": {
-        "name": "Alarm bits"
+        "name": "Alarm bits",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_bits_high": {
-        "name": "Alarm bits, high"
+        "name": "Alarm bits, high",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "bypass_position": {
-        "name": "Bypass damper position"
+        "name": "Bypass damper position",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "co2_level": {
-        "name": "CO2 level"
+        "name": "CO2 level",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "damper_test_day": {
         "name": "Damper test day",
@@ -453,10 +596,32 @@
           "friday": "Friday",
           "saturday": "Saturday",
           "sunday": "Sunday"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "damper_test_last_date": {
-        "name": "Last damper test"
+        "name": "Last damper test",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "damper_test_state": {
         "name": "Damper test",
@@ -468,13 +633,46 @@
           "opening": "Opening",
           "ok": "OK",
           "error": "Error"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "discharge_pressure": {
-        "name": "Discharge pressure"
+        "name": "Discharge pressure",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "efficiency": {
-        "name": "Heat recovery efficiency"
+        "name": "Heat recovery efficiency",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "electric_coil": {
         "name": "Electric heating coil",
@@ -482,37 +680,158 @@
           "none": "None",
           "reheat": "After-heating",
           "preheat": "Preheating"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "fan_dutycycle_extract": {
-        "name": "Extract fan speed"
+        "name": "Extract fan speed",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_dutycycle_supply": {
-        "name": "Supply fan speed"
+        "name": "Supply fan speed",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_current": {
-        "name": "Current fan level"
+        "name": "Current fan level",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_extract": {
-        "name": "Extract fan level"
+        "name": "Extract fan level",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_supply": {
-        "name": "Supply fan level"
+        "name": "Supply fan level",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_rpm_extract": {
-        "name": "Extract fan rotation speed"
+        "name": "Extract fan rotation speed",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_rpm_supply": {
-        "name": "Supply fan rotation speed"
+        "name": "Supply fan rotation speed",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_replace_time_ago": {
-        "name": "Time since filter change"
+        "name": "Time since filter change",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_replace_time_remain": {
-        "name": "Time until filter change"
+        "name": "Time until filter change",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_capacity": {
-        "name": "Heat pump capacity"
+        "name": "Heat pump capacity",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_state": {
         "name": "Heat pump state",
@@ -555,22 +874,88 @@
           "manual": "Manual",
           "external_stop": "External stop",
           "forced_low_speed": "Forced low speed"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "heat_pump_state_code": {
-        "name": "Heat pump state code"
+        "name": "Heat pump state code",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity": {
-        "name": "Humidity"
+        "name": "Humidity",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_average": {
-        "name": "Average humidity"
+        "name": "Average humidity",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_high_level": {
-        "name": "High humidity level"
+        "name": "High humidity level",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_high_level_time": {
-        "name": "High humidity duration"
+        "name": "High humidity duration",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "operation_mode_current": {
         "name": "Current operation mode",
@@ -580,6 +965,17 @@
           "cool": "Cool",
           "auto": "Auto",
           "service": "Service"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "operation_state": {
@@ -623,421 +1019,1942 @@
           "manual": "Manual",
           "external_stop": "External stop",
           "forced_low_speed": "Forced low speed"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "preheat_output": {
-        "name": "Preheater output"
+        "name": "Preheater output",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "reheat_output": {
-        "name": "After-heating output"
+        "name": "After-heating output",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "rotor_speed": {
-        "name": "Rotor speed"
+        "name": "Rotor speed",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "state_code": {
-        "name": "State code"
+        "name": "State code",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "suction_pressure": {
-        "name": "Suction pressure"
+        "name": "Suction pressure",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_after_condenser": {
-        "name": "Temperature after condenser"
+        "name": "Temperature after condenser",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_aux": {
-        "name": "Auxiliary temperature"
+        "name": "Auxiliary temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_before_condenser": {
-        "name": "Temperature before condenser"
+        "name": "Temperature before condenser",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_before_evaporator": {
-        "name": "Temperature before evaporator"
+        "name": "Temperature before evaporator",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_buffer_tank": {
-        "name": "Buffer tank temperature"
+        "name": "Buffer tank temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_return": {
-        "name": "Central heating return temperature"
+        "name": "Central heating return temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_supply": {
-        "name": "Central heating supply temperature"
+        "name": "Central heating supply temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_condenser": {
-        "name": "Condenser temperature"
+        "name": "Condenser temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_controller": {
-        "name": "Controller temperature"
+        "name": "Controller temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_evaporator": {
-        "name": "Evaporator temperature"
+        "name": "Evaporator temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_exhaust": {
-        "name": "Exhaust air temperature"
+        "name": "Exhaust air temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_extract": {
-        "name": "Extract air temperature"
+        "name": "Extract air temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_frost_protection": {
-        "name": "Frost protection temperature"
+        "name": "Frost protection temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_heat_pump_outdoor": {
-        "name": "Heat pump outdoor temperature"
+        "name": "Heat pump outdoor temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_heater": {
-        "name": "Heating surface temperature"
+        "name": "Heating surface temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater_bottom": {
-        "name": "Hot water bottom temperature"
+        "name": "Hot water bottom temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater_top": {
-        "name": "Hot water top temperature"
+        "name": "Hot water top temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_intake": {
-        "name": "Intake air temperature"
+        "name": "Intake air temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_outside": {
-        "name": "Outdoor air temperature"
+        "name": "Outdoor air temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_preheat_intake": {
-        "name": "Temperature before preheater"
+        "name": "Temperature before preheater",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_pressure_pipe": {
-        "name": "Pressure pipe temperature"
+        "name": "Pressure pipe temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_room": {
-        "name": "Room temperature"
+        "name": "Room temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_room_panel": {
-        "name": "Room temperature at panel"
+        "name": "Room temperature at panel",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_supply": {
-        "name": "Supply air temperature"
+        "name": "Supply air temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_supply_after_heater": {
-        "name": "Supply air temperature after heater"
+        "name": "Supply air temperature after heater",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "time_in_state": {
-        "name": "Time in state"
+        "name": "Time in state",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "voc_level": {
-        "name": "VOC level"
+        "name": "VOC level",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       }
     },
     "binary_sensor": {
       "alarm_external_filter": {
-        "name": "External filter alarm"
+        "name": "External filter alarm",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_external_stop": {
-        "name": "External stop"
+        "name": "External stop",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_extract_fan_error": {
-        "name": "Extract fan error"
+        "name": "Extract fan error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fan_error": {
-        "name": "Fan error"
+        "name": "Fan error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_box_1_error": {
-        "name": "Fire box 1 error"
+        "name": "Fire box 1 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_box_2_error": {
-        "name": "Fire box 2 error"
+        "name": "Fire box 2 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_damper_1_error": {
-        "name": "Fire damper 1 error"
+        "name": "Fire damper 1 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_damper_2_error": {
-        "name": "Fire damper 2 error"
+        "name": "Fire damper 2 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_damper_3_error": {
-        "name": "Fire damper 3 error"
+        "name": "Fire damper 3 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_damper_4_error": {
-        "name": "Fire damper 4 error"
+        "name": "Fire damper 4 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_fire_test_error": {
-        "name": "Fire test error"
+        "name": "Fire test error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_flow_temperature_error": {
-        "name": "Flow temperature error"
+        "name": "Flow temperature error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_frost_failure": {
-        "name": "Frost protection failure"
+        "name": "Frost protection failure",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_high_pressure": {
-        "name": "High pressure"
+        "name": "High pressure",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_humidity_sensor_error": {
-        "name": "Humidity sensor error"
+        "name": "Humidity sensor error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_internal_modbus": {
-        "name": "Internal Modbus"
+        "name": "Internal Modbus",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_low_pressure": {
-        "name": "Low pressure"
+        "name": "Low pressure",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_panel_communication": {
-        "name": "Panel communication"
+        "name": "Panel communication",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_return_temperature_error": {
-        "name": "Return temperature error"
+        "name": "Return temperature error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_rotor": {
-        "name": "Rotor"
+        "name": "Rotor",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_error": {
-        "name": "Sensor error"
+        "name": "Sensor error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t10_error": {
-        "name": "Sensor T10 error"
+        "name": "Sensor T10 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t11_error": {
-        "name": "Sensor T11 error"
+        "name": "Sensor T11 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t1_error": {
-        "name": "Sensor T1 error"
+        "name": "Sensor T1 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t2_error": {
-        "name": "Sensor T2 error"
+        "name": "Sensor T2 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t3_error": {
-        "name": "Sensor T3 error"
+        "name": "Sensor T3 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t4_error": {
-        "name": "Sensor T4 error"
+        "name": "Sensor T4 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t5_error": {
-        "name": "Sensor T5 error"
+        "name": "Sensor T5 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t6_error": {
-        "name": "Sensor T6 error"
+        "name": "Sensor T6 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t7_error": {
-        "name": "Sensor T7 error"
+        "name": "Sensor T7 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t8_error": {
-        "name": "Sensor T8 error"
+        "name": "Sensor T8 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_sensor_t9_error": {
-        "name": "Sensor T9 error"
+        "name": "Sensor T9 error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_status": {
-        "name": "Alarm"
+        "name": "Alarm",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "alarm_supply_fan_error": {
-        "name": "Supply fan error"
+        "name": "Supply fan error",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "bypass_active": {
-        "name": "Bypass damper"
+        "name": "Bypass damper",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "defrost_active": {
-        "name": "De-icing"
+        "name": "De-icing",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "digital_input_1": {
-        "name": "Digital input 1"
+        "name": "Digital input 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "digital_input_2": {
-        "name": "Digital input 2"
+        "name": "Digital input 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "digital_input_3": {
-        "name": "Digital input 3"
+        "name": "Digital input 3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_overridden": {
-        "name": "Fan level overridden"
+        "name": "Fan level overridden",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_ok": {
-        "name": "Filter change"
+        "name": "Filter change",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_active": {
-        "name": "Heat pump"
+        "name": "Heat pump",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_heater_active": {
-        "name": "Heat pump electric heater"
+        "name": "Heat pump electric heater",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_room_heating": {
-        "name": "Heat pump room heating"
+        "name": "Heat pump room heating",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "heat_pump_water_heating": {
-        "name": "Heat pump water heating"
+        "name": "Heat pump water heating",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_average_ok": {
-        "name": "24 hour humidity average OK"
+        "name": "24 hour humidity average OK",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_high_active": {
-        "name": "High humidity"
+        "name": "High humidity",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "preheat_coil_fitted": {
-        "name": "Preheating coil fitted"
+        "name": "Preheating coil fitted",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "reheat_active": {
-        "name": "After-heating"
+        "name": "After-heating",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "reheat_coil_fitted": {
-        "name": "After-heating coil fitted"
+        "name": "After-heating coil fitted",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "running": {
-        "name": "Running"
+        "name": "Running",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "sacrificial_anode_ok": {
-        "name": "Anode replacement"
+        "name": "Anode replacement",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "winter_mode_active": {
-        "name": "Winter mode"
+        "name": "Winter mode",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       }
     },
     "button": {
       "alarm_reset": {
-        "name": "Reset alarm"
+        "name": "Reset alarm",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_replace_reset": {
-        "name": "Reset filter timer"
+        "name": "Reset filter timer",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       }
     },
     "number": {
       "boost_time": {
-        "name": "Boost duration"
+        "name": "Boost duration",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "bypass_fan_increase": {
-        "name": "Bypass fan increase"
+        "name": "Bypass fan increase",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "central_heat_curve": {
-        "name": "Central heating curve"
+        "name": "Central heating curve",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "central_heat_regulation_time": {
-        "name": "Central heating regulation time"
+        "name": "Central heating regulation time",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "co2_threshold": {
-        "name": "High CO2 level"
+        "name": "High CO2 level",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "cooling_temperature": {
-        "name": "Cooling temperature"
+        "name": "Cooling temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "defrost_break_time": {
-        "name": "Time between de-icing"
+        "name": "Time between de-icing",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "defrost_max_time": {
-        "name": "Longest de-icing"
+        "name": "Longest de-icing",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level1_extract_preset": {
-        "name": "Extract air, level 1"
+        "name": "Extract air, level 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level1_supply_preset": {
-        "name": "Supply air, level 1"
+        "name": "Supply air, level 1",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level2_extract_preset": {
-        "name": "Extract air, level 2"
+        "name": "Extract air, level 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level2_supply_preset": {
-        "name": "Supply air, level 2"
+        "name": "Supply air, level 2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level3_extract_preset": {
-        "name": "Extract air, level 3"
+        "name": "Extract air, level 3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level3_supply_preset": {
-        "name": "Supply air, level 3"
+        "name": "Supply air, level 3",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level4_extract_preset": {
-        "name": "Extract air, level 4"
+        "name": "Extract air, level 4",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level4_supply_preset": {
-        "name": "Supply air, level 4"
+        "name": "Supply air, level 4",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_cooling": {
-        "name": "Fan level while cooling"
+        "name": "Fan level while cooling",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
+      },
+      "min_air_volume": {
+        "name": "Minimum air volume",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_high_co2": {
-        "name": "Fan level at high CO2"
+        "name": "Fan level at high CO2",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_high_humidity": {
-        "name": "Fan level at high humidity"
+        "name": "Fan level at high humidity",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_high_humidity_time": {
-        "name": "High humidity timeout"
+        "name": "High humidity timeout",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "fan_level_low_humidity": {
-        "name": "Fan level at low humidity"
+        "name": "Fan level at low humidity",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_replace_interval": {
-        "name": "Filter change interval"
+        "name": "Filter change interval",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_low_threshold": {
-        "name": "Low humidity level"
+        "name": "Low humidity level",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "service_capacity": {
-        "name": "Service capacity"
+        "name": "Service capacity",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_bypass_close_offset": {
-        "name": "Bypass closing offset"
+        "name": "Bypass closing offset",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_bypass_fan_increase_offset": {
-        "name": "Bypass fan increase offset"
+        "name": "Bypass fan increase offset",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_bypass_open_offset": {
-        "name": "Bypass opening offset"
+        "name": "Bypass opening offset",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_compensation": {
-        "name": "Outdoor temperature compensation"
+        "name": "Outdoor temperature compensation",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_offset": {
-        "name": "Central heating offset"
+        "name": "Central heating offset",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_supply_max": {
-        "name": "Maximum central heating supply temperature"
+        "name": "Maximum central heating supply temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_central_heat_supply_min": {
-        "name": "Minimum central heating supply temperature"
+        "name": "Minimum central heating supply temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_defrost_high_threshold": {
-        "name": "De-icing stop temperature"
+        "name": "De-icing stop temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_defrost_low_threshold": {
-        "name": "De-icing start temperature"
+        "name": "De-icing start temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater": {
-        "name": "Hot water temperature"
+        "name": "Hot water temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater_boost": {
-        "name": "Hot water top temperature, electric"
+        "name": "Hot water top temperature, electric",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater_bypass_offset": {
-        "name": "Hot water bypass offset"
+        "name": "Hot water bypass offset",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_hotwater_scald_protection": {
-        "name": "Scald protection temperature"
+        "name": "Scald protection temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_night_cooling_day_limit": {
-        "name": "Night cooling day limit"
+        "name": "Night cooling day limit",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_night_cooling_target": {
-        "name": "Night cooling target"
+        "name": "Night cooling target",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_regulation_dead_band": {
-        "name": "Regulation dead band"
+        "name": "Regulation dead band",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_summer_supply_max": {
-        "name": "Maximum supply air temperature, summer"
+        "name": "Maximum supply air temperature, summer",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_summer_supply_min": {
-        "name": "Minimum supply air temperature, summer"
+        "name": "Minimum supply air temperature, summer",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_supply_max": {
-        "name": "Maximum supply air temperature"
+        "name": "Maximum supply air temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_supply_min": {
-        "name": "Minimum supply air temperature"
+        "name": "Minimum supply air temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_target": {
-        "name": "Target temperature"
+        "name": "Target temperature",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_winter_mode_threshold": {
-        "name": "Summer/winter changeover"
+        "name": "Summer/winter changeover",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_winter_supply_max": {
-        "name": "Maximum supply air temperature, winter"
+        "name": "Maximum supply air temperature, winter",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "temp_winter_supply_min": {
-        "name": "Minimum supply air temperature, winter"
+        "name": "Minimum supply air temperature, winter",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "voc_threshold": {
-        "name": "High VOC level"
+        "name": "High VOC level",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       }
     },
     "select": {
@@ -1047,6 +2964,17 @@
           "energy": "Energy",
           "comfort": "Comfort",
           "comfort_water": "Comfort water"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "antilegionella_day": {
@@ -1060,6 +2988,17 @@
           "friday": "Friday",
           "saturday": "Saturday",
           "sunday": "Sunday"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "central_heat_mode": {
@@ -1068,6 +3007,17 @@
           "frost_protection_only": "Frost protection only",
           "always": "Always",
           "when_room_cold": "When the room is cold"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "central_heat_pump_mode": {
@@ -1075,6 +3025,17 @@
         "state": {
           "when_heating": "When heating",
           "continuous": "Continuous"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "central_heat_source": {
@@ -1087,6 +3048,17 @@
           "heat_pump_then_afterheat": "Heat pump, then after-heating",
           "afterheat_then_heat_pump": "After-heating, then heat pump",
           "heat_pump_then_electric": "Heat pump, then electric"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "compressor_priority": {
@@ -1094,6 +3066,17 @@
         "state": {
           "hot_water": "Hot water",
           "inlet_air": "Inlet air"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "control_sensor": {
@@ -1103,6 +3086,17 @@
           "external": "External sensor",
           "inlet": "Inlet",
           "exhaust": "Exhaust"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "extra_sensor": {
@@ -1111,6 +3105,17 @@
           "none": "None",
           "voc": "VOC",
           "co2": "CO2"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "fan_level": {
@@ -1121,6 +3126,17 @@
           "2": "Level 2",
           "3": "Level 3",
           "4": "Level 4"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "filter_replace_interval_choice": {
@@ -1132,6 +3148,17 @@
           "days_180": "180 days",
           "days_360": "360 days",
           "days_70_and_pressure_guard": "70 days and pressure guard"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "heat_source": {
@@ -1144,6 +3171,17 @@
           "heat_pump_then_afterheat": "Heat pump, then after-heating",
           "afterheat_then_heat_pump": "After-heating, then heat pump",
           "heat_pump_then_electric": "Heat pump, then electric"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "operation_mode": {
@@ -1154,6 +3192,17 @@
           "cool": "Cool",
           "auto": "Auto",
           "service": "Service"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "service_mode": {
@@ -1168,6 +3217,17 @@
           "heating": "Heating",
           "hot_water": "Hot water",
           "central_heat": "Central heating"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       },
       "temp_cooling_start_offset": {
@@ -1182,54 +3242,186 @@
           "plus_5": "Target + 5 °C",
           "plus_7": "Target + 7 °C",
           "plus_10": "Target + 10 °C"
+        },
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
         }
       }
     },
     "switch": {
       "boost_enable": {
-        "name": "Boost"
+        "name": "Boost",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "cooling_enable": {
-        "name": "Cooling"
+        "name": "Cooling",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "defrost_supply_fan": {
-        "name": "Supply fan while de-icing"
+        "name": "Supply fan while de-icing",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "enable": {
-        "name": "Power"
+        "name": "Power",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "filter_alarm_on_panel": {
-        "name": "Filter alarm on panel"
+        "name": "Filter alarm on panel",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "hotwater_heater_enable": {
-        "name": "Hot water electric heater"
+        "name": "Hot water electric heater",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "humidity_control_enable": {
-        "name": "Humidity control"
+        "name": "Humidity control",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "panel_lock_fan_level": {
-        "name": "Lock the panel's fan level"
+        "name": "Lock the panel's fan level",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "panel_lock_on_off": {
-        "name": "Lock the panel's on/off"
+        "name": "Lock the panel's on/off",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "preheat_enable": {
-        "name": "Preheating"
+        "name": "Preheating",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       },
       "reheat_enable": {
-        "name": "After-heating"
+        "name": "After-heating",
+        "state_attributes": {
+          "certainty": {
+            "name": "Certainty",
+            "state": {
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
+            }
+          }
+        }
       }
     },
     "climate": {
       "hvac": {
         "state_attributes": {
-          "fan_mode": {
+          "certainty": {
+            "name": "Certainty",
             "state": {
-              "0": "Off",
-              "1": "Level 1",
-              "2": "Level 2",
-              "3": "Level 3",
-              "4": "Level 4"
+              "verified": "Verified",
+              "reported": "Documented",
+              "inferred": "Inferred",
+              "test-candidate": "Test"
             }
           }
         }
@@ -1256,13 +3448,23 @@
   "options": {
     "step": {
       "init": {
-        "title": "Estimated values",
+        "title": "Level of values",
+        "description": "Choose which of the unit's values get an entity.\n\n- **Verified**: only values read on a unit of this model.\n- **Documented**: also values from the manufacturer's documentation. This is the default.\n- **Test**: every value, also those inferred from the order of Nilan's manual, and values tried in place of others or new. They have not been confirmed on a unit of this model: they may be wrong, and changing one may change a different setting. If you test, please [report]({report_url}) whether they match your unit's panel.",
         "data": {
-          "show_inferred": "Show estimated, untested entities"
+          "level": "Level"
         },
         "data_description": {
-          "show_inferred": "Some entities of units other than the CTS400 have an address estimated from Nilan's manual, never checked on a real unit. They may show wrong values, and changing one may change a different setting."
+          "level": "Each entity's attribute Certainty says how certain its value is."
         }
+      }
+    }
+  },
+  "selector": {
+    "level": {
+      "options": {
+        "verified": "Verified",
+        "documented": "Documented",
+        "test": "Test"
       }
     }
   }

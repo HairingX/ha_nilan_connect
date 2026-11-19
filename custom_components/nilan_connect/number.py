@@ -116,6 +116,7 @@ NUMBERS: tuple[NilanNumberDescription, ...] = (
     # neither.
     _setting(PointKey.COOLING_TEMPERATURE, None),
     _setting(PointKey.FAN_LEVEL_COOLING, None),
+    _setting(PointKey.MIN_AIR_VOLUME, None),
     _setting(PointKey.SERVICE_CAPACITY, None),
 )
 
