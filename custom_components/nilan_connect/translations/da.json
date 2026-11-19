@@ -476,6 +476,14 @@
       "efficiency": {
         "name": "Varmegenvindingsgrad"
       },
+      "electric_coil": {
+        "name": "Elvarmeflade",
+        "state": {
+          "none": "Ingen",
+          "reheat": "Eftervarme",
+          "preheat": "Forvarme"
+        }
+      },
       "fan_dutycycle_extract": {
         "name": "Ventilatorhastighed, udsugning"
       },
@@ -548,6 +556,9 @@
           "external_stop": "Eksternt stop",
           "forced_low_speed": "Tvungen lav hastighed"
         }
+      },
+      "heat_pump_state_code": {
+        "name": "Varmepumpens tilstandskode"
       },
       "humidity": {
         "name": "Luftfugtighed"
@@ -637,6 +648,9 @@
       },
       "temp_before_condenser": {
         "name": "Temperatur før kondensator"
+      },
+      "temp_before_evaporator": {
+        "name": "Temperatur før fordamper"
       },
       "temp_buffer_tank": {
         "name": "Buffertankens temperatur"
@@ -850,8 +864,14 @@
       "humidity_high_active": {
         "name": "Høj luftfugtighed"
       },
+      "preheat_coil_fitted": {
+        "name": "Forvarmeflade monteret"
+      },
       "reheat_active": {
         "name": "Eftervarme"
+      },
+      "reheat_coil_fitted": {
+        "name": "Eftervarmeflade monteret"
       },
       "running": {
         "name": "Kører"
@@ -1116,18 +1136,6 @@
       },
       "heat_source": {
         "name": "Varmekilde",
-        "state": {
-          "off": "Fra",
-          "electric": "El",
-          "heat_pump": "Varmepumpe",
-          "afterheat": "Eftervarme",
-          "heat_pump_then_afterheat": "Varmepumpe, derefter eftervarme",
-          "afterheat_then_heat_pump": "Eftervarme, derefter varmepumpe",
-          "heat_pump_then_electric": "Varmepumpe, derefter el"
-        }
-      },
-      "hotwater_supplement": {
-        "name": "Varmtvandstilskud",
         "state": {
           "off": "Fra",
           "electric": "El",

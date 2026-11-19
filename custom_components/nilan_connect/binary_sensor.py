@@ -82,6 +82,8 @@ BINARY_SENSORS: tuple[NilanBinarySensorDescription, ...] = (
     _state(PointKey.RUNNING, BinarySensorDeviceClass.RUNNING),
     # No register says whether an after-heating element is fitted.
     _state(PointKey.REHEAT_ACTIVE, BinarySensorDeviceClass.HEAT, enabled=False),
+    _state(PointKey.REHEAT_COIL_FITTED, None, category=EntityCategory.DIAGNOSTIC),
+    _state(PointKey.PREHEAT_COIL_FITTED, None, category=EntityCategory.DIAGNOSTIC),
     _state(PointKey.HEAT_PUMP_ACTIVE, BinarySensorDeviceClass.RUNNING),
     _state(PointKey.HEAT_PUMP_HEATER_ACTIVE, BinarySensorDeviceClass.HEAT),
     _state(PointKey.HEAT_PUMP_ROOM_HEATING, BinarySensorDeviceClass.HEAT),

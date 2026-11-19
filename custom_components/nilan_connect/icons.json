@@ -42,6 +42,9 @@
       },
       "efficiency": {
         "default": "mdi:heat-wave"
+      },
+      "electric_coil": {
+        "default": "mdi:heating-coil"
       }
     },
     "binary_sensor": {
@@ -62,6 +65,12 @@
       },
       "winter_mode_active": {
         "default": "mdi:sun-snowflake-variant"
+      },
+      "reheat_coil_fitted": {
+        "default": "mdi:heating-coil"
+      },
+      "preheat_coil_fitted": {
+        "default": "mdi:heating-coil"
       }
     },
     "button": {

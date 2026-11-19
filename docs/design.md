@@ -85,7 +85,8 @@ unavailable.
   University's course "Ventilation 7. Air to Air Heat Recovery" gives it (page 2), and as Svensk
   Ventilation's guidelines on temperature efficiency refer to EN 308:1997 section 5.5. It is
   worked out again whenever one of the three temperatures changes, and is unknown while the
-  extract and outdoor air are equally warm.
+  extract and outdoor air are equally warm. A unit that reads its supply air only after the
+  heater, such as a CTS602 Light, has none: the heater's warmth would count as recovered.
 
 ### The thermostat
 
