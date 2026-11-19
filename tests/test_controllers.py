@@ -138,6 +138,23 @@ async def test_a_setting_no_source_gives_a_range_for_gets_no_number(hass: HomeAs
     assert _entity(hass, "number", PointKey.FILTER_REPLACE_INTERVAL) is None
 
 
+@pytest.mark.parametrize("gateway", [OPTIMA_270], indirect=True, ids=["optima_270"])
+async def test_a_write_an_optima_270s_gateway_answers_0x01_is_taken_and_sent_once(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice, loaded: NilanData
+) -> None:
+    """An Optima 270's gateway answered 0x01 to every write it took."""
+    gateway.write_taken = frozenset({0, 1})
+    gateway.write_statuses = [1]
+    entry = _entity(hass, "climate", THERMOSTAT)
+    assert entry is not None
+    # A write sent again waits on the fake clock, which nothing moves here.
+    async with asyncio.timeout(5.0):
+        await hass.services.async_call(
+            "climate", "set_temperature", {"entity_id": entry.entity_id, "temperature": 22.0}, blocking=True
+        )
+    assert [command.items for command in gateway.received(SETPOINT_WRITE)] == [((0, 12, 120),)]
+
+
 @pytest.mark.parametrize("gateway", [OPTIMA_250], indirect=True, ids=["optima_250"])
 async def test_a_filter_interval_in_months_is_a_number_without_a_duration(
     hass: HomeAssistant, loaded: NilanData
