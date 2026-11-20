@@ -1,16 +1,20 @@
-"""What a bug report needs: the unit's model, every value with its quality, what is missing, and
+"""What a bug report needs to show the unit works: the versions, the unit's model, every value with
+its quality, what is missing, the latest writes with how each ended, how the gateway answers, and
 the points tried at the Test level."""
 
 from __future__ import annotations
 
+from datetime import date, time
+from enum import Enum
 from importlib import metadata
 from typing import Any, cast
 
 from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant
-from nilan_connect import Status
+from homeassistant.loader import async_get_integration
+from nilan_connect import Client, DataValue, Key, Status
 
-from .const import CONF_EMAIL, CONF_GATEWAY_ID
+from .const import CONF_EMAIL, CONF_GATEWAY_ID, DOMAIN
 from .data import NilanConfigEntry
 
 REDACTED = "**REDACTED**"
@@ -25,19 +29,22 @@ LIBRARIES = ("nilan_connect", "modbus_event_connect", "event_connect")
 async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: NilanConfigEntry
 ) -> dict[str, Any]:
-    """The client's picture of the unit and how the gateway has answered, without the email or
-    where the gateway is.
+    """The client's picture of the unit, the writes sent to it and how the gateway has answered,
+    without the email or where the gateway is.
 
-    The entry's unique id is left out: it is the gateway's id. `test` lists each candidate the
-    unit uses, with its value, its certainty and the key it replaces, and each inferred point,
-    with its value.
+    The entry's unique id is left out: it is the gateway's id. `writes` holds the latest writes
+    of each key, the newest last, each with how it ended and the first read of the key after it.
+    `test` lists each candidate the unit uses, with its value, its certainty and the key it
+    replaces, and each inferred point, with its value.
     """
     client = entry.runtime_data.client
+    integration = await async_get_integration(hass, DOMAIN)
     library = dict(client.diagnostics())
     level = library.pop("level")
+    writes = library.pop("writes")
     certainty = cast(dict[str, str], library.pop("certainty", {}))
     candidates = cast(dict[str, str | None], library.pop("candidates", {}))
-    read = {str(key): current.value for key, current in client.values.items()}
+    read = {str(key): _plain(current.value) for key, current in client.values.items()}
     return {
         "entry": {
             "version": entry.version,
@@ -49,14 +56,23 @@ async def async_get_config_entry_diagnostics(
             "options": dict(entry.options),
             "polling_disabled": entry.pref_disable_polling,
         },
+        "integration_version": None if integration.version is None else str(integration.version),
         "libraries": {name: _version(name) for name in LIBRARIES},
         "model": client.model.name,
         "identity": dict(client.identity),
+        "level": level,
         "status": {status.name: client.status(status).value for status in Status},
         "seconds_until_next_poll": client.seconds_until_next_poll(),
         "silent": client.silent,
         "silent_for": client.silent_for,
-        "level": level,
+        "values": {
+            str(key): _value(client, key, current)
+            for key, current in sorted(client.values.items())
+        },
+        "unavailable": {
+            str(key): reason for key, reason in sorted(client.unavailable_reasons.items())
+        },
+        "writes": writes,
         "certainty": certainty,
         "test": {
             "candidates": {
@@ -74,20 +90,30 @@ async def async_get_config_entry_diagnostics(
             },
         },
         "gateway": library,
-        "values": {
-            str(key): {
-                "value": current.value,
-                "quality": current.quality.name,
-                "raw": list(current.raw),
-                "at": current.timestamp.isoformat(),
-                "consecutive_failures": client.consecutive_failures(str(key)),
-            }
-            for key, current in sorted(client.values.items())
-        },
-        "unavailable": {
-            str(key): reason for key, reason in sorted(client.unavailable_reasons.items())
-        },
     }
+
+
+def _value(client: Client, key: Key[Any], current: DataValue[Any]) -> dict[str, Any]:
+    """`current`, the value of `key`, as plain data: when the gateway last answered it, and how
+    many reads of it have failed since."""
+    point = client.points.get(key)
+    return {
+        "value": _plain(current.value),
+        "raw": list(current.raw),
+        "quality": current.quality.name,
+        "certainty": None if point is None else str(point.certainty),
+        "at": current.timestamp.isoformat(),
+        "consecutive_failures": client.consecutive_failures(str(key)),
+    }
+
+
+def _plain(value: object) -> object:
+    """`value` as JSON holds it: a state by its name, a time in ISO 8601."""
+    if isinstance(value, Enum):
+        return value.name
+    if isinstance(value, (date, time)):
+        return value.isoformat()
+    return value
 
 
 def _version(name: str) -> str | None:
