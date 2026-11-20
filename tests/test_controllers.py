@@ -29,6 +29,7 @@ from pytest_homeassistant.common import MockConfigEntry
 from custom_components.nilan_connect.climate import THERMOSTAT
 from custom_components.nilan_connect.const import CONF_LEVEL, DOMAIN
 from custom_components.nilan_connect.data import NilanData
+from custom_components.nilan_connect.diagnostics import async_get_config_entry_diagnostics
 from custom_components.nilan_connect.sensor import EFFICIENCY
 
 from .conftest import GATEWAY_ID, NAME, entry_data, simulated_gateway
@@ -266,6 +267,22 @@ async def test_a_renamed_points_old_entity_is_removed_where_its_new_one_exists(
     kept = registry.async_get(new.entity_id)
     assert kept is not None and kept.unique_id == f"{NAME}_{PointKey.TEMP_ROOM_PANEL}"
     await _unload(hass, config_entry)
+
+
+@pytest.mark.parametrize("gateway", [CTS602], indirect=True, ids=["cts602"])
+async def test_a_time_in_the_diagnostics_is_in_iso_8601(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    """A CTS602's alarm time, a point of the Test level, as DOS keeps a date and a time: 20
+    November 2026, 10:15:02."""
+    gateway.datapoint_registers.update({(0, 66): (46 << 9) | (11 << 5) | 20, (0, 67): (10 << 11) | (15 << 5) | 1})
+    entry = _at_test_level(gateway)
+    await _set_up(hass, entry)
+    data: NilanData = entry.runtime_data
+    await data.client.refresh([PointKey.ALARM_1_TIME])
+    found = await async_get_config_entry_diagnostics(hass, entry)
+    assert found["values"]["alarm_1_time"]["value"] == "2026-11-20T10:15:02"
+    await _unload(hass, entry)
 
 
 @pytest.mark.parametrize("gateway", [CTS602_HEAT_PUMP], indirect=True, ids=["cts602_heat_pump"])

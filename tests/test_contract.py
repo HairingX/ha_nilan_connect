@@ -128,16 +128,27 @@ def test_a_library_built_from_a_branch_is_not_a_release() -> None:
     assert not _released("0.6.1.dev3+g1c7097c")
 
 
-def test_the_manifest_pins_the_library_version_the_tests_run() -> None:
-    installed = importlib.metadata.version("nilan_connect")
+PINNED = ("nilan_connect", "modbus_event_connect")
+"""The libraries the manifest pins: Home Assistant installs a requirement only while the version
+installed does not meet it, so modbus_event_connect is pinned for its client's write log, which an
+installation's older copy lacks."""
+
+
+def test_the_manifest_pins_nothing_but_the_libraries() -> None:
+    assert [line.split("==")[0] for line in _manifest()["requirements"]] == list(PINNED)
+
+
+@pytest.mark.parametrize("library", PINNED)
+def test_the_manifest_pins_the_library_version_the_tests_run(library: str) -> None:
+    installed = importlib.metadata.version(library)
     if not _released(installed):
-        pytest.skip(f"nilan_connect {installed} is built from a branch, so no release pins it yet")
-    assert _manifest()["requirements"] == [f"nilan_connect=={installed}"]
+        pytest.skip(f"{library} {installed} is built from a branch, so no release pins it yet")
+    assert f"{library}=={installed}" in _manifest()["requirements"]
 
 
 def test_the_test_requirements_pin_what_the_manifest_requires() -> None:
     lines = (REPOSITORY / "requirements-test.txt").read_text(encoding="utf-8").splitlines()
-    assert [line for line in lines if line.startswith("nilan_connect==")] == _manifest()["requirements"]
+    assert set(_manifest()["requirements"]) <= set(lines)
 
 
 def test_the_libraries_developed_alongside_are_listed_in_the_order_they_are_installed() -> None:

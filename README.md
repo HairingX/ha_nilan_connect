@@ -84,8 +84,8 @@ values; if it leaves the next one unanswered too, they are unavailable until it 
 - **No gateway is found**: discovery is a broadcast on the local network. Enter the gateway's
   address instead.
 - The diagnostics, downloaded from the integration's entry, hold every value without the email or
-  where the gateway is, the level, how certain each value is, and, under `test`, each value under
-  test with what it replaces.
+  where the gateway is, the level, how certain each value is, the latest writes, and, under
+  `test`, each value under test with what it replaces.
 
 ### Reporting a problem
 
@@ -101,10 +101,13 @@ again, why each session with it began, and when it answered with only zeros and 
 lasted: Settings > System > Logs. Neither the log nor the diagnostics hold the email or the
 gateway's id; the log can hold its address, which you may remove before sharing it.
 
-The diagnostics hold the installed library versions, how the gateway has answered - requests,
-resends, response times, silences, refused sessions, answers of only zeros and how each ended,
-and whether the client is waiting before it tries the gateway again - and every value with its
-quality, when it was read and how many reads of it have failed in a row.
+The diagnostics hold the integration's and the installed libraries' versions, how the gateway
+has answered - requests, resends, response times, silences, refused sessions, answers of only
+zeros and how each ended, and whether the client is waiting before it tries the gateway again -
+every value with its quality, its raw registers, how certain it is, when it was read and how
+many reads of it have failed in a row, and, under `writes`, the latest five writes of each
+setting: the value and registers sent, when, how many times, how it ended, and the value the
+unit answered the next read with.
 
 ## Removal
 

@@ -92,9 +92,12 @@ with a verified point: on any other it would leave no entity.
   the test report form as its link. A setup at another level, or of a unit with nothing under
   test, removes it. Unloading does not: removing it there would forget that the user ignored it,
   and Home Assistant removes an entry's issues with the entry.
-- **Diagnostics.** The library's `level`, `certainty` and `candidates` are lifted out of `gateway`:
-  `level`, `certainty` per point, and `test`, which lists each candidate used with its value,
-  certainty and the key it replaces, and each inferred point used with its value.
+- **Diagnostics.** The library's `level`, `writes`, `certainty` and `candidates` are lifted out
+  of `gateway`: `level`, `writes` with the latest writes of each key and how each ended,
+  `certainty` per point, and `test`, which lists each candidate used with its value, certainty
+  and the key it replaces, and each inferred point used with its value. Each value also states
+  its certainty, so one entry shows whether a point was read, how it was decoded and how sure
+  that decoding is.
 
 ## Entities
 
@@ -171,7 +174,11 @@ for has no number, rather than one offering every value its register can carry.
 
 ## Dependencies
 
-- `manifest.json` pins the library with `==`, as the manifest documentation asks.
+- `manifest.json` pins the library with `==`, as the manifest documentation asks, and
+  `modbus_event_connect` too, though the library requires it: Home Assistant installs a
+  requirement only while the version installed does not meet it, so an installation that already
+  has `nilan_connect` keeps the `modbus_event_connect` it has unless the manifest names the one the
+  integration needs - for the diagnostics' `writes`, 0.10.1.
 - Home Assistant installs requirements under its package constraints
   (`homeassistant/package_constraints.txt`), which pin `pymodbus`, a dependency of the library;
   the tests run that version.
