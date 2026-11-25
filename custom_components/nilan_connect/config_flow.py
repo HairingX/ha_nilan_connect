@@ -40,7 +40,6 @@ from .const import (
 )
 from .data import NilanConfigEntry, identity_text, new_client
 from .guide import (
-    CONF_FULL_READ,
     CONF_MORE,
     CONF_SUGGESTION,
     CONF_TITLE,
@@ -495,7 +494,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         guide = self._require_guide()
         if user_input is not None:
             if not await guide.write_comments(user_input):
-                return await self.async_step_map_gone()
+                return self.async_abort(reason="mapping_gone_comments")
             return await self.async_step_map_tested()
         # A field's name is its label where no translation names it: the register and its change.
         fields: dict[Any, Any] = {probatio.Optional(name): str for name in guide.register_fields()}
@@ -559,18 +558,18 @@ class NilanOptionsFlow(OptionsFlowWithReload):
     async def async_step_map_send(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Finish, after scanning every address once more if asked."""
+        """Finish; after a test, once every address has been scanned once more, so that a
+        register a test brought is not missed."""
         if not self._loaded():
             return self.async_abort(reason="not_loaded")
         guide = self._require_guide()
-        if user_input is not None:
-            if user_input.get(CONF_FULL_READ):
-                return await self._read(guide.full_read, on_failure="map_send")
+        if not guide.tested:
             return await self.async_step_map_finish()
-        schema = probatio.Schema({probatio.Optional(CONF_FULL_READ, default=False): bool})
+        if user_input is not None:
+            return await self._read(guide.full_read, on_failure="map_send")
         return self.async_show_form(
             step_id="map_send",
-            data_schema=schema,
+            data_schema=probatio.Schema({}),
             description_placeholders={"report_url": MAPPING_REPORT_URL},
             errors=guide.take_errors(),
         )
@@ -583,11 +582,17 @@ class NilanOptionsFlow(OptionsFlowWithReload):
             reason="mapping_saved", description_placeholders={"report_url": MAPPING_REPORT_URL}
         )
 
-    async def async_step_map_gone(
+    async def async_step_map_gone_test(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """The mapping gave way to newer ones of the unit, and takes no more."""
-        return self.async_abort(reason="mapping_gone")
+        """The mapping gave way to newer ones of the unit, and took not the last test."""
+        return self.async_abort(reason="mapping_gone_test")
+
+    async def async_step_map_gone_final(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The mapping gave way to newer ones of the unit, and took not the last scan."""
+        return self.async_abort(reason="mapping_gone_final")
 
     async def _read(
         self, read: Callable[[], Awaitable[str]], *, on_failure: str

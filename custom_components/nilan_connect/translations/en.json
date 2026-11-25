@@ -3501,7 +3501,7 @@
           "more": "The other registers"
         },
         "data_description": {
-          "more": "Write after each \"=\" what the register is. A line you leave empty or delete stores nothing."
+          "more": "Write after each \"=\" what the register is; a line of its own belongs to the register above it. A register whose line you leave empty or delete stores nothing."
         }
       },
       "map_tested": {
@@ -3523,10 +3523,7 @@
       },
       "map_send": {
         "title": "Send in",
-        "description": "Every test is stored. A last scan of every address finds registers that answer only now, such as one a function switched on during the tests; it takes as long as the first scan. Then download the diagnostics and attach them to a [mapping report]({report_url}).",
-        "data": {
-          "full_read": "Scan every address once more"
-        }
+        "description": "Every test is stored. To miss no register - such as one a function you switched on brought - every address is scanned once more now; that takes as long as the first scan. Then download the diagnostics and attach them to a [mapping report]({report_url})."
       }
     },
     "progress": {
@@ -3540,7 +3537,9 @@
     "abort": {
       "not_loaded": "The unit is not set up right now, so it cannot be mapped. Try again once it is.",
       "mapping_saved": "The mapping is stored. Download the diagnostics and attach them to a [mapping report]({report_url}).",
-      "mapping_gone": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept, and the last test was not stored."
+      "mapping_gone_test": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the last test was not stored.",
+      "mapping_gone_comments": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the comments on the last test were not stored.",
+      "mapping_gone_final": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the last scan was not stored."
     }
   },
   "selector": {
@@ -3556,7 +3555,8 @@
         "unknown": "unknown",
         "nothing_changed": "Nothing changed since the last scan. The function may be switched off by another setting - for example the after-heating is off. Switch it on, and test again.",
         "changed": "{count} registers changed since the last scan.",
-        "found_space": "{space}: {present} with values, {absent} absent"
+        "found_space": "{space}: {present} with values, {absent} absent",
+        "changed_one": "1 register changed since the last scan."
       }
     },
     "mapping_suggestion": {

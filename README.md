@@ -56,16 +56,19 @@ Devices & services > Nilan Connect > Configure > **Map the unit**. It is offered
    says so, and submit: the guide scans again, in a few seconds, only the registers that answered.
 3. Each register that changed gets a field, named by the register and its raw change, such as
    "datapoint 79: 0 → 1", with the name of the value we know at it, if any. Write what it is; "?" is fine, and
-   an empty field is no comment. Beyond 20 registers, the rest share one field, a line each. If
+   an empty field is no comment. Beyond 20 registers, the rest share one field, a line each, where
+   a line of its own belongs to the register above it. If
    nothing changed, the guide says so: the function may be switched off by another setting.
 4. **Next test**, **Show all values** - every register's latest value, page by page, read from
-   what the scans found - or **Send in**, optionally after one more scan of every address, which
-   finds registers that answer only now.
+   what the scans found - or **Send in**. After a test, sending in scans every address once more,
+   so that no register is missed that a function switched on during the tests brought.
 5. Download the diagnostics and attach them to a
    [mapping report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml).
 
-Nothing is written to the unit, and nothing is read for a mapping unless the guide scans. A scan
-stops at once when the gateway is busy or does not answer, and the guide says so. Closing the
+Nothing is written to the unit, and nothing is read for a mapping unless the guide scans. While
+the first and the last scan of every address run - seconds to a few minutes - the unit's values
+are not updated; they keep their last value, and nothing becomes unavailable. A scan stops at
+once when the gateway is busy or does not answer, and the guide says so. Closing the
 guide during a scan stops it; the tests already made are kept. The latest three mappings of a
 unit are kept, each with up to 30 tests, and are deleted with the integration. The diagnostics
 show them under `mappings`: what you wrote, the unit's identity and model, the first scan in full,

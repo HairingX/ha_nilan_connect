@@ -44,9 +44,6 @@ CONF_TITLE: Final = "title"
 CONF_MORE: Final = "more"
 """The user's comments on the changed registers beyond those given a field each, a line each."""
 
-CONF_FULL_READ: Final = "full_read"
-"""Whether the guide scans every address once more before it ends."""
-
 OWN_TEST: Final = "own"
 """The suggestion of a test of the user's own."""
 
@@ -75,19 +72,22 @@ def comment_lines(changes: Iterable[RegisterChange]) -> str:
 
 
 def parse_comments(text: str, changes: Sequence[RegisterChange]) -> dict[RawAddress, str]:
-    """The comment written after each change's line in `text`, by its address. A line left empty
-    after its "=", deleted, or of a register not among `changes`, gives none, as does text on no
-    line of a change."""
+    """The comment written for each change in `text`, by its address: after the "=" of its line,
+    and on the lines after it up to the next change's line, joined by line breaks. A change whose
+    line is deleted, or left without text, gives none, as do lines before the first change's line
+    and those after a line of a register not among `changes`."""
     changed = {change.address for change in changes}
-    comments: dict[RawAddress, str] = {}
+    written: dict[RawAddress, list[str]] = {}
+    current: RawAddress | None = None
     for line in text.splitlines():
         found = _LINE.match(line)
-        if found is None or not found["comment"].strip():
-            continue
-        address = RawAddress(found["space"], int(found["number"]))
-        if address in changed:
-            comments[address] = found["comment"].strip()
-    return comments
+        if found is not None:
+            address = RawAddress(found["space"], int(found["number"]))
+            current = address if address in changed else None
+            line = found["comment"]
+        if current is not None and line.strip():
+            written.setdefault(current, []).append(line.strip())
+    return {address: "\n".join(lines) for address, lines in written.items()}
 
 
 class Known:
@@ -159,10 +159,17 @@ class MappingGuide:
                          .replace("{present}", str(present)).replace("{absent}", str(absent)))
         return "\n".join(lines)
 
+    @property
+    def tested(self) -> bool:
+        """Whether a test has been scanned."""
+        return self._steps > 0
+
     def result_text(self) -> str:
         """How many registers the last scan changed, or that nothing changed."""
         if not self._changes:
             return self._label("nothing_changed")
+        if len(self._changes) == 1:
+            return self._label("changed_one")
         return self._label("changed").replace("{count}", str(len(self._changes)))
 
     def register_fields(self) -> dict[str, RawAddress]:
@@ -190,6 +197,8 @@ class MappingGuide:
     def page_placeholders(self) -> dict[str, str]:
         """The page of values shown: each address with its last word and what is known of it."""
         pages = self.pages() or [[]]
+        # The pages change with each scan: a page past the last shows the last.
+        self.page = min(self.page, len(pages) - 1)
         rows = "\n".join(f"- {address}: {self._words[address]} · {self._known.describe(address)}"
                          for address in pages[self.page])
         return {"page": str(self.page + 1), "pages": str(len(pages)), "values": rows or "-"}
@@ -261,8 +270,9 @@ class MappingGuide:
         suggestion = None if self.suggestion == OWN_TEST else self.suggestion
         if not await self._mappings.async_add_step(
                 self._started_at, step(again.taken_at, self.title, suggestion, self._changes)):
-            return "map_gone"
+            return "map_gone_test"
         self._steps += 1
+        self.page = 0
         return "map_result"
 
     async def full_read(self) -> str:
@@ -272,7 +282,7 @@ class MappingGuide:
         self._learn(again)
         final = {**step(again.taken_at, "", None, self._changes), "snapshot": again.as_plain()}
         if not await self._mappings.async_finish(self._started_at, final):
-            return "map_gone"
+            return "map_gone_final"
         return "map_finish"
 
     async def write_comments(self, given: Mapping[str, Any]) -> bool:

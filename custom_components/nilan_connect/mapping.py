@@ -35,8 +35,15 @@ async def load_mappings(hass: HomeAssistant, entry_id: str) -> list[Plain]:
 
 
 async def remove_mappings(hass: HomeAssistant, entry_id: str) -> None:
-    """Remove the entry's stored mappings."""
-    await _store(hass, entry_id).async_remove()
+    """Remove the entry's stored mappings, once no guide is storing, and the lock guides store
+    under."""
+    async with _lock(hass, entry_id):
+        await _store(hass, entry_id).async_remove()
+    hass.data.setdefault(_LOCKS, {}).pop(entry_id, None)
+
+
+def _lock(hass: HomeAssistant, entry_id: str) -> asyncio.Lock:
+    return hass.data.setdefault(_LOCKS, {}).setdefault(entry_id, asyncio.Lock())
 
 
 def mapping(
@@ -77,7 +84,7 @@ class Mappings:
         self._hass = hass
         self._entry_id = entry_id
         self._store = _store(hass, entry_id)
-        self._lock = hass.data.setdefault(_LOCKS, {}).setdefault(entry_id, asyncio.Lock())
+        self._lock = _lock(hass, entry_id)
 
     async def async_start(self, found: Plain) -> None:
         """Store `found` as the newest mapping; the oldest gives way beyond the latest kept."""

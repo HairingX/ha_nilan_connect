@@ -3501,7 +3501,7 @@
           "more": "De øvrige registre"
         },
         "data_description": {
-          "more": "Skriv efter hvert \"=\", hvad registeret er. En linje, du lader stå tom eller sletter, gemmer intet."
+          "more": "Skriv efter hvert \"=\", hvad registeret er; en linje for sig hører til registeret over den. Et register, hvis linje du lader stå tom eller sletter, gemmer intet."
         }
       },
       "map_tested": {
@@ -3523,10 +3523,7 @@
       },
       "map_send": {
         "title": "Send ind",
-        "description": "Alle test er gemt. En sidste skanning af hver adresse finder registre, der først svarer nu, fx ét, som en funktion slået til under testene har givet; den tager lige så lang tid som den første. Hent så diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url}).",
-        "data": {
-          "full_read": "Skan hver adresse én gang til"
-        }
+        "description": "Alle test er gemt. For ikke at overse et register - fx ét, som en funktion, du slog til, har givet - skannes hver adresse én gang til nu; det tager lige så lang tid som den første skanning. Hent så diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url})."
       }
     },
     "progress": {
@@ -3540,7 +3537,9 @@
     "abort": {
       "not_loaded": "Anlægget er ikke sat op lige nu, så det kan ikke kortlægges. Prøv igen, når det er.",
       "mapping_saved": "Kortlægningen er gemt. Hent diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url}).",
-      "mapping_gone": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere, og den sidste test blev ikke gemt."
+      "mapping_gone_test": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: den sidste test blev ikke gemt.",
+      "mapping_gone_comments": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: kommentarerne til den sidste test blev ikke gemt.",
+      "mapping_gone_final": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: den sidste skanning blev ikke gemt."
     }
   },
   "selector": {
@@ -3556,7 +3555,8 @@
         "unknown": "ukendt",
         "nothing_changed": "Intet skiftede siden sidste skanning. Funktionen kan være slået fra af en anden indstilling - fx er eftervarmen slået fra. Slå den til, og test igen.",
         "changed": "{count} registre skiftede siden sidste skanning.",
-        "found_space": "{space}: {present} med værdier, {absent} findes ikke"
+        "found_space": "{space}: {present} med værdier, {absent} findes ikke",
+        "changed_one": "1 register skiftede siden sidste skanning."
       }
     },
     "mapping_suggestion": {
