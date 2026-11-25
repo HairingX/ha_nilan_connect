@@ -171,9 +171,11 @@ HACS installs only releases, pre-releases and the default branch. To try a devel
 on a real Home Assistant, run the **Test build** workflow from the Actions tab on that branch:
 
 1. It tests and validates the branch's commit, then publishes it as a pre-release such as
-   `v0.1.0b3`: the next release's version - the draft's, or the patch after the last release
-   when there is no draft - with the first free `b<n>`. The branch's commit is tagged; the
-   version and the libraries are set only in the zip the pre-release carries.
+   `v0.1.0b57`: the next release's version - the draft's, or the patch after the last release
+   when there is no draft - with `b<n>` the number of its run, or higher, so that a new test
+   build is always higher than any before it and HACS offers it as an update. The branch's
+   commit is tagged; the version and the libraries are set only in the zip the pre-release
+   carries.
 2. Where a library listed under `[tool.hairingx-workflows] libraries` in `pyproject.toml`
    has a branch of the same name, the test build requires that branch's current commit, from
    GitHub; otherwise the version the manifest pins. Home Assistant then checks that requirement
