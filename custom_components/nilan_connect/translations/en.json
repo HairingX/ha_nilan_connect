@@ -3467,32 +3467,34 @@
       },
       "map_start": {
         "title": "Map the unit",
-        "description": "Mapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you test functions one at a time on the unit's own panel or in the manufacturer's app, and after each the unit is scanned again, in a few seconds, and you see which registers changed. Nothing is written to the unit.\n\nWhen you are done, the mapping is in the diagnostics; attach them to a [mapping report]({report_url}).",
+        "description": "Recognised: **{model}**.\n\nMapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you test functions one at a time on the unit's own panel or in the manufacturer's app, and after each the unit is scanned again, in a few seconds, and you see which registers changed. Nothing is written to the unit.\n\nWhen you finish, the mapping is saved, and in the diagnostics; to send it to us, attach them to a [mapping report]({report_url}).",
         "data": {
-          "unit": "Which unit is it, and what is fitted?"
+          "fitted": "Is any extra equipment fitted we should know about?"
         },
         "data_description": {
-          "unit": "Such as: Genvex Optima 399, bought in 2019, with an after-heating coil and a heat pump."
-        }
+          "fitted": "Such as a heat pump, a preheater or a CO2 sensor. Leave it empty if there is none, or you do not know."
+        },
+        "submit": "Scan"
       },
       "map_found": {
         "title": "Scanned",
-        "description": "Registers found:\n\n{found}",
+        "description": "Registers found:\n\n{found}\n\nThe scan is saved. Please make a few tests: each test shows what one change on the unit does. Finish when you are done — you can send the mapping to us through the diagnostics.",
         "menu_options": {
-          "map_send": "Send in now",
-          "map_test": "Test functions"
+          "map_test": "Make a test (recommended)",
+          "map_send": "Finish and save"
         }
       },
       "map_test": {
         "title": "Test a function",
-        "description": "Choose a test, or make your own, and name it in one short line. Make the change on the panel or in the app, wait if the test says so, then submit it, and the unit is scanned.",
+        "description": "Change one thing on the unit (on its panel or in its app), for example the fan level, then press Scan.",
         "data": {
           "suggestion": "Test",
           "title": "What you tested"
         },
         "data_description": {
           "title": "Such as: Bypass opened, or Target temperature 23.5 °C."
-        }
+        },
+        "submit": "Scan"
       },
       "map_result": {
         "title": "What changed",
@@ -3509,8 +3511,9 @@
         "menu_options": {
           "map_test": "Next test",
           "map_values": "Show all values",
-          "map_send": "Send in"
-        }
+          "map_send": "Finish and save"
+        },
+        "description": "The scan is saved. Please make a few tests: each test shows what one change on the unit does. Finish when you are done — you can send the mapping to us through the diagnostics."
       },
       "map_values": {
         "title": "All values, page {page} of {pages}",
@@ -3522,8 +3525,9 @@
         }
       },
       "map_send": {
-        "title": "Send in",
-        "description": "Every test is stored. To miss no register - such as one a function you switched on brought - every address is scanned once more now; that takes as long as the first scan. Then download the diagnostics and attach them to a [mapping report]({report_url})."
+        "title": "Finish and save",
+        "description": "Every test is saved. To miss no register - such as one a function you switched on brought - every address is scanned once more now; that takes as long as the first scan. Then you can send the mapping to us: download the diagnostics and attach them to a [mapping report]({report_url}).",
+        "submit": "Scan and save"
       }
     },
     "progress": {
@@ -3555,7 +3559,7 @@
         "unknown": "unknown",
         "nothing_changed": "Nothing changed since the last scan. The function may be switched off by another setting - for example the after-heating is off. Switch it on, and test again.",
         "changed": "{count} registers changed since the last scan.",
-        "found_space": "{space}: {present} with values, {absent} absent",
+        "found_space": "{space}: {answered} answered, {nonzero} not 0, {absent} absent",
         "changed_one": "1 register changed since the last scan."
       }
     },

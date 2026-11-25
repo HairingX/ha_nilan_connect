@@ -32,8 +32,8 @@ from .mapping import Mappings, mapping, step
 
 _LOGGER = logging.getLogger(__name__)
 
-CONF_UNIT: Final = "unit"
-"""What the user says the unit is, and what is fitted to it."""
+CONF_FITTED: Final = "fitted"
+"""The extra equipment the user says is fitted to the unit, if any."""
 
 CONF_SUGGESTION: Final = "suggestion"
 """The kind of test the user chose from the suggestions, or their own."""
@@ -121,7 +121,7 @@ class MappingGuide:
         self._hass = hass
         self._entry = entry
         self._mappings = Mappings(hass, entry.entry_id)
-        self.unit_description = ""
+        self.fitted = ""
         self.title = ""
         self.suggestion = OWN_TEST
         self.page = 0
@@ -148,15 +148,18 @@ class MappingGuide:
         return self._steps < STEPS_KEPT
 
     def found_text(self) -> str:
-        """What the first scan found, per space: how many registers hold a value, and how many
-        are absent."""
+        """What the first scan found, per space: how many registers answered, how many of them
+        were not 0, and how many are absent. A gateway may answer 0 where nothing is, so an answer
+        alone says little."""
         spaces = sorted({address.space for address in (*self._found.values, *self._found.missing)})
         lines: list[str] = []
         for space in spaces:
-            present = sum(1 for address in self._found.values if address.space == space)
+            words = [word for address, word in self._found.values.items() if address.space == space]
             absent = sum(1 for address in self._found.missing if address.space == space)
             lines.append("- " + self._label("found_space").replace("{space}", space)
-                         .replace("{present}", str(present)).replace("{absent}", str(absent)))
+                         .replace("{answered}", str(len(words)))
+                         .replace("{nonzero}", str(sum(1 for word in words if word)))
+                         .replace("{absent}", str(absent)))
         return "\n".join(lines)
 
     @property
@@ -249,7 +252,7 @@ class MappingGuide:
         self._started_at = started.isoformat()
         await self._mappings.async_start(mapping(
             started_at=started,
-            unit_description=self.unit_description,
+            fitted=self.fitted,
             model=client.model.name,
             identity=dict(client.identity),
             device=device,

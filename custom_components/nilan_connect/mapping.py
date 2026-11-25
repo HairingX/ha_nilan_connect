@@ -49,7 +49,7 @@ def _lock(hass: HomeAssistant, entry_id: str) -> asyncio.Lock:
 def mapping(
     *,
     started_at: datetime,
-    unit_description: str,
+    fitted: str,
     model: str,
     identity: dict[str, Any],
     device: dict[str, str | None],
@@ -59,7 +59,7 @@ def mapping(
     """A new mapping, with its first full read and no steps yet."""
     return {
         "started_at": started_at.isoformat(),
-        "unit_description": unit_description,
+        "fitted": fitted,
         "model": model,
         "identity": identity,
         "device": device,

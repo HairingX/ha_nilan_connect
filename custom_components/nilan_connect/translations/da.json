@@ -3467,32 +3467,34 @@
       },
       "map_start": {
         "title": "Kortlæg anlægget",
-        "description": "Kortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så tester du funktioner én ad gangen på anlæggets eget panel eller i producentens app, og efter hver skannes anlægget igen, på få sekunder, og du ser, hvilke registre der skiftede. Der skrives intet til anlægget.\n\nNår du er færdig, er kortlægningen i diagnostikken; vedhæft den en [kortlægningsrapport]({report_url}).",
+        "description": "Genkendt: **{model}**.\n\nKortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så tester du funktioner én ad gangen på anlæggets eget panel eller i producentens app, og efter hver skannes anlægget igen, på få sekunder, og du ser, hvilke registre der skiftede. Der skrives intet til anlægget.\n\nNår du afslutter, er kortlægningen gemt og i diagnostikken; vil du sende den til os, så vedhæft den en [kortlægningsrapport]({report_url}).",
         "data": {
-          "unit": "Hvilket anlæg er det, og hvad har det monteret?"
+          "fitted": "Er der monteret ekstraudstyr, vi bør kende til?"
         },
         "data_description": {
-          "unit": "Fx: Genvex Optima 399, købt 2019, med eftervarmeflade og varmepumpe."
-        }
+          "fitted": "Fx en varmepumpe, en forvarmeflade eller en CO2-føler. Lad feltet stå tomt, hvis der ikke er noget, eller du ikke ved det."
+        },
+        "submit": "Skan"
       },
       "map_found": {
         "title": "Skannet",
-        "description": "Fundne registre:\n\n{found}",
+        "description": "Fundne registre:\n\n{found}\n\nSkanningen er gemt. Lav gerne et par tests: hver test viser, hvad én ændring på anlægget gør. Afslut, når du er færdig – kortlægningen kan sendes til os via diagnostikken.",
         "menu_options": {
-          "map_send": "Send ind nu",
-          "map_test": "Test funktioner"
+          "map_test": "Lav en test (anbefalet)",
+          "map_send": "Afslut og gem"
         }
       },
       "map_test": {
         "title": "Test en funktion",
-        "description": "Vælg en test, eller lav din egen, og giv den et navn på én kort linje. Lav ændringen på panelet eller i appen, vent, hvis testen siger det, og send det så, og anlægget skannes.",
+        "description": "Skift én ting på anlægget (på panelet eller i appen), fx ventilatortrin, og tryk så Skan.",
         "data": {
           "suggestion": "Test",
           "title": "Hvad du testede"
         },
         "data_description": {
           "title": "Fx: Bypass åbnet, eller Ønsket temperatur 23,5 °C."
-        }
+        },
+        "submit": "Skan"
       },
       "map_result": {
         "title": "Det skiftede",
@@ -3509,8 +3511,9 @@
         "menu_options": {
           "map_test": "Næste test",
           "map_values": "Vis alle værdier",
-          "map_send": "Send ind"
-        }
+          "map_send": "Afslut og gem"
+        },
+        "description": "Skanningen er gemt. Lav gerne et par tests: hver test viser, hvad én ændring på anlægget gør. Afslut, når du er færdig – kortlægningen kan sendes til os via diagnostikken."
       },
       "map_values": {
         "title": "Alle værdier, side {page} af {pages}",
@@ -3522,8 +3525,9 @@
         }
       },
       "map_send": {
-        "title": "Send ind",
-        "description": "Alle test er gemt. For ikke at overse et register - fx ét, som en funktion, du slog til, har givet - skannes hver adresse én gang til nu; det tager lige så lang tid som den første skanning. Hent så diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url})."
+        "title": "Afslut og gem",
+        "description": "Alle test er gemt. For ikke at overse et register - fx ét, som en funktion, du slog til, har givet - skannes hver adresse én gang til nu; det tager lige så lang tid som den første skanning. Så kan du sende kortlægningen til os: hent diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url}).",
+        "submit": "Skan og gem"
       }
     },
     "progress": {
@@ -3555,7 +3559,7 @@
         "unknown": "ukendt",
         "nothing_changed": "Intet skiftede siden sidste skanning. Funktionen kan være slået fra af en anden indstilling - fx er eftervarmen slået fra. Slå den til, og test igen.",
         "changed": "{count} registre skiftede siden sidste skanning.",
-        "found_space": "{space}: {present} med værdier, {absent} findes ikke",
+        "found_space": "{space}: {answered} svarede, {nonzero} ikke 0, {absent} findes ikke",
         "changed_one": "1 register skiftede siden sidste skanning."
       }
     },

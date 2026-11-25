@@ -1,12 +1,12 @@
 name: Mapping
-description: Send the mapping of your unit, made with Configure > Map the unit.
+description: The mapping of your unit, made and finished with Configure > Map the unit.
 labels: ["mapping"]
 body:
   - type: markdown
     attributes:
       value: >-
         Thank you for mapping your unit. Each step of the mapping is in the diagnostics, under
-        "mappings": what you wrote, when, and which registers changed. The email, the gateway's
+        "mappings": the extra equipment you named, each test, and which registers changed. The email, the gateway's
         address and its id are never in them. Danish is fine.
   - type: input
     id: model
