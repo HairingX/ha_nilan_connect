@@ -1,0 +1,40 @@
+name: Kortlægning (mapping)
+description: Send the mapping of your unit, made with Configure > Map the unit.
+labels: ["mapping"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Thank you for mapping your unit. Each step of the mapping is in the diagnostics, under
+        "mappings": what you wrote, when, and which registers changed. The email, the gateway's
+        address and its id are never in them. Danish is fine.
+  - type: input
+    id: model
+    attributes:
+      label: Your unit
+      description: >-
+        As you know it, such as "Genvex Optima 399" or "Nilan Compact P", with what is fitted to
+        it: an after-heating coil, a heat pump, a CO2 sensor.
+    validations:
+      required: true
+  - type: input
+    id: integration_version
+    attributes:
+      label: Version of Nilan Connect
+      description: Settings > Devices & services > Nilan Connect.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: >-
+        Settings > Devices & services > Nilan Connect > the three dots > Download
+        diagnostics. Attach the file here.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: A step you are unsure of, or something the panel showed that the steps do not say.

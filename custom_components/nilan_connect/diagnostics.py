@@ -1,6 +1,6 @@
 """What a bug report needs to show the unit works: the versions, the unit's model, every value with
-its quality, what is missing, the latest writes with how each ended, how the gateway answers, and
-the points tried at the Test level."""
+its quality, what is missing, the latest writes with how each ended, how the gateway answers, the
+points tried at the Test level, and the unit's stored mappings."""
 
 from __future__ import annotations
 
@@ -16,6 +16,7 @@ from nilan_connect import Client, DataValue, Key, Status
 
 from .const import CONF_EMAIL, CONF_GATEWAY_ID, DOMAIN
 from .data import NilanConfigEntry
+from .mapping import load_mappings
 
 REDACTED = "**REDACTED**"
 
@@ -35,7 +36,8 @@ async def async_get_config_entry_diagnostics(
     The entry's unique id is left out: it is the gateway's id. `writes` holds the latest writes
     of each key, the newest last, each with how it ended and the first read of the key after it.
     `test` lists each candidate the unit uses, with its value, its certainty and the key it
-    replaces, and each inferred point, with its value.
+    replaces, and each inferred point, with its value. `mappings` holds the unit's latest
+    mappings as stored, the oldest first; nothing is read from the unit for them.
     """
     client = entry.runtime_data.client
     integration = await async_get_integration(hass, DOMAIN)
@@ -90,6 +92,7 @@ async def async_get_config_entry_diagnostics(
             },
         },
         "gateway": library,
+        "mappings": await load_mappings(hass, entry.entry_id),
     }
 
 

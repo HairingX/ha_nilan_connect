@@ -3448,6 +3448,14 @@
   "options": {
     "step": {
       "init": {
+        "title": "Nilan Connect",
+        "description": "Skift anlæggets indstillinger, eller kortlæg det.",
+        "menu_options": {
+          "settings": "Indstillinger",
+          "map_unit": "Kortlæg anlægget"
+        }
+      },
+      "settings": {
         "title": "Niveau for værdier",
         "description": "Vælg, hvilke af anlæggets værdier der får en entitet.\n\n- **Verificeret**: kun værdier, der er læst på et anlæg af denne model.\n- **Dokumenteret**: også værdier fra producentens dokumentation. Det er standard.\n- **Test**: alle værdier, også dem, der er udledt af rækkefølgen i Nilans manual, og værdier, der afprøves i stedet for andre eller er nye. De er ikke bekræftet på et anlæg af denne model: de kan være forkerte, og ændrer du én, kan det ændre en anden indstilling. Tester du, så [fortæl os]({report_url}), om de passer med dit anlægs panel.",
         "data": {
@@ -3456,7 +3464,55 @@
         "data_description": {
           "level": "Hver entitets attribut Sikkerhed fortæller, hvor sikker dens værdi er."
         }
+      },
+      "map_start": {
+        "title": "Kortlæg anlægget",
+        "description": "Kortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Du laver én ændring ad gangen på anlæggets eget panel eller i producentens app, og efter hver læser integrationen anlægget og viser, hvad der skiftede. Der skrives intet til anlægget.\n\nFørst læser integrationen alle anlæggets registre én gang. Den første læsning kan tage et minut eller to; hver læsning derefter tager få sekunder.\n\nNår du er færdig, så hent diagnostikken og vedhæft den en [kortlægningsrapport]({report_url}).",
+        "data": {
+          "unit": "Hvilket anlæg er det, og hvad har det monteret?"
+        },
+        "data_description": {
+          "unit": "Fx: Genvex Optima 399, købt 2019, med eftervarmeflade og varmepumpe."
+        }
+      },
+      "map_change": {
+        "title": "Lav én ændring",
+        "description": "Skiftede ved sidste læsning ({count}):\n\n{changes}\n\nLav én ændring på panelet eller i appen. Skriv, hvad du ændrede, og hvad panelet viser nu. Send det så, og anlægget læses.",
+        "data": {
+          "change": "Hvad ændrede du, og hvad viser panelet nu?"
+        },
+        "data_description": {
+          "change": "Fx: Åbnede bypass-spjældet. Rum 1 viser 21,5 °C."
+        }
+      },
+      "map_changed": {
+        "title": "Det skiftede",
+        "description": "Skiftede siden læsningen før ({count}):\n\n{changes}\n\nDiagnostikken har alle ændringer.",
+        "menu_options": {
+          "map_next": "Næste ændring",
+          "map_done": "Færdig"
+        }
+      },
+      "map_done": {
+        "title": "Færdig",
+        "description": "Alle trin er gemt. En sidste læsning af alt finder registre, der er dukket op under kortlægningen; den tager lige så lang tid som den første.",
+        "menu_options": {
+          "map_full": "Læs alt én gang til",
+          "map_finish": "Afslut"
+        }
       }
+    },
+    "progress": {
+      "reading": "Læser anlægget. Den første læsning kan tage et minut eller to; lukker du her, stopper den, og alle trin, der allerede er taget, er gemt."
+    },
+    "error": {
+      "read_failed": "Anlægget var optaget eller svarede ikke, så læsningen stoppede. Prøv igen om lidt.",
+      "unknown": "Uventet fejl; se loggen."
+    },
+    "abort": {
+      "not_loaded": "Anlægget er ikke sat op lige nu, så det kan ikke kortlægges. Prøv igen, når det er.",
+      "mapping_saved": "Kortlægningen er gemt. Den sidste læsning skiftede ({count}):\n\n{changes}\n\nHent diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url}).",
+      "mapping_saved_without_full_read": "Kortlægningen er gemt, men den sidste læsning af alt stoppede: anlægget var optaget eller svarede ikke."
     }
   },
   "selector": {

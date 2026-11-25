@@ -143,7 +143,8 @@ async def test_the_level_is_an_option_of_the_entry(
 ) -> None:
     # HA declares the options manager's user input as a bare `dict`.
     options: Any = hass.config_entries.options
-    flow: ConfigFlowResult = await options.async_init(config_entry.entry_id)
+    flow: ConfigFlowResult = await options.async_configure(
+        (await options.async_init(config_entry.entry_id))["flow_id"], {"next_step_id": "settings"})
     assert flow.get("type") is FlowResultType.FORM
     result: ConfigFlowResult = await options.async_configure(flow["flow_id"], {CONF_LEVEL: "test"})
     await hass.async_block_till_done()

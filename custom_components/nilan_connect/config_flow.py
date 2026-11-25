@@ -1,10 +1,10 @@
-"""Set up a Nilan unit behind its gateway, change where it is reached, renew its email, and choose
-the level of the values it shows."""
+"""Set up a Nilan unit behind its gateway, change where it is reached, renew its email, choose
+the level of the values it shows, and map it."""
 
 from __future__ import annotations
 
 import logging
-from collections.abc import Mapping
+from collections.abc import Awaitable, Callable, Mapping
 from typing import Any, cast
 
 import probatio
@@ -35,9 +35,11 @@ from .const import (
     DEFAULT_NAME,
     DEFAULT_PORT,
     DOMAIN,
+    MAPPING_REPORT_URL,
     TEST_REPORT_URL,
 )
 from .data import NilanConfigEntry, identity_text, new_client
+from .guide import CONF_CHANGE, CONF_UNIT, MappingGuide
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -48,6 +50,10 @@ _PORT = probatio.All(int, probatio.Range(min=1, max=65535))
 _SELECT = cast(
     type[selector.Selector[selector.SelectSelectorConfig]], getattr(selector, "SelectSelector")
 )
+_TEXT = cast(
+    type[selector.Selector[selector.TextSelectorConfig]], getattr(selector, "TextSelector")
+)
+_MULTILINE = selector.TextSelectorConfig(multiline=True)
 
 
 class EmailRefusedError(Exception):
@@ -99,7 +105,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> NilanOptionsFlow:
-        """Choose the level of the values the unit shows."""
+        """Choose the level of the values the unit shows, or map the unit."""
         return NilanOptionsFlow()
 
     async def async_step_user(
@@ -337,15 +343,28 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class NilanOptionsFlow(OptionsFlowWithReload):
-    """The level of the values the unit shows; the entry reloads with the choice.
+    """The unit's settings, and the guide that maps it.
 
+    Settings choose the level of the values the unit shows; the entry reloads with the choice.
     Verified is offered only where the unit's model has a verified point, or while the entry is
     not loaded and its model is not known.
+
+    Mapping reads the unit's registers once in full, then, after each change the user makes on
+    the unit's panel, only those it found, and stores what changed; it changes no option.
     """
+
+    _started: MappingGuide | None = None
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
+        """The settings, or the guide."""
+        return self.async_show_menu(step_id="init", menu_options=["settings", "map_unit"])
+
+    async def async_step_settings(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The level of the values the unit shows."""
         if user_input is not None:
             return self.async_create_entry(data=user_input)
         entry: NilanConfigEntry = self.config_entry
@@ -365,7 +384,121 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         )
         schema = probatio.Schema({probatio.Required(CONF_LEVEL, default=str(DEFAULT_LEVEL)): levels})
         return self.async_show_form(
-            step_id="init",
+            step_id="settings",
             data_schema=self.add_suggested_values_to_schema(schema, self.config_entry.options),
             description_placeholders={"report_url": TEST_REPORT_URL},
         )
+
+    async def async_step_map_unit(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Start mapping the unit, which must be loaded."""
+        entry: NilanConfigEntry = self.config_entry
+        if entry.state is not ConfigEntryState.LOADED:
+            return self.async_abort(reason="not_loaded")
+        return await self.async_step_map_start()
+
+    async def async_step_map_start(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Ask what the user knows of the unit, then read it in full."""
+        guide = self._require_guide()
+        if user_input is not None:
+            guide.unit_description = str(user_input.get(CONF_UNIT, "")).strip()
+            return await self._read(guide.first_read, on_failure="map_start")
+        schema = probatio.Schema({probatio.Optional(CONF_UNIT): _TEXT(_MULTILINE)})
+        return self.async_show_form(
+            step_id="map_start",
+            data_schema=self.add_suggested_values_to_schema(
+                schema, {CONF_UNIT: guide.unit_description}
+            ),
+            description_placeholders={"report_url": MAPPING_REPORT_URL},
+            errors=guide.take_errors(),
+        )
+
+    async def async_step_map_change(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Ask what the user changed on the unit's panel, then read the unit again."""
+        guide = self._require_guide()
+        if user_input is not None:
+            guide.note = str(user_input.get(CONF_CHANGE, "")).strip()
+            return await self._read(guide.step_read, on_failure="map_change")
+        schema = probatio.Schema({probatio.Optional(CONF_CHANGE): _TEXT(_MULTILINE)})
+        return self.async_show_form(
+            step_id="map_change",
+            data_schema=self.add_suggested_values_to_schema(schema, {CONF_CHANGE: guide.note}),
+            description_placeholders=guide.placeholders(),
+            errors=guide.take_errors(),
+        )
+
+    async def async_step_map_read(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Show the read in progress; when it ends, go on, or back with its error."""
+        guide = self._require_guide()
+        task, started = guide.reading()
+        # Progress is shown at least once: a read that fails at once ends as it starts.
+        if started or not task.done():
+            return self.async_show_progress(
+                step_id="map_read", progress_action="reading", progress_task=task
+            )
+        return self.async_show_progress_done(next_step_id=await guide.finished(task))
+
+    async def async_step_map_changed(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """What the last read changed; the next change, or done."""
+        guide = self._require_guide()
+        options = ["map_next", "map_done"] if guide.room_for_steps else ["map_done"]
+        return self.async_show_menu(
+            step_id="map_changed", menu_options=options, description_placeholders=guide.placeholders()
+        )
+
+    async def async_step_map_next(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Make the next change."""
+        self._require_guide().note = ""
+        return await self.async_step_map_change()
+
+    async def async_step_map_done(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Finish, after reading everything once more, or as it is."""
+        return self.async_show_menu(step_id="map_done", menu_options=["map_full", "map_finish"])
+
+    async def async_step_map_full(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Read everything once more, as the first read did, to find registers that appeared."""
+        return await self._read(self._require_guide().full_read, on_failure="map_full_failed")
+
+    async def async_step_map_full_failed(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The last full read failed; the steps are stored."""
+        return self.async_abort(reason="mapping_saved_without_full_read")
+
+    async def async_step_map_finish(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The mapping is stored."""
+        guide = self._require_guide()
+        return self.async_abort(
+            reason="mapping_saved",
+            description_placeholders={**guide.placeholders(), "report_url": MAPPING_REPORT_URL},
+        )
+
+    async def _read(
+        self, read: Callable[[], Awaitable[str]], *, on_failure: str
+    ) -> ConfigFlowResult:
+        """Start `read`, which gives the step to go on with, and show its progress."""
+        self._require_guide().prepare(read, on_failure=on_failure)
+        return await self.async_step_map_read()
+
+    def _require_guide(self) -> MappingGuide:
+        """The guide of this flow, made the first time it is needed."""
+        if self._started is None:
+            self._started = MappingGuide(self.hass, self.config_entry)
+        return self._started

@@ -20,7 +20,7 @@ and off where the unit's on/off setting is known.
 ## Level of values
 
 How certain a value must be to get an entity is your choice: Settings > Devices & services >
-Nilan Connect > Configure > *Level*.
+Nilan Connect > Configure > *Settings* > *Level*.
 
 | Level | Entities |
 |---|---|
@@ -40,6 +40,28 @@ values it shows. An entry of a unit with estimated entities (a CTS602 or a CTS60
 showed them before levels existed is on Test; any other is on Documented, so no entity comes or
 goes with the change. An entity that a level leaves out is kept, unavailable, with its name and
 settings, for when you choose a level that has it again.
+
+## Map the unit
+
+Help find out what your unit's registers mean, those we know and those we do not: Settings >
+Devices & services > Nilan Connect > Configure > **Map the unit**. It is offered on every unit.
+
+1. Say which unit it is and what is fitted to it, such as "Genvex Optima 399, bought in 2019, with
+   an after-heating coil and a heat pump". The guide then reads every register of the unit once,
+   which can take a minute or two.
+2. Make one change on the unit's own panel or in the manufacturer's app, write what you changed
+   and what the panel shows now, and submit: the guide reads the unit again, in a few seconds,
+   and lists the registers that changed. Repeat for as many changes as you like.
+3. **Done**: optionally read everything once more, to find registers that appeared, then finish.
+4. Download the diagnostics and attach them to a
+   [mapping report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml).
+
+Nothing is written to the unit, and nothing is read for a mapping unless the guide reads. A read
+stops at once when the gateway is busy or does not answer, and the guide says so. Closing the
+guide during a read stops it; the steps already taken are kept. The latest three mappings of a
+unit are kept, each with up to 30 steps, and are deleted with the integration. The diagnostics
+show them under `mappings`: what you wrote, the unit's identity and model, the first read in
+full, and what changed at each step; never the email, the gateway's address or its id.
 
 ## Installation
 
@@ -84,8 +106,8 @@ values; if it leaves the next one unanswered too, they are unavailable until it 
 - **No gateway is found**: discovery is a broadcast on the local network. Enter the gateway's
   address instead.
 - The diagnostics, downloaded from the integration's entry, hold every value without the email or
-  where the gateway is, the level, how certain each value is, the latest writes, and, under
-  `test`, each value under test with what it replaces.
+  where the gateway is, the level, how certain each value is, the latest writes, under
+  `test`, each value under test with what it replaces, and under `mappings` the unit's mappings.
 
 ### Reporting a problem
 

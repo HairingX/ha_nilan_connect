@@ -177,7 +177,8 @@ async def test_an_entity_a_level_leaves_out_keeps_its_name_for_a_level_that_has_
     registry.async_update_entity(entity_id, name="Living room")
     options: Any = hass.config_entries.options
     for level in ("verified", "documented"):
-        flow: ConfigFlowResult = await options.async_init(entry.entry_id)
+        flow: ConfigFlowResult = await options.async_configure(
+            (await options.async_init(entry.entry_id))["flow_id"], {"next_step_id": "settings"})
         await options.async_configure(flow["flow_id"], {CONF_LEVEL: level})
         await hass.async_block_till_done()
         kept = registry.async_get(entity_id)
@@ -354,7 +355,8 @@ async def test_choosing_another_level_than_test_removes_the_request_to_report(
     assert _issue(hass, entry) is not None
     # HA declares the options manager's user input as a bare `dict`.
     options: Any = hass.config_entries.options
-    flow: ConfigFlowResult = await options.async_init(entry.entry_id)
+    flow: ConfigFlowResult = await options.async_configure(
+        (await options.async_init(entry.entry_id))["flow_id"], {"next_step_id": "settings"})
     await options.async_configure(flow["flow_id"], {CONF_LEVEL: "documented"})
     await hass.async_block_till_done()
     assert _issue(hass, entry) is None
@@ -434,7 +436,8 @@ async def test_the_diagnostics_list_nothing_under_test_below_the_test_level(
 async def _offered(hass: HomeAssistant, entry: MockConfigEntry) -> list[str]:
     """The levels the entry's options offer."""
     options: Any = hass.config_entries.options
-    flow: ConfigFlowResult = await options.async_init(entry.entry_id)
+    flow: ConfigFlowResult = await options.async_configure(
+        (await options.async_init(entry.entry_id))["flow_id"], {"next_step_id": "settings"})
     schema: Any = flow.get("data_schema")
     ((marker, field),) = schema.schema.items()
     assert str(marker) == CONF_LEVEL
@@ -476,7 +479,7 @@ async def test_every_level_is_offered_while_the_unit_is_not_loaded(
 def test_the_level_and_the_request_to_report_are_translated_with_their_placeholders(language: str) -> None:
     translations = json.loads((TRANSLATIONS / f"{language}.json").read_text(encoding="utf-8"))
     assert set(translations["selector"][CONF_LEVEL]["options"]) == {"verified", "documented", "test"}
-    assert "{report_url}" in translations["options"]["step"]["init"]["description"]
+    assert "{report_url}" in translations["options"]["step"]["settings"]["description"]
     issue = translations["issues"][TESTING_ISSUE]
     assert "{name}" in issue["title"] and "{model}" in issue["title"]
     assert "{report_url}" in issue["description"]

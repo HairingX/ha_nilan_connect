@@ -65,7 +65,8 @@ point.
 ## The level of values
 
 The library chooses which of a model's points a unit has by the level the client is made with
-(`nilan_connect.Level`), stored by its text as the entry's one option:
+(`nilan_connect.Level`), stored by its text as the entry's one option, chosen under Settings in
+the options:
 
 | Level | Points |
 |---|---|
@@ -98,6 +99,43 @@ with a verified point: on any other it would leave no entity.
   and the key it replaces, and each inferred point used with its value. Each value also states
   its certainty, so one entry shows whether a point was read, how it was decoded and how sure
   that decoding is.
+
+## Mapping a unit
+
+The options open on a menu: **Settings**, the level, and **Map the unit**, a guide that finds out
+with the user what the unit's registers mean, whether the model knows them or not. The options
+flow is Home Assistant's place for how an integration behaves, and shows menus, forms and
+progress between steps; a button is one action without steps, Repairs is for faults the user
+must fix, and the debug log only logs.
+
+- **Steps.** `map_start` asks what the user knows of the unit, as free text, then `map_read`
+  shows the progress of the first read, `Client.map_areas(limit=MAPPING_LIMIT)`. `map_change`
+  asks what the user changed on the unit's panel and what it shows now; `map_read` then reads
+  again only what the first read found, `Client.read_mapped`, and `map_changed` lists what changed
+  since the read before - the first `CHANGES_SHOWN`, the diagnostics having all - with
+  `map_next` and `map_done`. At `map_done` the user may read everything once more, `map_full`,
+  with the same limit, so that a register that appeared during the mapping is found, or finish.
+  A read that fails returns to the form it came from, saying why; one that fails at `map_full`
+  ends the guide, the steps stored. A progress step is shown at least once, as a read that fails
+  at once ends as it starts. Nothing changes the entry's options, so the entry does not reload.
+- **What is read.** The library derives the registers from the model's points: for each of the
+  gateway's tables, the span from the lowest to the highest address the points read or write,
+  and above it up to `MAPPING_LIMIT`, 300, which the owner chose from the measured cost of the
+  first read on every model's simulated gateway. Nothing is read for a mapping unless the guide
+  reads, only reads, through the client's own requests and between its polls; busy or no answer
+  stops a read with `CannotConnectError`.
+- **Storage.** One `Store` per entry, `nilan_connect.mappings.<entry id>`, holds the latest
+  `MAPPINGS_KEPT` (3) mappings, the oldest giving way, each with up to `STEPS_KEPT` (30) steps:
+  when it started, what the user said of the unit, the model, the handshake's identity, the
+  device's manufacturer, model and software version, the areas, the first read in full, and per
+  step its time, the user's note and what changed; the full state at any step is the first read
+  plus the changes so far. Each read is stored as soon as it ends, so a guide closed during a read,
+  which cancels it, keeps the steps taken. `async_remove_entry` removes the store.
+- **Diagnostics.** `mappings` is what the store holds, read from it: the diagnostics never read
+  the unit for it. The identity holds the controller's type and model numbers, not a serial
+  number; the email, the gateway's address and its id are not in it.
+- **Reporting.** The issue form `mapping.yml` asks for the unit as the user knows it, the
+  integration's version and the diagnostics.
 
 ## Entities
 

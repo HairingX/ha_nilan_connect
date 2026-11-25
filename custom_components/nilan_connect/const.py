@@ -41,3 +41,20 @@ entities keep theirs when the unit is replaced."""
 DEFAULT_PORT: Final = PORT
 """The UDP port a Nilan gateway answers micro_nabto on."""
 
+
+MAPPING_LIMIT: Final = 300
+"""How far up each of the gateway's tables a mapping reads: the owner chose 300 from the measured
+cost of the first read of every model's simulated gateway, about 15 to 500 requests, a few seconds
+at the gateways' usual answer time."""
+
+MAPPINGS_KEPT: Final = 3
+"""How many of a unit's latest mappings are stored; the oldest gives way first."""
+
+STEPS_KEPT: Final = 30
+"""How many steps of one mapping are stored."""
+
+CHANGES_SHOWN: Final = 12
+"""How many of a step's changes the guide lists; the diagnostics hold every one."""
+
+MAPPING_REPORT_URL: Final = "https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml"
+"""Where a user sends the mappings of their unit."""

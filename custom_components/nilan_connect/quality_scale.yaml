@@ -44,7 +44,9 @@ rules:
   config-entry-unloading: done
   docs-configuration-parameters:
     status: done
-    comment: The one option, the level of values, is described in the README.
+    comment: >-
+      The one option, the level of values, and the guide that maps the unit are described in the
+      README.
   docs-installation-parameters: done
   entity-unavailable: done
   integration-owner: done

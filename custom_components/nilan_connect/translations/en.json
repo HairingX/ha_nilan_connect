@@ -3448,6 +3448,14 @@
   "options": {
     "step": {
       "init": {
+        "title": "Nilan Connect",
+        "description": "Change the unit's settings, or map it.",
+        "menu_options": {
+          "settings": "Settings",
+          "map_unit": "Map the unit"
+        }
+      },
+      "settings": {
         "title": "Level of values",
         "description": "Choose which of the unit's values get an entity.\n\n- **Verified**: only values read on a unit of this model.\n- **Documented**: also values from the manufacturer's documentation. This is the default.\n- **Test**: every value, also those inferred from the order of Nilan's manual, and values tried in place of others or new. They have not been confirmed on a unit of this model: they may be wrong, and changing one may change a different setting. If you test, please [report]({report_url}) whether they match your unit's panel.",
         "data": {
@@ -3456,7 +3464,55 @@
         "data_description": {
           "level": "Each entity's attribute Certainty says how certain its value is."
         }
+      },
+      "map_start": {
+        "title": "Map the unit",
+        "description": "Mapping finds out what the unit's registers mean, with your help. You make one change at a time on the unit's own panel or in the manufacturer's app, and after each the integration reads the unit and shows what changed. Nothing is written to the unit.\n\nFirst the integration reads every register of the unit once. The first read can take a minute or two; every read after it takes a few seconds.\n\nWhen you are done, download the diagnostics and attach them to a [mapping report]({report_url}).",
+        "data": {
+          "unit": "Which unit is it, and what is fitted?"
+        },
+        "data_description": {
+          "unit": "Such as: Genvex Optima 399, bought in 2019, with an after-heating coil and a heat pump."
+        }
+      },
+      "map_change": {
+        "title": "Make one change",
+        "description": "Changed by the last read ({count}):\n\n{changes}\n\nMake one change on the panel or in the app. Write what you changed and what the panel shows now. Then submit it, and the unit is read.",
+        "data": {
+          "change": "What did you change, and what does the panel show now?"
+        },
+        "data_description": {
+          "change": "Such as: Opened the bypass damper. Room 1 shows 21.5 °C."
+        }
+      },
+      "map_changed": {
+        "title": "What changed",
+        "description": "Changed since the read before ({count}):\n\n{changes}\n\nThe diagnostics hold every change.",
+        "menu_options": {
+          "map_next": "Next change",
+          "map_done": "Done"
+        }
+      },
+      "map_done": {
+        "title": "Done",
+        "description": "Every step is stored. A last read of everything finds registers that appeared during the mapping; it takes as long as the first read.",
+        "menu_options": {
+          "map_full": "Read everything once more",
+          "map_finish": "Finish"
+        }
       }
+    },
+    "progress": {
+      "reading": "Reading the unit. The first read can take a minute or two; closing this stops it, and every step already taken stays stored."
+    },
+    "error": {
+      "read_failed": "The unit was busy or did not answer, so the read stopped. Try again in a moment.",
+      "unknown": "Unexpected error; see the log."
+    },
+    "abort": {
+      "not_loaded": "The unit is not set up right now, so it cannot be mapped. Try again once it is.",
+      "mapping_saved": "The mapping is stored. The last read changed ({count}):\n\n{changes}\n\nDownload the diagnostics and attach them to a [mapping report]({report_url}).",
+      "mapping_saved_without_full_read": "The mapping is stored, but the last read of everything stopped: the unit was busy or did not answer."
     }
   },
   "selector": {
