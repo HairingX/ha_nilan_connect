@@ -108,19 +108,23 @@ flow is Home Assistant's place for how an integration behaves, and shows menus, 
 progress between steps; a button is one action without steps, Repairs is for faults the user
 must fix, and the debug log only logs.
 
-- **Steps.** `map_start` takes one line about the unit, then `map_read` shows the progress of the
-  first scan, `Client.map_areas(limit=MAPPING_LIMIT)`, and `map_found` says how many registers of
-  each space hold a value and how many are absent, with **Send in now** (`map_send`) and **Test
-  functions** (`map_test`). A test is chosen from the suggestions, translated under the selector
-  `mapping_suggestion`, or the user's own, and named in one required line; `map_read` then scans
+- **Steps.** `map_start` shows the model the unit was recognised as and asks, optionally, what
+  extra equipment is fitted; then `map_read` shows the progress of the first scan,
+  `Client.map_areas(limit=MAPPING_LIMIT)`, and `map_found` says per space how many registers
+  answered, how many of those were not 0, and how many are absent - a gateway may answer 0 where
+  nothing is, so an answer alone says little - and that the scan is saved, with **Make a test
+  (recommended)** (`map_test`) and **Finish and save** (`map_send`): nothing is sent anywhere. A
+  test is chosen from the suggestions, translated under the selector `mapping_suggestion`, or the
+  user's own, and named in one required line; its **Scan** button, a step's `submit` translation,
+  then starts `map_read`, which scans
   again only what the first scan found, `Client.read_mapped`. `map_result` gives each changed
   register, up to `REGISTER_FIELDS` (20), a field of its own, and the rest one multiline field a
   line each, parsed back by the address at the start of each line; a line of its own belongs to
   the register above it. `map_tested` offers the next test, `map_values` - the latest state, the
   first scan with every scan after it, `VALUES_PER_PAGE` (50) registers of one space a page, read
   from what the guide holds, from the first page again after each scan - and `map_send`. After a
-  test, sending in scans every address once more, with the same limit, as a test can switch on
-  something whose registers answer only then, and no register may be missed; sent in straight
+  test, finishing scans every address once more, with the same limit, as a test can switch on
+  something whose registers answer only then, and no register may be missed; finished straight
   after the first scan, it needs none.
 - **Field names.** A field Home Assistant has no translation for is labelled by its name, so a
   register's field is named by the register and its raw change, "datapoint 79: 0 → 1", with the
@@ -148,7 +152,7 @@ must fix, and the debug log only logs.
   their last value, and as the gateway answers, nothing becomes unavailable.
 - **Storage.** One `Store` per entry, `nilan_connect.mappings.<entry id>`, holds the latest
   `MAPPINGS_KEPT` (3) mappings, the oldest giving way, each with up to `STEPS_KEPT` (30) tests:
-  when it started, what the user said of the unit, the model, the handshake's identity, the
+  when it started, the extra equipment the user named (`fitted`), the model, the handshake's identity, the
   device's manufacturer, model and software version, the areas, the first scan in full, per test
   its time, name, suggestion and changes with the user's comment on each, and the last full scan
   in full with what it changed. Each scan is stored as soon as it ends, under a lock per entry, so

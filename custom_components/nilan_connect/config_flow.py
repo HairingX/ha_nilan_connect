@@ -41,9 +41,9 @@ from .const import (
 from .data import NilanConfigEntry, identity_text, new_client
 from .guide import (
     CONF_MORE,
+    CONF_FITTED,
     CONF_SUGGESTION,
     CONF_TITLE,
-    CONF_UNIT,
     OWN_TEST,
     SUGGESTIONS,
     MappingGuide,
@@ -408,20 +408,23 @@ class NilanOptionsFlow(OptionsFlowWithReload):
     async def async_step_map_start(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Ask what the user knows of the unit, then scan every address of it."""
+        """Show the model the unit was recognised as, ask what extra equipment is fitted, if any,
+        then scan every address of it."""
         if not self._loaded():
             return self.async_abort(reason="not_loaded")
         guide = self._require_guide()
         if user_input is not None:
-            guide.unit_description = str(user_input.get(CONF_UNIT, "")).strip()
+            guide.fitted = str(user_input.get(CONF_FITTED, "")).strip()
             return await self._read(guide.first_read, on_failure="map_start")
-        schema = probatio.Schema({probatio.Optional(CONF_UNIT): str})
+        model = self.config_entry.runtime_data.client.model
+        schema = probatio.Schema({probatio.Optional(CONF_FITTED): str})
         return self.async_show_form(
             step_id="map_start",
-            data_schema=self.add_suggested_values_to_schema(
-                schema, {CONF_UNIT: guide.unit_description}
-            ),
-            description_placeholders={"report_url": MAPPING_REPORT_URL},
+            data_schema=self.add_suggested_values_to_schema(schema, {CONF_FITTED: guide.fitted}),
+            description_placeholders={
+                "model": f"{model.manufacturer} {model.name}",
+                "report_url": MAPPING_REPORT_URL,
+            },
             errors=guide.take_errors(),
         )
 
@@ -446,7 +449,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
             return self.async_abort(reason="not_loaded")
         return self.async_show_menu(
             step_id="map_found",
-            menu_options=["map_send", "map_test"],
+            menu_options=["map_test", "map_send"],
             description_placeholders={"found": self._require_guide().found_text()},
         )
 
