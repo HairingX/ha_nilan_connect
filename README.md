@@ -20,7 +20,7 @@ and off where the unit's on/off setting is known.
 ## Level of values
 
 How certain a value must be to get an entity is your choice: Settings > Devices & services >
-Nilan Connect > Configure > *Level*.
+Nilan Connect > Configure > *Settings* > *Level*.
 
 | Level | Entities |
 |---|---|
@@ -40,6 +40,40 @@ values it shows. An entry of a unit with estimated entities (a CTS602 or a CTS60
 showed them before levels existed is on Test; any other is on Documented, so no entity comes or
 goes with the change. An entity that a level leaves out is kept, unavailable, with its name and
 settings, for when you choose a level that has it again.
+
+## Map the unit
+
+Help find out what your unit's registers mean, those we know and those we do not: Settings >
+Devices & services > Nilan Connect > Configure > **Map the unit**. It is offered on every unit.
+
+1. Say in one line which unit it is and what is fitted to it, such as "Genvex Optima 399, bought
+   in 2019, with an after-heating coil and a heat pump". The guide then scans every address of
+   the unit once, from 0 to 299, and says how many registers it found. That takes from seconds to
+   a few minutes on a slow gateway.
+2. **Send in now**, or **Test functions**: pick a suggested test - a temperature sensor, a
+   setting, something switched on and off, a mode, an alarm - or your own, and name it in one
+   line. Make the change on the unit's own panel or in the manufacturer's app, wait if the test
+   says so, and submit: the guide scans again, in a few seconds, only the registers that answered.
+3. Each register that changed gets a field, named by the register and its raw change, such as
+   "datapoint 79: 0 → 1", with the name of the value we know at it, if any. Write what it is; "?" is fine, and
+   an empty field is no comment. Beyond 20 registers, the rest share one field, a line each, where
+   a line of its own belongs to the register above it. If
+   nothing changed, the guide says so: the function may be switched off by another setting.
+4. **Next test**, **Show all values** - every register's latest value, page by page, read from
+   what the scans found - or **Send in**. After a test, sending in scans every address once more,
+   so that no register is missed that a function switched on during the tests brought.
+5. Download the diagnostics and attach them to a
+   [mapping report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml).
+
+Nothing is written to the unit, and nothing is read for a mapping unless the guide scans. While
+the first and the last scan of every address run - seconds to a few minutes - the unit's values
+are not updated; they keep their last value, and nothing becomes unavailable. A scan stops at
+once when the gateway is busy or does not answer, and the guide says so. Closing the
+guide during a scan stops it; the tests already made are kept. The latest three mappings of a
+unit are kept, each with up to 30 tests, and are deleted with the integration. The diagnostics
+show them under `mappings`: what you wrote, the unit's identity and model, the first scan in full,
+and per test its name, the suggestion it followed, what changed and your comments; never the
+email, the gateway's address or its id.
 
 ## Installation
 
@@ -84,8 +118,8 @@ values; if it leaves the next one unanswered too, they are unavailable until it 
 - **No gateway is found**: discovery is a broadcast on the local network. Enter the gateway's
   address instead.
 - The diagnostics, downloaded from the integration's entry, hold every value without the email or
-  where the gateway is, the level, how certain each value is, the latest writes, and, under
-  `test`, each value under test with what it replaces.
+  where the gateway is, the level, how certain each value is, the latest writes, under
+  `test`, each value under test with what it replaces, and under `mappings` the unit's mappings.
 
 ### Reporting a problem
 

@@ -50,6 +50,7 @@ from .button import BUTTONS
 from .climate import CONTROLS, THERMOSTAT
 from .data import NilanConfigEntry, NilanData, identity_text, new_client
 from .entity import NilanEntityDescription
+from .mapping import remove_mappings
 from .number import NUMBERS
 from .select import SELECTS
 from .sensor import EFFICIENCY, EFFICIENCY_FROM, SENSORS
@@ -213,6 +214,11 @@ async def async_unload_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> bo
         await asyncio.wait([data.poller])
     await data.client.disconnect()
     return True
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> None:
+    """Remove the unit's stored mappings with its entry."""
+    await remove_mappings(hass, entry.entry_id)
 
 
 @callback

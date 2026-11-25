@@ -41,3 +41,24 @@ entities keep theirs when the unit is replaced."""
 DEFAULT_PORT: Final = PORT
 """The UDP port a Nilan gateway answers micro_nabto on."""
 
+
+MAPPING_LIMIT: Final = 300
+"""How far up each of the gateway's spaces a mapping reads, every address from 0: the owner chose
+300 from the measured cost of the first scan on every model's simulated gateway, up to about 750
+requests - seconds on a quick gateway, up to a few minutes on a slow one."""
+
+MAPPINGS_KEPT: Final = 3
+"""How many of a unit's latest mappings are stored; the oldest gives way first."""
+
+STEPS_KEPT: Final = 30
+"""How many steps of one mapping are stored."""
+
+REGISTER_FIELDS: Final = 20
+"""How many of a test's changed registers get a field of their own for the user's comment; the
+rest share one field, a line each."""
+
+VALUES_PER_PAGE: Final = 50
+"""How many of a space's registers a page of the values shows."""
+
+MAPPING_REPORT_URL: Final = "https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml"
+"""Where a user sends the mappings of their unit."""

@@ -1,10 +1,10 @@
-"""Set up a Nilan unit behind its gateway, change where it is reached, renew its email, and choose
-the level of the values it shows."""
+"""Set up a Nilan unit behind its gateway, change where it is reached, renew its email, choose
+the level of the values it shows, and map it."""
 
 from __future__ import annotations
 
 import logging
-from collections.abc import Mapping
+from collections.abc import Awaitable, Callable, Mapping
 from typing import Any, cast
 
 import probatio
@@ -35,9 +35,20 @@ from .const import (
     DEFAULT_NAME,
     DEFAULT_PORT,
     DOMAIN,
+    MAPPING_REPORT_URL,
     TEST_REPORT_URL,
 )
 from .data import NilanConfigEntry, identity_text, new_client
+from .guide import (
+    CONF_MORE,
+    CONF_SUGGESTION,
+    CONF_TITLE,
+    CONF_UNIT,
+    OWN_TEST,
+    SUGGESTIONS,
+    MappingGuide,
+    comment_lines,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -48,6 +59,10 @@ _PORT = probatio.All(int, probatio.Range(min=1, max=65535))
 _SELECT = cast(
     type[selector.Selector[selector.SelectSelectorConfig]], getattr(selector, "SelectSelector")
 )
+_TEXT = cast(
+    type[selector.Selector[selector.TextSelectorConfig]], getattr(selector, "TextSelector")
+)
+_MULTILINE = selector.TextSelectorConfig(multiline=True)
 
 
 class EmailRefusedError(Exception):
@@ -99,7 +114,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> NilanOptionsFlow:
-        """Choose the level of the values the unit shows."""
+        """Choose the level of the values the unit shows, or map the unit."""
         return NilanOptionsFlow()
 
     async def async_step_user(
@@ -337,15 +352,29 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class NilanOptionsFlow(OptionsFlowWithReload):
-    """The level of the values the unit shows; the entry reloads with the choice.
+    """The unit's settings, and the guide that maps it.
 
+    Settings choose the level of the values the unit shows; the entry reloads with the choice.
     Verified is offered only where the unit's model has a verified point, or while the entry is
     not loaded and its model is not known.
+
+    Mapping scans every address of the unit once, then, after each test the user makes on the
+    unit's panel, only those that answered, and stores what changed with the user's comments; it
+    changes no option.
     """
+
+    _started: MappingGuide | None = None
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
+        """The settings, or the guide."""
+        return self.async_show_menu(step_id="init", menu_options=["settings", "map_unit"])
+
+    async def async_step_settings(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The level of the values the unit shows."""
         if user_input is not None:
             return self.async_create_entry(data=user_input)
         entry: NilanConfigEntry = self.config_entry
@@ -365,7 +394,219 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         )
         schema = probatio.Schema({probatio.Required(CONF_LEVEL, default=str(DEFAULT_LEVEL)): levels})
         return self.async_show_form(
-            step_id="init",
+            step_id="settings",
             data_schema=self.add_suggested_values_to_schema(schema, self.config_entry.options),
             description_placeholders={"report_url": TEST_REPORT_URL},
         )
+
+    async def async_step_map_unit(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Start mapping the unit."""
+        return await self.async_step_map_start()
+
+    async def async_step_map_start(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Ask what the user knows of the unit, then scan every address of it."""
+        if not self._loaded():
+            return self.async_abort(reason="not_loaded")
+        guide = self._require_guide()
+        if user_input is not None:
+            guide.unit_description = str(user_input.get(CONF_UNIT, "")).strip()
+            return await self._read(guide.first_read, on_failure="map_start")
+        schema = probatio.Schema({probatio.Optional(CONF_UNIT): str})
+        return self.async_show_form(
+            step_id="map_start",
+            data_schema=self.add_suggested_values_to_schema(
+                schema, {CONF_UNIT: guide.unit_description}
+            ),
+            description_placeholders={"report_url": MAPPING_REPORT_URL},
+            errors=guide.take_errors(),
+        )
+
+    async def async_step_map_read(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Show the scan in progress; when it ends, go on, or back with its error."""
+        guide = self._require_guide()
+        task, started = guide.reading()
+        # Progress is shown at least once: a scan that fails at once ends as it starts.
+        if started or not task.done():
+            return self.async_show_progress(
+                step_id="map_read", progress_action="reading", progress_task=task
+            )
+        return self.async_show_progress_done(next_step_id=await guide.finished(task))
+
+    async def async_step_map_found(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """What the first scan found; send it in now, or test functions."""
+        if not self._loaded():
+            return self.async_abort(reason="not_loaded")
+        return self.async_show_menu(
+            step_id="map_found",
+            menu_options=["map_send", "map_test"],
+            description_placeholders={"found": self._require_guide().found_text()},
+        )
+
+    async def async_step_map_test(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Choose a test and name it; the user makes it, then the unit is scanned."""
+        if not self._loaded():
+            return self.async_abort(reason="not_loaded")
+        guide = self._require_guide()
+        errors = guide.take_errors()
+        if user_input is not None:
+            guide.suggestion = str(user_input.get(CONF_SUGGESTION, OWN_TEST))
+            guide.title = str(user_input.get(CONF_TITLE, "")).strip()
+            if guide.title:
+                return await self._read(guide.step_read, on_failure="map_test")
+            errors = {CONF_TITLE: "title_required"}
+        suggestions = _SELECT(
+            selector.SelectSelectorConfig(
+                options=[OWN_TEST, *SUGGESTIONS],
+                translation_key="mapping_suggestion",
+                mode=selector.SelectSelectorMode.LIST,
+            )
+        )
+        schema = probatio.Schema(
+            {
+                probatio.Required(CONF_SUGGESTION, default=OWN_TEST): suggestions,
+                probatio.Required(CONF_TITLE): str,
+            }
+        )
+        return self.async_show_form(
+            step_id="map_test",
+            data_schema=self.add_suggested_values_to_schema(
+                schema, {CONF_SUGGESTION: guide.suggestion, CONF_TITLE: guide.title}
+            ),
+            errors=errors,
+        )
+
+    async def async_step_map_result(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """What the test changed, a field for the user's comment on each register."""
+        if not self._loaded():
+            return self.async_abort(reason="not_loaded")
+        guide = self._require_guide()
+        if user_input is not None:
+            if not await guide.write_comments(user_input):
+                return self.async_abort(reason="mapping_gone_comments")
+            return await self.async_step_map_tested()
+        # A field's name is its label where no translation names it: the register and its change.
+        fields: dict[Any, Any] = {probatio.Optional(name): str for name in guide.register_fields()}
+        suggested: dict[str, str] = {}
+        if guide.more_changes:
+            fields[probatio.Optional(CONF_MORE)] = _TEXT(_MULTILINE)
+            suggested[CONF_MORE] = comment_lines(guide.more_changes)
+        return self.async_show_form(
+            step_id="map_result",
+            data_schema=self.add_suggested_values_to_schema(probatio.Schema(fields), suggested),
+            description_placeholders={"result": guide.result_text()},
+        )
+
+    async def async_step_map_tested(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The next test, the values, or send it in."""
+        if not self._loaded():
+            return self.async_abort(reason="not_loaded")
+        guide = self._require_guide()
+        options = ["map_test", "map_values", "map_send"] if guide.room_for_steps else ["map_values", "map_send"]
+        return self.async_show_menu(step_id="map_tested", menu_options=options)
+
+    async def async_step_map_values(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """A page of the values the scans found; nothing is read for it."""
+        if not self._loaded():
+            return self.async_abort(reason="not_loaded")
+        guide = self._require_guide()
+        pages = len(guide.pages())
+        options = [
+            *(["map_values_previous"] if guide.page > 0 else []),
+            *(["map_values_next"] if guide.page + 1 < pages else []),
+            "map_values_back",
+        ]
+        return self.async_show_menu(
+            step_id="map_values", menu_options=options, description_placeholders=guide.page_placeholders()
+        )
+
+    async def async_step_map_values_next(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The next page of values."""
+        self._require_guide().page += 1
+        return await self.async_step_map_values()
+
+    async def async_step_map_values_previous(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The page of values before."""
+        self._require_guide().page -= 1
+        return await self.async_step_map_values()
+
+    async def async_step_map_values_back(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Back to the next test or sending it in."""
+        return await self.async_step_map_tested()
+
+    async def async_step_map_send(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Finish; after a test, once every address has been scanned once more, so that a
+        register a test brought is not missed."""
+        if not self._loaded():
+            return self.async_abort(reason="not_loaded")
+        guide = self._require_guide()
+        if not guide.tested:
+            return await self.async_step_map_finish()
+        if user_input is not None:
+            return await self._read(guide.full_read, on_failure="map_send")
+        return self.async_show_form(
+            step_id="map_send",
+            data_schema=probatio.Schema({}),
+            description_placeholders={"report_url": MAPPING_REPORT_URL},
+            errors=guide.take_errors(),
+        )
+
+    async def async_step_map_finish(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The mapping is stored."""
+        return self.async_abort(
+            reason="mapping_saved", description_placeholders={"report_url": MAPPING_REPORT_URL}
+        )
+
+    async def async_step_map_gone_test(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The mapping gave way to newer ones of the unit, and took not the last test."""
+        return self.async_abort(reason="mapping_gone_test")
+
+    async def async_step_map_gone_final(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The mapping gave way to newer ones of the unit, and took not the last scan."""
+        return self.async_abort(reason="mapping_gone_final")
+
+    async def _read(
+        self, read: Callable[[], Awaitable[str]], *, on_failure: str
+    ) -> ConfigFlowResult:
+        """Start `read`, which gives the step to go on with, and show its progress."""
+        self._require_guide().prepare(read, on_failure=on_failure)
+        return await self.async_step_map_read()
+
+    def _loaded(self) -> bool:
+        """Whether the unit's entry is set up, which every read needs."""
+        return self.config_entry.state is ConfigEntryState.LOADED
+
+    def _require_guide(self) -> MappingGuide:
+        """The guide of this flow, made the first time it is needed."""
+        if self._started is None:
+            self._started = MappingGuide(self.hass, self.config_entry)
+        return self._started

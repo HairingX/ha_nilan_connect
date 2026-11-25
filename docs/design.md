@@ -65,7 +65,8 @@ point.
 ## The level of values
 
 The library chooses which of a model's points a unit has by the level the client is made with
-(`nilan_connect.Level`), stored by its text as the entry's one option:
+(`nilan_connect.Level`), stored by its text as the entry's one option, chosen under Settings in
+the options:
 
 | Level | Points |
 |---|---|
@@ -98,6 +99,68 @@ with a verified point: on any other it would leave no entity.
   and the key it replaces, and each inferred point used with its value. Each value also states
   its certainty, so one entry shows whether a point was read, how it was decoded and how sure
   that decoding is.
+
+## Mapping a unit
+
+The options open on a menu: **Settings**, the level, and **Map the unit**, a guide that finds out
+with the user what the unit's registers mean, whether the model knows them or not. The options
+flow is Home Assistant's place for how an integration behaves, and shows menus, forms and
+progress between steps; a button is one action without steps, Repairs is for faults the user
+must fix, and the debug log only logs.
+
+- **Steps.** `map_start` takes one line about the unit, then `map_read` shows the progress of the
+  first scan, `Client.map_areas(limit=MAPPING_LIMIT)`, and `map_found` says how many registers of
+  each space hold a value and how many are absent, with **Send in now** (`map_send`) and **Test
+  functions** (`map_test`). A test is chosen from the suggestions, translated under the selector
+  `mapping_suggestion`, or the user's own, and named in one required line; `map_read` then scans
+  again only what the first scan found, `Client.read_mapped`. `map_result` gives each changed
+  register, up to `REGISTER_FIELDS` (20), a field of its own, and the rest one multiline field a
+  line each, parsed back by the address at the start of each line; a line of its own belongs to
+  the register above it. `map_tested` offers the next test, `map_values` - the latest state, the
+  first scan with every scan after it, `VALUES_PER_PAGE` (50) registers of one space a page, read
+  from what the guide holds, from the first page again after each scan - and `map_send`. After a
+  test, sending in scans every address once more, with the same limit, as a test can switch on
+  something whose registers answer only then, and no register may be missed; sent in straight
+  after the first scan, it needs none.
+- **Field names.** A field Home Assistant has no translation for is labelled by its name, so a
+  register's field is named by the register and its raw change, "datapoint 79: 0 → 1", with the
+  name of the entity of a point at it in Home Assistant's language. Values are shown raw: a
+  register's meaning is what the mapping is to find.
+- **Words in lists.** What the guide writes into a placeholder - unknown, nothing changed, how
+  many changed, one changed, what each space holds - is taken from the selector translation
+  `mapping_label`, loaded with `async_get_translations` in Home Assistant's language. An
+  integration's translations have no category for free strings it composes itself: the step,
+  error and abort texts are fixed per key, and a selector's options are the one place whose keys an
+  integration names and whose texts it can load by key. A flow is not told the language of the
+  user's browser, so Home Assistant's own language is used.
+- **Failures.** A scan that fails returns to the form it came from, saying why. A progress step is
+  shown at least once, as a scan that fails at once ends as it starts. Every step ends the guide
+  with `not_loaded` when the entry is no longer loaded. A mapping that gave way to three newer
+  ones ends the guide saying what was lost: the last test (`mapping_gone_test`), the comments on
+  it (`mapping_gone_comments`), or the last scan (`mapping_gone_final`). Nothing changes the entry's
+  options, so the entry does not reload.
+- **What is read.** The library reads, for each of the gateway's spaces, every address from 0 up
+  to `MAPPING_LIMIT`, 300, or up to the highest address the model's points read or write; the
+  owner chose the limit from the measured cost of the first scan. Nothing is read for a mapping
+  unless the guide scans, only reads, through the client's own requests and between its polls;
+  busy or no answer stops a scan with `CannotConnectError`. While the first and the last scan of
+  every address run, as a polling pass of their own, the unit's values are not read; they keep
+  their last value, and as the gateway answers, nothing becomes unavailable.
+- **Storage.** One `Store` per entry, `nilan_connect.mappings.<entry id>`, holds the latest
+  `MAPPINGS_KEPT` (3) mappings, the oldest giving way, each with up to `STEPS_KEPT` (30) tests:
+  when it started, what the user said of the unit, the model, the handshake's identity, the
+  device's manufacturer, model and software version, the areas, the first scan in full, per test
+  its time, name, suggestion and changes with the user's comment on each, and the last full scan
+  in full with what it changed. Each scan is stored as soon as it ends, under a lock per entry, so
+  two guides of one unit never store over each other; removing the entry removes the store under
+  the same lock, and then the lock, and a guide closed during a scan, which
+  cancels it, keeps the tests made. The changes of a scan are against what the scans before found,
+  each address as the last scan of it found it. `async_remove_entry` removes the store.
+- **Diagnostics.** `mappings` is what the store holds, read from it: the diagnostics never read
+  the unit for it. The identity holds the controller's type and model numbers, not a serial
+  number; the email, the gateway's address and its id are not in it.
+- **Reporting.** The issue form `mapping.yml` asks for the unit as the user knows it, the
+  integration's version and the diagnostics.
 
 ## Entities
 

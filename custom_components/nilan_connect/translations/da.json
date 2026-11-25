@@ -3448,6 +3448,14 @@
   "options": {
     "step": {
       "init": {
+        "title": "Nilan Connect",
+        "description": "Skift anlæggets indstillinger, eller kortlæg det.",
+        "menu_options": {
+          "settings": "Indstillinger",
+          "map_unit": "Kortlæg anlægget"
+        }
+      },
+      "settings": {
         "title": "Niveau for værdier",
         "description": "Vælg, hvilke af anlæggets værdier der får en entitet.\n\n- **Verificeret**: kun værdier, der er læst på et anlæg af denne model.\n- **Dokumenteret**: også værdier fra producentens dokumentation. Det er standard.\n- **Test**: alle værdier, også dem, der er udledt af rækkefølgen i Nilans manual, og værdier, der afprøves i stedet for andre eller er nye. De er ikke bekræftet på et anlæg af denne model: de kan være forkerte, og ændrer du én, kan det ændre en anden indstilling. Tester du, så [fortæl os]({report_url}), om de passer med dit anlægs panel.",
         "data": {
@@ -3456,7 +3464,82 @@
         "data_description": {
           "level": "Hver entitets attribut Sikkerhed fortæller, hvor sikker dens værdi er."
         }
+      },
+      "map_start": {
+        "title": "Kortlæg anlægget",
+        "description": "Kortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så tester du funktioner én ad gangen på anlæggets eget panel eller i producentens app, og efter hver skannes anlægget igen, på få sekunder, og du ser, hvilke registre der skiftede. Der skrives intet til anlægget.\n\nNår du er færdig, er kortlægningen i diagnostikken; vedhæft den en [kortlægningsrapport]({report_url}).",
+        "data": {
+          "unit": "Hvilket anlæg er det, og hvad har det monteret?"
+        },
+        "data_description": {
+          "unit": "Fx: Genvex Optima 399, købt 2019, med eftervarmeflade og varmepumpe."
+        }
+      },
+      "map_found": {
+        "title": "Skannet",
+        "description": "Fundne registre:\n\n{found}",
+        "menu_options": {
+          "map_send": "Send ind nu",
+          "map_test": "Test funktioner"
+        }
+      },
+      "map_test": {
+        "title": "Test en funktion",
+        "description": "Vælg en test, eller lav din egen, og giv den et navn på én kort linje. Lav ændringen på panelet eller i appen, vent, hvis testen siger det, og send det så, og anlægget skannes.",
+        "data": {
+          "suggestion": "Test",
+          "title": "Hvad du testede"
+        },
+        "data_description": {
+          "title": "Fx: Bypass åbnet, eller Ønsket temperatur 23,5 °C."
+        }
+      },
+      "map_result": {
+        "title": "Det skiftede",
+        "description": "{result}\n\nSkriv, hvad hvert register er, så vidt du kan se; \"?\" er fint, og et tomt felt er ingen kommentar.",
+        "data": {
+          "more": "De øvrige registre"
+        },
+        "data_description": {
+          "more": "Skriv efter hvert \"=\", hvad registeret er; en linje for sig hører til registeret over den. Et register, hvis linje du lader stå tom eller sletter, gemmer intet."
+        }
+      },
+      "map_tested": {
+        "title": "Videre",
+        "menu_options": {
+          "map_test": "Næste test",
+          "map_values": "Vis alle værdier",
+          "map_send": "Send ind"
+        }
+      },
+      "map_values": {
+        "title": "Alle værdier, side {page} af {pages}",
+        "description": "Som skanningerne fandt dem; der læses intet for at vise dem.\n\n{values}",
+        "menu_options": {
+          "map_values_previous": "Forrige side",
+          "map_values_next": "Næste side",
+          "map_values_back": "Tilbage"
+        }
+      },
+      "map_send": {
+        "title": "Send ind",
+        "description": "Alle test er gemt. For ikke at overse et register - fx ét, som en funktion, du slog til, har givet - skannes hver adresse én gang til nu; det tager lige så lang tid som den første skanning. Hent så diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url})."
       }
+    },
+    "progress": {
+      "reading": "Skanner anlægget. Den første skanning kan tage et par minutter på en langsom gateway; lukker du her, stopper den, og alle test, der allerede er lavet, er gemt."
+    },
+    "error": {
+      "read_failed": "Anlægget var optaget eller svarede ikke, så skanningen stoppede. Prøv igen om lidt.",
+      "unknown": "Uventet fejl; se loggen.",
+      "title_required": "Giv det, du testede, et navn."
+    },
+    "abort": {
+      "not_loaded": "Anlægget er ikke sat op lige nu, så det kan ikke kortlægges. Prøv igen, når det er.",
+      "mapping_saved": "Kortlægningen er gemt. Hent diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url}).",
+      "mapping_gone_test": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: den sidste test blev ikke gemt.",
+      "mapping_gone_comments": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: kommentarerne til den sidste test blev ikke gemt.",
+      "mapping_gone_final": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: den sidste skanning blev ikke gemt."
     }
   },
   "selector": {
@@ -3465,6 +3548,25 @@
         "verified": "Verificeret",
         "documented": "Dokumenteret",
         "test": "Test"
+      }
+    },
+    "mapping_label": {
+      "options": {
+        "unknown": "ukendt",
+        "nothing_changed": "Intet skiftede siden sidste skanning. Funktionen kan være slået fra af en anden indstilling - fx er eftervarmen slået fra. Slå den til, og test igen.",
+        "changed": "{count} registre skiftede siden sidste skanning.",
+        "found_space": "{space}: {present} med værdier, {absent} findes ikke",
+        "changed_one": "1 register skiftede siden sidste skanning."
+      }
+    },
+    "mapping_suggestion": {
+      "options": {
+        "own": "Egen test",
+        "temperature": "En temperaturføler: pust på den, hold den mod noget koldt eller læg den udenfor, og vent et par minutter",
+        "setting": "En indstilling: sæt den til en usædvanlig værdi, fx ønsket 23,5 °C",
+        "switch": "Til og fra: eftervarme, bypass, boost eller gulvvarme",
+        "mode": "En tilstand: ventilationstrin fra 1 til 3",
+        "alarm": "En alarm: nulstil filteralarmen"
       }
     }
   },

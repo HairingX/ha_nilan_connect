@@ -3448,6 +3448,14 @@
   "options": {
     "step": {
       "init": {
+        "title": "Nilan Connect",
+        "description": "Change the unit's settings, or map it.",
+        "menu_options": {
+          "settings": "Settings",
+          "map_unit": "Map the unit"
+        }
+      },
+      "settings": {
         "title": "Level of values",
         "description": "Choose which of the unit's values get an entity.\n\n- **Verified**: only values read on a unit of this model.\n- **Documented**: also values from the manufacturer's documentation. This is the default.\n- **Test**: every value, also those inferred from the order of Nilan's manual, and values tried in place of others or new. They have not been confirmed on a unit of this model: they may be wrong, and changing one may change a different setting. If you test, please [report]({report_url}) whether they match your unit's panel.",
         "data": {
@@ -3456,7 +3464,82 @@
         "data_description": {
           "level": "Each entity's attribute Certainty says how certain its value is."
         }
+      },
+      "map_start": {
+        "title": "Map the unit",
+        "description": "Mapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you test functions one at a time on the unit's own panel or in the manufacturer's app, and after each the unit is scanned again, in a few seconds, and you see which registers changed. Nothing is written to the unit.\n\nWhen you are done, the mapping is in the diagnostics; attach them to a [mapping report]({report_url}).",
+        "data": {
+          "unit": "Which unit is it, and what is fitted?"
+        },
+        "data_description": {
+          "unit": "Such as: Genvex Optima 399, bought in 2019, with an after-heating coil and a heat pump."
+        }
+      },
+      "map_found": {
+        "title": "Scanned",
+        "description": "Registers found:\n\n{found}",
+        "menu_options": {
+          "map_send": "Send in now",
+          "map_test": "Test functions"
+        }
+      },
+      "map_test": {
+        "title": "Test a function",
+        "description": "Choose a test, or make your own, and name it in one short line. Make the change on the panel or in the app, wait if the test says so, then submit it, and the unit is scanned.",
+        "data": {
+          "suggestion": "Test",
+          "title": "What you tested"
+        },
+        "data_description": {
+          "title": "Such as: Bypass opened, or Target temperature 23.5 °C."
+        }
+      },
+      "map_result": {
+        "title": "What changed",
+        "description": "{result}\n\nWrite what each register is, as far as you can tell; \"?\" is fine, and an empty field is no comment.",
+        "data": {
+          "more": "The other registers"
+        },
+        "data_description": {
+          "more": "Write after each \"=\" what the register is; a line of its own belongs to the register above it. A register whose line you leave empty or delete stores nothing."
+        }
+      },
+      "map_tested": {
+        "title": "Next",
+        "menu_options": {
+          "map_test": "Next test",
+          "map_values": "Show all values",
+          "map_send": "Send in"
+        }
+      },
+      "map_values": {
+        "title": "All values, page {page} of {pages}",
+        "description": "As the scans found them; nothing is read for this.\n\n{values}",
+        "menu_options": {
+          "map_values_previous": "Previous page",
+          "map_values_next": "Next page",
+          "map_values_back": "Back"
+        }
+      },
+      "map_send": {
+        "title": "Send in",
+        "description": "Every test is stored. To miss no register - such as one a function you switched on brought - every address is scanned once more now; that takes as long as the first scan. Then download the diagnostics and attach them to a [mapping report]({report_url})."
       }
+    },
+    "progress": {
+      "reading": "Scanning the unit. The first scan can take up to a few minutes on a slow gateway; closing this stops it, and every test already made stays stored."
+    },
+    "error": {
+      "read_failed": "The unit was busy or did not answer, so the scan stopped. Try again in a moment.",
+      "unknown": "Unexpected error; see the log.",
+      "title_required": "Name what you tested."
+    },
+    "abort": {
+      "not_loaded": "The unit is not set up right now, so it cannot be mapped. Try again once it is.",
+      "mapping_saved": "The mapping is stored. Download the diagnostics and attach them to a [mapping report]({report_url}).",
+      "mapping_gone_test": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the last test was not stored.",
+      "mapping_gone_comments": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the comments on the last test were not stored.",
+      "mapping_gone_final": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the last scan was not stored."
     }
   },
   "selector": {
@@ -3465,6 +3548,25 @@
         "verified": "Verified",
         "documented": "Documented",
         "test": "Test"
+      }
+    },
+    "mapping_label": {
+      "options": {
+        "unknown": "unknown",
+        "nothing_changed": "Nothing changed since the last scan. The function may be switched off by another setting - for example the after-heating is off. Switch it on, and test again.",
+        "changed": "{count} registers changed since the last scan.",
+        "found_space": "{space}: {present} with values, {absent} absent",
+        "changed_one": "1 register changed since the last scan."
+      }
+    },
+    "mapping_suggestion": {
+      "options": {
+        "own": "Own test",
+        "temperature": "A temperature sensor: breathe on it, hold it to something cold or put it outside, and wait a few minutes",
+        "setting": "A setting: set it to an unusual value, such as a target of 23.5 °C",
+        "switch": "On and off: the after-heating, the bypass, boost or floor heating",
+        "mode": "A mode: the fan level from 1 to 3",
+        "alarm": "An alarm: reset the filter alarm"
       }
     }
   },
