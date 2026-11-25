@@ -43,9 +43,9 @@ DEFAULT_PORT: Final = PORT
 
 
 MAPPING_LIMIT: Final = 300
-"""How far up each of the gateway's tables a mapping reads: the owner chose 300 from the measured
-cost of the first read of every model's simulated gateway, about 15 to 500 requests, a few seconds
-at the gateways' usual answer time."""
+"""How far up each of the gateway's spaces a mapping reads, every address from 0: the owner chose
+300 from the measured cost of the first scan on every model's simulated gateway, up to about 750
+requests - seconds on a quick gateway, up to a few minutes on a slow one."""
 
 MAPPINGS_KEPT: Final = 3
 """How many of a unit's latest mappings are stored; the oldest gives way first."""
@@ -53,8 +53,12 @@ MAPPINGS_KEPT: Final = 3
 STEPS_KEPT: Final = 30
 """How many steps of one mapping are stored."""
 
-CHANGES_SHOWN: Final = 12
-"""How many of a step's changes the guide lists; the diagnostics hold every one."""
+REGISTER_FIELDS: Final = 20
+"""How many of a test's changed registers get a field of their own for the user's comment; the
+rest share one field, a line each."""
+
+VALUES_PER_PAGE: Final = 50
+"""How many of a space's registers a page of the values shows."""
 
 MAPPING_REPORT_URL: Final = "https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml"
 """Where a user sends the mappings of their unit."""

@@ -3467,7 +3467,7 @@
       },
       "map_start": {
         "title": "Kortlæg anlægget",
-        "description": "Kortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Du laver én ændring ad gangen på anlæggets eget panel eller i producentens app, og efter hver læser integrationen anlægget og viser, hvad der skiftede. Der skrives intet til anlægget.\n\nFørst læser integrationen alle anlæggets registre én gang. Den første læsning kan tage et minut eller to; hver læsning derefter tager få sekunder.\n\nNår du er færdig, så hent diagnostikken og vedhæft den en [kortlægningsrapport]({report_url}).",
+        "description": "Kortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så tester du funktioner én ad gangen på anlæggets eget panel eller i producentens app, og efter hver skannes anlægget igen, på få sekunder, og du ser, hvilke registre der skiftede. Der skrives intet til anlægget.\n\nNår du er færdig, er kortlægningen i diagnostikken; vedhæft den en [kortlægningsrapport]({report_url}).",
         "data": {
           "unit": "Hvilket anlæg er det, og hvad har det monteret?"
         },
@@ -3475,44 +3475,72 @@
           "unit": "Fx: Genvex Optima 399, købt 2019, med eftervarmeflade og varmepumpe."
         }
       },
-      "map_change": {
-        "title": "Lav én ændring",
-        "description": "Skiftede ved sidste læsning ({count}):\n\n{changes}\n\nLav én ændring på panelet eller i appen. Skriv, hvad du ændrede, og hvad panelet viser nu. Send det så, og anlægget læses.",
+      "map_found": {
+        "title": "Skannet",
+        "description": "Fundne registre:\n\n{found}",
+        "menu_options": {
+          "map_send": "Send ind nu",
+          "map_test": "Test funktioner"
+        }
+      },
+      "map_test": {
+        "title": "Test en funktion",
+        "description": "Vælg en test, eller lav din egen, og giv den et navn på én kort linje. Lav ændringen på panelet eller i appen, vent, hvis testen siger det, og send det så, og anlægget skannes.",
         "data": {
-          "change": "Hvad ændrede du, og hvad viser panelet nu?"
+          "suggestion": "Test",
+          "title": "Hvad du testede"
         },
         "data_description": {
-          "change": "Fx: Åbnede bypass-spjældet. Rum 1 viser 21,5 °C."
+          "title": "Fx: Bypass åbnet, eller Ønsket temperatur 23,5 °C."
         }
       },
-      "map_changed": {
+      "map_result": {
         "title": "Det skiftede",
-        "description": "Skiftede siden læsningen før ({count}):\n\n{changes}\n\nDiagnostikken har alle ændringer.",
-        "menu_options": {
-          "map_next": "Næste ændring",
-          "map_done": "Færdig"
+        "description": "{result}\n\nSkriv, hvad hvert register er, så vidt du kan se; \"?\" er fint, og et tomt felt er ingen kommentar.",
+        "data": {
+          "more": "De øvrige registre"
+        },
+        "data_description": {
+          "more": "Skriv efter hvert \"=\", hvad registeret er. En linje, du lader stå tom eller sletter, gemmer intet."
         }
       },
-      "map_done": {
-        "title": "Færdig",
-        "description": "Alle trin er gemt. En sidste læsning af alt finder registre, der er dukket op under kortlægningen; den tager lige så lang tid som den første.",
+      "map_tested": {
+        "title": "Videre",
         "menu_options": {
-          "map_full": "Læs alt én gang til",
-          "map_finish": "Afslut"
+          "map_test": "Næste test",
+          "map_values": "Vis alle værdier",
+          "map_send": "Send ind"
+        }
+      },
+      "map_values": {
+        "title": "Alle værdier, side {page} af {pages}",
+        "description": "Som skanningerne fandt dem; der læses intet for at vise dem.\n\n{values}",
+        "menu_options": {
+          "map_values_previous": "Forrige side",
+          "map_values_next": "Næste side",
+          "map_values_back": "Tilbage"
+        }
+      },
+      "map_send": {
+        "title": "Send ind",
+        "description": "Alle test er gemt. En sidste skanning af hver adresse finder registre, der først svarer nu, fx ét, som en funktion slået til under testene har givet; den tager lige så lang tid som den første. Hent så diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url}).",
+        "data": {
+          "full_read": "Skan hver adresse én gang til"
         }
       }
     },
     "progress": {
-      "reading": "Læser anlægget. Den første læsning kan tage et minut eller to; lukker du her, stopper den, og alle trin, der allerede er taget, er gemt."
+      "reading": "Skanner anlægget. Den første skanning kan tage et par minutter på en langsom gateway; lukker du her, stopper den, og alle test, der allerede er lavet, er gemt."
     },
     "error": {
-      "read_failed": "Anlægget var optaget eller svarede ikke, så læsningen stoppede. Prøv igen om lidt.",
-      "unknown": "Uventet fejl; se loggen."
+      "read_failed": "Anlægget var optaget eller svarede ikke, så skanningen stoppede. Prøv igen om lidt.",
+      "unknown": "Uventet fejl; se loggen.",
+      "title_required": "Giv det, du testede, et navn."
     },
     "abort": {
       "not_loaded": "Anlægget er ikke sat op lige nu, så det kan ikke kortlægges. Prøv igen, når det er.",
-      "mapping_saved": "Kortlægningen er gemt. Den sidste læsning skiftede ({count}):\n\n{changes}\n\nHent diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url}).",
-      "mapping_saved_without_full_read": "Kortlægningen er gemt, men den sidste læsning af alt stoppede: anlægget var optaget eller svarede ikke."
+      "mapping_saved": "Kortlægningen er gemt. Hent diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url}).",
+      "mapping_gone": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere, og den sidste test blev ikke gemt."
     }
   },
   "selector": {
@@ -3521,6 +3549,24 @@
         "verified": "Verificeret",
         "documented": "Dokumenteret",
         "test": "Test"
+      }
+    },
+    "mapping_label": {
+      "options": {
+        "unknown": "ukendt",
+        "nothing_changed": "Intet skiftede siden sidste skanning. Funktionen kan være slået fra af en anden indstilling - fx er eftervarmen slået fra. Slå den til, og test igen.",
+        "changed": "{count} registre skiftede siden sidste skanning.",
+        "found_space": "{space}: {present} med værdier, {absent} findes ikke"
+      }
+    },
+    "mapping_suggestion": {
+      "options": {
+        "own": "Egen test",
+        "temperature": "En temperaturføler: pust på den, hold den mod noget koldt eller læg den udenfor, og vent et par minutter",
+        "setting": "En indstilling: sæt den til en usædvanlig værdi, fx ønsket 23,5 °C",
+        "switch": "Til og fra: eftervarme, bypass, boost eller gulvvarme",
+        "mode": "En tilstand: ventilationstrin fra 1 til 3",
+        "alarm": "En alarm: nulstil filteralarmen"
       }
     }
   },

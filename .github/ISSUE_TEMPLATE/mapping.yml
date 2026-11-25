@@ -1,4 +1,4 @@
-name: Kortlægning (mapping)
+name: Mapping
 description: Send the mapping of your unit, made with Configure > Map the unit.
 labels: ["mapping"]
 body:

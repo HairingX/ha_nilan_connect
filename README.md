@@ -46,22 +46,31 @@ settings, for when you choose a level that has it again.
 Help find out what your unit's registers mean, those we know and those we do not: Settings >
 Devices & services > Nilan Connect > Configure > **Map the unit**. It is offered on every unit.
 
-1. Say which unit it is and what is fitted to it, such as "Genvex Optima 399, bought in 2019, with
-   an after-heating coil and a heat pump". The guide then reads every register of the unit once,
-   which can take a minute or two.
-2. Make one change on the unit's own panel or in the manufacturer's app, write what you changed
-   and what the panel shows now, and submit: the guide reads the unit again, in a few seconds,
-   and lists the registers that changed. Repeat for as many changes as you like.
-3. **Done**: optionally read everything once more, to find registers that appeared, then finish.
-4. Download the diagnostics and attach them to a
+1. Say in one line which unit it is and what is fitted to it, such as "Genvex Optima 399, bought
+   in 2019, with an after-heating coil and a heat pump". The guide then scans every address of
+   the unit once, from 0 to 299, and says how many registers it found. That takes from seconds to
+   a few minutes on a slow gateway.
+2. **Send in now**, or **Test functions**: pick a suggested test - a temperature sensor, a
+   setting, something switched on and off, a mode, an alarm - or your own, and name it in one
+   line. Make the change on the unit's own panel or in the manufacturer's app, wait if the test
+   says so, and submit: the guide scans again, in a few seconds, only the registers that answered.
+3. Each register that changed gets a field, named by the register and its raw change, such as
+   "datapoint 79: 0 → 1", with the name of the value we know at it, if any. Write what it is; "?" is fine, and
+   an empty field is no comment. Beyond 20 registers, the rest share one field, a line each. If
+   nothing changed, the guide says so: the function may be switched off by another setting.
+4. **Next test**, **Show all values** - every register's latest value, page by page, read from
+   what the scans found - or **Send in**, optionally after one more scan of every address, which
+   finds registers that answer only now.
+5. Download the diagnostics and attach them to a
    [mapping report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml).
 
-Nothing is written to the unit, and nothing is read for a mapping unless the guide reads. A read
+Nothing is written to the unit, and nothing is read for a mapping unless the guide scans. A scan
 stops at once when the gateway is busy or does not answer, and the guide says so. Closing the
-guide during a read stops it; the steps already taken are kept. The latest three mappings of a
-unit are kept, each with up to 30 steps, and are deleted with the integration. The diagnostics
-show them under `mappings`: what you wrote, the unit's identity and model, the first read in
-full, and what changed at each step; never the email, the gateway's address or its id.
+guide during a scan stops it; the tests already made are kept. The latest three mappings of a
+unit are kept, each with up to 30 tests, and are deleted with the integration. The diagnostics
+show them under `mappings`: what you wrote, the unit's identity and model, the first scan in full,
+and per test its name, the suggestion it followed, what changed and your comments; never the
+email, the gateway's address or its id.
 
 ## Installation
 

@@ -1,18 +1,32 @@
-"""The guide that maps a unit: its reads, what each changed, and what is stored of them."""
+"""The guide that maps a unit: its scans, what each test changed, what is known of each register,
+the user's comments, and what is stored of them."""
 
 from __future__ import annotations
 
 import asyncio
 import logging
-from collections.abc import Awaitable, Callable, Sequence
-from typing import Final
+import re
+from collections.abc import Awaitable, Callable, Iterable, Mapping, Sequence
+from typing import Any, Final
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers.translation import async_get_translations
 from homeassistant.util import dt as dt_util
-from nilan_connect import CannotConnectError, NotConnectedError, RegisterChange, Snapshot, difference
+from nilan_connect import (
+    MODELS,
+    CannotConnectError,
+    Client,
+    NotConnectedError,
+    Point,
+    RawAddress,
+    RegisterChange,
+    Snapshot,
+    difference,
+    model_points,
+)
 
-from .const import CHANGES_SHOWN, DOMAIN, MAPPING_LIMIT, STEPS_KEPT
+from .const import DOMAIN, MAPPING_LIMIT, REGISTER_FIELDS, STEPS_KEPT, VALUES_PER_PAGE
 from .data import NilanConfigEntry
 from .mapping import Mappings, mapping, step
 
@@ -21,74 +35,187 @@ _LOGGER = logging.getLogger(__name__)
 CONF_UNIT: Final = "unit"
 """What the user says the unit is, and what is fitted to it."""
 
-CONF_CHANGE: Final = "change"
-"""What the user changed on the unit's panel, and what it shows now."""
+CONF_SUGGESTION: Final = "suggestion"
+"""The kind of test the user chose from the suggestions, or their own."""
 
+CONF_TITLE: Final = "title"
+"""What the user tested, in one short line."""
 
-def changes_text(changes: Sequence[RegisterChange]) -> str:
-    """`changes` as a list, the first few only: "- datapoint 38: 1 → 0 (bits 0)"."""
-    if not changes:
-        return "-"
-    lines = [f"- {change.address}: {_word(change.before)} → {_word(change.after)}"
-             + (f" (bits {', '.join(map(str, change.bits))})" if change.bits else "")
-             for change in changes[:CHANGES_SHOWN]]
-    if len(changes) > CHANGES_SHOWN:
-        lines.append("- …")
-    return "\n".join(lines)
+CONF_MORE: Final = "more"
+"""The user's comments on the changed registers beyond those given a field each, a line each."""
+
+CONF_FULL_READ: Final = "full_read"
+"""Whether the guide scans every address once more before it ends."""
+
+OWN_TEST: Final = "own"
+"""The suggestion of a test of the user's own."""
+
+SUGGESTIONS: Final = ("temperature", "setting", "switch", "mode", "alarm")
+"""The tests the guide suggests, by their translation keys."""
+
+LABELS: Final = "mapping_label"
+"""The translation key of the words the guide puts into its texts."""
+
+_LINE = re.compile(r"^\s*(?P<space>[\w:]+)\s+(?P<number>\d+)\s*:[^=]*=(?P<comment>.*)$")
+"""A line of the comments: "datapoint 205: 0 → 1 = the bypass", the comment after the first "="."""
 
 
 def _word(word: int | None) -> str:
     return "–" if word is None else str(word)
 
 
+def change_text(change: RegisterChange) -> str:
+    """A change by its register and raw words: "datapoint 79: 0 → 1"."""
+    return f"{change.address}: {_word(change.before)} → {_word(change.after)}"
+
+
+def comment_lines(changes: Iterable[RegisterChange]) -> str:
+    """One line for each change, for the user to write its meaning after."""
+    return "\n".join(f"{change_text(change)} = " for change in changes)
+
+
+def parse_comments(text: str, changes: Sequence[RegisterChange]) -> dict[RawAddress, str]:
+    """The comment written after each change's line in `text`, by its address. A line left empty
+    after its "=", deleted, or of a register not among `changes`, gives none, as does text on no
+    line of a change."""
+    changed = {change.address for change in changes}
+    comments: dict[RawAddress, str] = {}
+    for line in text.splitlines():
+        found = _LINE.match(line)
+        if found is None or not found["comment"].strip():
+            continue
+        address = RawAddress(found["space"], int(found["number"]))
+        if address in changed:
+            comments[address] = found["comment"].strip()
+    return comments
+
+
+class Known:
+    """What the unit's model says of each register: the points at it, by name."""
+
+    def __init__(self, points: Iterable[Point[Any]], names: Mapping[str, str], unknown: str) -> None:
+        self._unknown = unknown
+        self._names: dict[RawAddress, list[str]] = {}
+        for point in points:
+            for access in {access for access in (point.read, point.write) if access is not None}:
+                for offset in range(point.registers):
+                    found = self._names.setdefault(RawAddress(access.space, access.address + offset), [])
+                    name = names.get(str(point.key), str(point.key))
+                    if name not in found:
+                        found.append(name)
+
+    def name(self, address: RawAddress) -> str | None:
+        """The points at `address`, by name; None for one no point is at."""
+        found = self._names.get(address)
+        return "; ".join(found) if found else None
+
+    def describe(self, address: RawAddress) -> str:
+        """The points at `address`, by name, or that it is unknown."""
+        return self.name(address) or self._unknown
+
+
 class MappingGuide:
-    """One mapping of a loaded unit, read step by step; each read is stored as soon as it ends."""
+    """One mapping of a loaded unit, scanned test by test; each scan is stored as soon as it ends."""
 
     def __init__(self, hass: HomeAssistant, entry: NilanConfigEntry) -> None:
         self._hass = hass
         self._entry = entry
         self._mappings = Mappings(hass, entry.entry_id)
         self.unit_description = ""
-        self.note = ""
+        self.title = ""
+        self.suggestion = OWN_TEST
+        self.page = 0
+        """The page of values shown."""
         self._task: asyncio.Task[str] | None = None
         self._pending: tuple[Callable[[], Awaitable[str]], str] = (self.first_read, "map_start")
         self._errors: dict[str, str] = {}
         self._started_at = ""
-        nothing = Snapshot(dt_util.utcnow(), {}, [])
-        self._found = self._last = nothing
-        """The first full read, and the read last; nothing before the first read."""
+        self._found = Snapshot(dt_util.utcnow(), {}, [])
+        """The first full scan; nothing before it."""
+        self._words: dict[RawAddress, int] = {}
+        self._missing: set[RawAddress] = set()
+        """What the scans so far found, each address as the last scan of it found it."""
         self._changes: tuple[RegisterChange, ...] = ()
         self._steps = 0
+        self._known = Known((), {}, "")
+        self._labels: dict[str, str] = {}
+
+    # ------------------------------------------------------------------------- what is shown
 
     @property
     def room_for_steps(self) -> bool:
-        """Whether another step would be stored."""
+        """Whether another test would be stored."""
         return self._steps < STEPS_KEPT
 
-    def placeholders(self) -> dict[str, str]:
-        """What the last read changed, for a step's description."""
-        return {"count": str(len(self._changes)), "changes": changes_text(self._changes)}
+    def found_text(self) -> str:
+        """What the first scan found, per space: how many registers hold a value, and how many
+        are absent."""
+        spaces = sorted({address.space for address in (*self._found.values, *self._found.missing)})
+        lines: list[str] = []
+        for space in spaces:
+            present = sum(1 for address in self._found.values if address.space == space)
+            absent = sum(1 for address in self._found.missing if address.space == space)
+            lines.append("- " + self._label("found_space").replace("{space}", space)
+                         .replace("{present}", str(present)).replace("{absent}", str(absent)))
+        return "\n".join(lines)
+
+    def result_text(self) -> str:
+        """How many registers the last scan changed, or that nothing changed."""
+        if not self._changes:
+            return self._label("nothing_changed")
+        return self._label("changed").replace("{count}", str(len(self._changes)))
+
+    def register_fields(self) -> dict[str, RawAddress]:
+        """The registers the last scan changed that get a field of their own, by the field's name:
+        the register, its raw change, and the points at it."""
+        fields: dict[str, RawAddress] = {}
+        for change in self._changes[:REGISTER_FIELDS]:
+            name = self._known.name(change.address)
+            fields[change_text(change) + (f" ({name})" if name else "")] = change.address
+        return fields
+
+    @property
+    def more_changes(self) -> tuple[RegisterChange, ...]:
+        """The changes beyond those given a field each."""
+        return self._changes[REGISTER_FIELDS:]
+
+    def pages(self) -> list[list[RawAddress]]:
+        """The addresses the scans found a word at, per space, `VALUES_PER_PAGE` a page."""
+        by_space: dict[str, list[RawAddress]] = {}
+        for address in sorted(self._words):
+            by_space.setdefault(address.space, []).append(address)
+        return [addresses[at:at + VALUES_PER_PAGE] for addresses in by_space.values()
+                for at in range(0, len(addresses), VALUES_PER_PAGE)]
+
+    def page_placeholders(self) -> dict[str, str]:
+        """The page of values shown: each address with its last word and what is known of it."""
+        pages = self.pages() or [[]]
+        rows = "\n".join(f"- {address}: {self._words[address]} · {self._known.describe(address)}"
+                         for address in pages[self.page])
+        return {"page": str(self.page + 1), "pages": str(len(pages)), "values": rows or "-"}
 
     def take_errors(self) -> dict[str, str]:
-        """Why the last read failed, once; empty when it did not."""
+        """Why the last scan failed, once; empty when it did not."""
         errors, self._errors = self._errors, {}
         return errors
 
+    # ------------------------------------------------------------------------------ reading
+
     def prepare(self, read: Callable[[], Awaitable[str]], *, on_failure: str) -> None:
-        """Make `read` the next read; when it fails, the guide goes on with `on_failure`, saying why."""
+        """Make `read` the next scan; when it fails, the guide goes on with `on_failure`, saying why."""
         self._pending = (read, on_failure)
 
     def reading(self) -> tuple[asyncio.Task[str], bool]:
-        """The read under way, which gives the step to go on with, and whether it was started now,
+        """The scan under way, which gives the step to go on with, and whether it was started now,
         from the one prepared, as none was."""
         if self._task is not None:
             return self._task, False
         read, on_failure = self._pending
-        self._task = self._hass.async_create_task(self._run(read, on_failure), "nilan_connect mapping read")
+        self._task = self._hass.async_create_task(self._run(read, on_failure), "nilan_connect mapping scan")
         return self._task, True
 
     async def finished(self, task: asyncio.Task[str]) -> str:
-        """The step the ended read `task` goes on with; the next read starts afresh."""
+        """The step the ended scan `task` goes on with; the next scan starts afresh."""
         self._task = None
         return await task
 
@@ -104,8 +231,10 @@ class MappingGuide:
         return on_failure
 
     async def first_read(self) -> str:
-        """Find and read every register of the unit, and store the mapping with it."""
+        """Scan every address of the unit once, and store the mapping with it."""
         client = self._entry.runtime_data.client
+        await self._load_labels(client)
+        device = self._device()
         found = await client.map_areas(limit=MAPPING_LIMIT)
         started = dt_util.utcnow()
         self._started_at = started.isoformat()
@@ -114,34 +243,75 @@ class MappingGuide:
             unit_description=self.unit_description,
             model=client.model.name,
             identity=dict(client.identity),
-            device=self._device(),
+            device=device,
             areas=client.mapping_areas(limit=MAPPING_LIMIT),
             baseline=found,
         ))
-        self._found = self._last = found
+        self._found = found
+        self._words, self._missing = dict(found.values), set(found.missing)
         self._changes, self._steps = (), 0
-        return "map_change"
+        return "map_found"
 
     async def step_read(self) -> str:
-        """Read again the registers found, and store what changed since the read before."""
+        """Scan again the registers the first scan found, and store what changed since the scans
+        before, as the test the user made."""
         again = await self._entry.runtime_data.client.read_mapped(self._found)
-        self._changes = difference(self._last, again)
-        await self._mappings.async_add_step(self._started_at, step(again.taken_at, self.note, self._changes))
+        self._changes = difference(self._last(), again)
+        self._learn(again)
+        suggestion = None if self.suggestion == OWN_TEST else self.suggestion
+        if not await self._mappings.async_add_step(
+                self._started_at, step(again.taken_at, self.title, suggestion, self._changes)):
+            return "map_gone"
         self._steps += 1
-        self._last = again
-        return "map_changed"
+        return "map_result"
 
     async def full_read(self) -> str:
-        """Find and read every register once more, and store what changed since the last read."""
+        """Scan every address once more, and store it and what changed since the scans before."""
         again = await self._entry.runtime_data.client.map_areas(limit=MAPPING_LIMIT)
-        # Against the last words and what the first read found missing, so that a register that
-        # answers only now shows as a change.
-        known = Snapshot(self._last.taken_at, {**self._found.values, **self._last.values},
-                         self._found.missing.difference(self._last.values))
-        self._changes = difference(known, again)
-        await self._mappings.async_finish(self._started_at, step(again.taken_at, "", self._changes))
-        self._last = again
+        self._changes = difference(self._last(), again)
+        self._learn(again)
+        final = {**step(again.taken_at, "", None, self._changes), "snapshot": again.as_plain()}
+        if not await self._mappings.async_finish(self._started_at, final):
+            return "map_gone"
         return "map_finish"
+
+    async def write_comments(self, given: Mapping[str, Any]) -> bool:
+        """Store the user's comments on the last test's changes: from the field of each register
+        that has one, and from the lines of the rest. Whether the mapping still takes them."""
+        comments = {address: str(given[field]).strip() for field, address in self.register_fields().items()
+                    if str(given.get(field) or "").strip()}
+        comments.update(parse_comments(str(given.get(CONF_MORE) or ""), self.more_changes))
+        if not comments:
+            return True
+        return await self._mappings.async_annotate(
+            self._started_at, self._steps - 1, {str(address): comment for address, comment in comments.items()})
+
+    def _last(self) -> Snapshot:
+        """The unit as the scans so far found it: each address as the last scan of it found it."""
+        return Snapshot(dt_util.utcnow(), self._words, self._missing)
+
+    def _learn(self, read: Snapshot) -> None:
+        for address, word in read.values.items():
+            self._words[address] = word
+            self._missing.discard(address)
+        for address in read.missing:
+            self._missing.add(address)
+            self._words.pop(address, None)
+
+    # ----------------------------------------------------------------------------- helpers
+
+    async def _load_labels(self, client: Client) -> None:
+        """The guide's words and the points' names, in Home Assistant's language."""
+        language = self._hass.config.language
+        labels = await async_get_translations(self._hass, language, "selector", [DOMAIN])
+        prefix = f"component.{DOMAIN}.selector.{LABELS}.options."
+        self._labels = {key.removeprefix(prefix): text for key, text in labels.items() if key.startswith(prefix)}
+        entities = await async_get_translations(self._hass, language, "entity", [DOMAIN])
+        points = [point for model in MODELS if model is client.model for point in model_points(model)]
+        self._known = Known(points, _entity_names(entities), self._label("unknown"))
+
+    def _label(self, key: str) -> str:
+        return self._labels.get(key, key)
 
     def _device(self) -> dict[str, str | None]:
         """What Home Assistant's device of the unit says it is."""
@@ -151,3 +321,13 @@ class MappingGuide:
         if device is None:
             return {"manufacturer": None, "model": None, "sw_version": None}
         return {"manufacturer": device.manufacturer, "model": device.model, "sw_version": device.sw_version}
+
+
+def _entity_names(translations: Mapping[str, str]) -> dict[str, str]:
+    """Each point's entity name, by its key: "component.<domain>.entity.<platform>.<key>.name"."""
+    names: dict[str, str] = {}
+    for key, text in translations.items():
+        parts = key.split(".")
+        if len(parts) == 6 and parts[5] == "name":
+            names.setdefault(parts[4], text)
+    return names

@@ -108,29 +108,43 @@ flow is Home Assistant's place for how an integration behaves, and shows menus, 
 progress between steps; a button is one action without steps, Repairs is for faults the user
 must fix, and the debug log only logs.
 
-- **Steps.** `map_start` asks what the user knows of the unit, as free text, then `map_read`
-  shows the progress of the first read, `Client.map_areas(limit=MAPPING_LIMIT)`. `map_change`
-  asks what the user changed on the unit's panel and what it shows now; `map_read` then reads
-  again only what the first read found, `Client.read_mapped`, and `map_changed` lists what changed
-  since the read before - the first `CHANGES_SHOWN`, the diagnostics having all - with
-  `map_next` and `map_done`. At `map_done` the user may read everything once more, `map_full`,
-  with the same limit, so that a register that appeared during the mapping is found, or finish.
-  A read that fails returns to the form it came from, saying why; one that fails at `map_full`
-  ends the guide, the steps stored. A progress step is shown at least once, as a read that fails
-  at once ends as it starts. Nothing changes the entry's options, so the entry does not reload.
-- **What is read.** The library derives the registers from the model's points: for each of the
-  gateway's tables, the span from the lowest to the highest address the points read or write,
-  and above it up to `MAPPING_LIMIT`, 300, which the owner chose from the measured cost of the
-  first read on every model's simulated gateway. Nothing is read for a mapping unless the guide
-  reads, only reads, through the client's own requests and between its polls; busy or no answer
-  stops a read with `CannotConnectError`.
+- **Steps.** `map_start` takes one line about the unit, then `map_read` shows the progress of the
+  first scan, `Client.map_areas(limit=MAPPING_LIMIT)`, and `map_found` says how many registers of
+  each space hold a value and how many are absent, with **Send in now** (`map_send`) and **Test
+  functions** (`map_test`). A test is chosen from the suggestions, translated under the selector
+  `mapping_suggestion`, or the user's own, and named in one required line; `map_read` then scans
+  again only what the first scan found, `Client.read_mapped`. `map_result` gives each changed
+  register, up to `REGISTER_FIELDS` (20), a field of its own, and the rest one multiline field a
+  line each, parsed back by the address at the start of each line. `map_tested` offers the next
+  test, `map_values` - the latest state, the first scan with every scan after it, `VALUES_PER_PAGE`
+  (50) registers of one space a page, read from what the guide holds - and `map_send`, which may
+  scan every address once more, with the same limit, before the guide ends.
+- **Field names.** A field Home Assistant has no translation for is labelled by its name, so a
+  register's field is named by the register and its raw change, "datapoint 79: 0 → 1", with the
+  name of the entity of a point at it in Home Assistant's language. Values are shown raw: a
+  register's meaning is what the mapping is to find.
+- **Words in lists.** What the guide writes into a list - unknown, nothing changed, how many
+  changed, what each space holds - is taken from the selector translation `mapping_label` in Home
+  Assistant's language, so the Danish guide shows no English word.
+- **Failures.** A scan that fails returns to the form it came from, saying why. A progress step is
+  shown at least once, as a scan that fails at once ends as it starts. Every step ends the guide
+  with `not_loaded` when the entry is no longer loaded, and a test or a comment for a mapping
+  that gave way to three newer ones ends it with `mapping_gone`. Nothing changes the entry's
+  options, so the entry does not reload.
+- **What is read.** The library reads, for each of the gateway's spaces, every address from 0 up
+  to `MAPPING_LIMIT`, 300, or up to the highest address the model's points read or write; the
+  owner chose the limit from the measured cost of the first scan. Nothing is read for a mapping
+  unless the guide scans, only reads, through the client's own requests and between its polls;
+  busy or no answer stops a scan with `CannotConnectError`.
 - **Storage.** One `Store` per entry, `nilan_connect.mappings.<entry id>`, holds the latest
-  `MAPPINGS_KEPT` (3) mappings, the oldest giving way, each with up to `STEPS_KEPT` (30) steps:
+  `MAPPINGS_KEPT` (3) mappings, the oldest giving way, each with up to `STEPS_KEPT` (30) tests:
   when it started, what the user said of the unit, the model, the handshake's identity, the
-  device's manufacturer, model and software version, the areas, the first read in full, and per
-  step its time, the user's note and what changed; the full state at any step is the first read
-  plus the changes so far. Each read is stored as soon as it ends, so a guide closed during a read,
-  which cancels it, keeps the steps taken. `async_remove_entry` removes the store.
+  device's manufacturer, model and software version, the areas, the first scan in full, per test
+  its time, name, suggestion and changes with the user's comment on each, and the last full scan
+  in full with what it changed. Each scan is stored as soon as it ends, under a lock per entry, so
+  two guides of one unit never store over each other, and a guide closed during a scan, which
+  cancels it, keeps the tests made. The changes of a scan are against what the scans before found,
+  each address as the last scan of it found it. `async_remove_entry` removes the store.
 - **Diagnostics.** `mappings` is what the store holds, read from it: the diagnostics never read
   the unit for it. The identity holds the controller's type and model numbers, not a serial
   number; the email, the gateway's address and its id are not in it.

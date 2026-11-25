@@ -3467,7 +3467,7 @@
       },
       "map_start": {
         "title": "Map the unit",
-        "description": "Mapping finds out what the unit's registers mean, with your help. You make one change at a time on the unit's own panel or in the manufacturer's app, and after each the integration reads the unit and shows what changed. Nothing is written to the unit.\n\nFirst the integration reads every register of the unit once. The first read can take a minute or two; every read after it takes a few seconds.\n\nWhen you are done, download the diagnostics and attach them to a [mapping report]({report_url}).",
+        "description": "Mapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you test functions one at a time on the unit's own panel or in the manufacturer's app, and after each the unit is scanned again, in a few seconds, and you see which registers changed. Nothing is written to the unit.\n\nWhen you are done, the mapping is in the diagnostics; attach them to a [mapping report]({report_url}).",
         "data": {
           "unit": "Which unit is it, and what is fitted?"
         },
@@ -3475,44 +3475,72 @@
           "unit": "Such as: Genvex Optima 399, bought in 2019, with an after-heating coil and a heat pump."
         }
       },
-      "map_change": {
-        "title": "Make one change",
-        "description": "Changed by the last read ({count}):\n\n{changes}\n\nMake one change on the panel or in the app. Write what you changed and what the panel shows now. Then submit it, and the unit is read.",
+      "map_found": {
+        "title": "Scanned",
+        "description": "Registers found:\n\n{found}",
+        "menu_options": {
+          "map_send": "Send in now",
+          "map_test": "Test functions"
+        }
+      },
+      "map_test": {
+        "title": "Test a function",
+        "description": "Choose a test, or make your own, and name it in one short line. Make the change on the panel or in the app, wait if the test says so, then submit it, and the unit is scanned.",
         "data": {
-          "change": "What did you change, and what does the panel show now?"
+          "suggestion": "Test",
+          "title": "What you tested"
         },
         "data_description": {
-          "change": "Such as: Opened the bypass damper. Room 1 shows 21.5 °C."
+          "title": "Such as: Bypass opened, or Target temperature 23.5 °C."
         }
       },
-      "map_changed": {
+      "map_result": {
         "title": "What changed",
-        "description": "Changed since the read before ({count}):\n\n{changes}\n\nThe diagnostics hold every change.",
-        "menu_options": {
-          "map_next": "Next change",
-          "map_done": "Done"
+        "description": "{result}\n\nWrite what each register is, as far as you can tell; \"?\" is fine, and an empty field is no comment.",
+        "data": {
+          "more": "The other registers"
+        },
+        "data_description": {
+          "more": "Write after each \"=\" what the register is. A line you leave empty or delete stores nothing."
         }
       },
-      "map_done": {
-        "title": "Done",
-        "description": "Every step is stored. A last read of everything finds registers that appeared during the mapping; it takes as long as the first read.",
+      "map_tested": {
+        "title": "Next",
         "menu_options": {
-          "map_full": "Read everything once more",
-          "map_finish": "Finish"
+          "map_test": "Next test",
+          "map_values": "Show all values",
+          "map_send": "Send in"
+        }
+      },
+      "map_values": {
+        "title": "All values, page {page} of {pages}",
+        "description": "As the scans found them; nothing is read for this.\n\n{values}",
+        "menu_options": {
+          "map_values_previous": "Previous page",
+          "map_values_next": "Next page",
+          "map_values_back": "Back"
+        }
+      },
+      "map_send": {
+        "title": "Send in",
+        "description": "Every test is stored. A last scan of every address finds registers that answer only now, such as one a function switched on during the tests; it takes as long as the first scan. Then download the diagnostics and attach them to a [mapping report]({report_url}).",
+        "data": {
+          "full_read": "Scan every address once more"
         }
       }
     },
     "progress": {
-      "reading": "Reading the unit. The first read can take a minute or two; closing this stops it, and every step already taken stays stored."
+      "reading": "Scanning the unit. The first scan can take up to a few minutes on a slow gateway; closing this stops it, and every test already made stays stored."
     },
     "error": {
-      "read_failed": "The unit was busy or did not answer, so the read stopped. Try again in a moment.",
-      "unknown": "Unexpected error; see the log."
+      "read_failed": "The unit was busy or did not answer, so the scan stopped. Try again in a moment.",
+      "unknown": "Unexpected error; see the log.",
+      "title_required": "Name what you tested."
     },
     "abort": {
       "not_loaded": "The unit is not set up right now, so it cannot be mapped. Try again once it is.",
-      "mapping_saved": "The mapping is stored. The last read changed ({count}):\n\n{changes}\n\nDownload the diagnostics and attach them to a [mapping report]({report_url}).",
-      "mapping_saved_without_full_read": "The mapping is stored, but the last read of everything stopped: the unit was busy or did not answer."
+      "mapping_saved": "The mapping is stored. Download the diagnostics and attach them to a [mapping report]({report_url}).",
+      "mapping_gone": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept, and the last test was not stored."
     }
   },
   "selector": {
@@ -3521,6 +3549,24 @@
         "verified": "Verified",
         "documented": "Documented",
         "test": "Test"
+      }
+    },
+    "mapping_label": {
+      "options": {
+        "unknown": "unknown",
+        "nothing_changed": "Nothing changed since the last scan. The function may be switched off by another setting - for example the after-heating is off. Switch it on, and test again.",
+        "changed": "{count} registers changed since the last scan.",
+        "found_space": "{space}: {present} with values, {absent} absent"
+      }
+    },
+    "mapping_suggestion": {
+      "options": {
+        "own": "Own test",
+        "temperature": "A temperature sensor: breathe on it, hold it to something cold or put it outside, and wait a few minutes",
+        "setting": "A setting: set it to an unusual value, such as a target of 23.5 °C",
+        "switch": "On and off: the after-heating, the bypass, boost or floor heating",
+        "mode": "A mode: the fan level from 1 to 3",
+        "alarm": "An alarm: reset the filter alarm"
       }
     }
   },
