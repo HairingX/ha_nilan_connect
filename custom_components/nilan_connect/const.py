@@ -62,3 +62,6 @@ VALUES_PER_PAGE: Final = 50
 
 MAPPING_REPORT_URL: Final = "https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml"
 """Where a user sends the mappings of their unit."""
+
+PROGRESS_EVERY: Final = 0.5
+"""Seconds between two updates of the progress of a mapping's last scan of every address."""

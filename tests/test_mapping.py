@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any, cast
 
@@ -30,7 +31,7 @@ from custom_components.nilan_connect.const import (
 )
 from custom_components.nilan_connect.data import NilanData
 from custom_components.nilan_connect.diagnostics import async_get_config_entry_diagnostics
-from custom_components.nilan_connect.guide import SUGGESTIONS, comment_lines, parse_comments
+from custom_components.nilan_connect.guide import SUGGESTIONS, MappingGuide, comment_lines, parse_comments
 from custom_components.nilan_connect.mapping import Mappings, load_mappings, step
 
 from .conftest import EMAIL, GATEWAY_ID, HOST
@@ -78,11 +79,18 @@ async def _scanned(hass: HomeAssistant, entry: MockConfigEntry, fitted: str = "a
     return await _read(hass, await _options(hass).async_configure(start["flow_id"], {"fitted": fitted}))
 
 
-async def _test(hass: HomeAssistant, flow_id: str, title: str, suggestion: str = "own") -> ConfigFlowResult:
-    """One test from the menu: chosen, named and scanned."""
+async def _test(hass: HomeAssistant, flow_id: str, title: str, suggestion: str = "own",
+                change: Callable[[], object] | None = None) -> ConfigFlowResult:
+    """One test from the menu: chosen and named, the unit read before the change, `change` made,
+    and the unit read again; where the read before fails, the step it goes on with."""
     await _go(hass, flow_id, "map_test")
-    return await _read(hass, await _options(hass).async_configure(
+    made = await _read(hass, await _options(hass).async_configure(
         flow_id, {"suggestion": suggestion, "title": title}))
+    if made.get("step_id") != "map_change":
+        return made
+    if change is not None:
+        change()
+    return await _read(hass, await _options(hass).async_configure(flow_id, {}))
 
 
 def _schema(form: ConfigFlowResult) -> list[dict[str, Any]]:
@@ -117,13 +125,18 @@ def test_the_guide_is_translated_with_its_placeholders_labels_and_suggestions(la
     assert set(steps["map_tested"]["menu_options"]) == {"map_test", "map_values", "map_send"}
     assert set(steps["map_values"]["menu_options"]) == {"map_values_previous", "map_values_next", "map_values_back"}
     assert "{values}" in steps["map_values"]["description"] and "{pages}" in steps["map_values"]["title"]
-    assert "data" not in steps["map_send"] and "{report_url}" in steps["map_send"]["description"]
+    assert "data" not in steps["map_send"] and "{duration}" in steps["map_send"]["description"]
+    assert all(f"{{{key}}}" in options["abort"]["mapping_saved"] for key in ("summary", "report_url"))
+    assert "{total}" in options["progress"]["reading"]
+    assert "data" not in steps["map_change"] and "submit" in steps["map_change"]
     assert {"not_loaded", "mapping_saved", "mapping_gone_test", "mapping_gone_comments",
             "mapping_gone_final"} <= set(options["abort"])
     assert {"read_failed", "unknown", "title_required"} <= set(options["error"]) and "reading" in options["progress"]
     selectors = _translations(language)["selector"]
     labels = selectors["mapping_label"]["options"]
-    assert set(labels) == {"unknown", "nothing_changed", "changed", "changed_one", "found_space"}
+    assert set(labels) == {"unknown", "nothing_changed", "changed", "changed_one", "found_space", "second_one",
+                           "second", "minute_one", "minute", "test_one", "test", "changed_last_one",
+                           "changed_last", "done", "done_scanned"}
     assert "{count}" in labels["changed"]
     assert all(f"{{{key}}}" in labels["found_space"] for key in ("space", "answered", "nonzero", "absent"))
     assert set(selectors["mapping_suggestion"]["options"]) == {"own", *SUGGESTIONS}
@@ -152,8 +165,8 @@ async def test_a_unit_is_scanned_tested_and_commented_register_by_register_and_e
     assert found.get("description_placeholders") == {
         "found": "- datapoint: 45 answered, 21 not 0, 255 absent\n- setpoint: 47 answered, 33 not 0, 253 absent"}
 
-    gateway.datapoint_registers.update({(0, 23): 0, (0, 28): 170, (0, 79): 1})
-    result = await _test(hass, found["flow_id"], "Bypass closed", "switch")
+    result = await _test(hass, found["flow_id"], "Bypass closed", "switch",
+                         lambda: gateway.datapoint_registers.update({(0, 23): 0, (0, 28): 170, (0, 79): 1}))
     assert result.get("step_id") == "map_result"
     assert result.get("description_placeholders") == {"result": "3 registers changed since the last scan."}
     names = [field["name"] for field in _schema(result)]
@@ -168,8 +181,13 @@ async def test_a_unit_is_scanned_tested_and_commented_register_by_register_and_e
     after = await _options(hass).async_configure(nothing["flow_id"], {})
     send = await _go(hass, after["flow_id"], "map_send")
     assert (send.get("step_id"), _schema(send)) == ("map_send", [])
-    finished = await _read(hass, await _options(hass).async_configure(send["flow_id"], {}))
+    assert (send.get("description_placeholders") or {})["duration"] == "1 second"
+    scanning = await _options(hass).async_configure(send["flow_id"], {})
+    assert scanning.get("description_placeholders") == {"total": "600"}
+    finished = await _read(hass, scanning)
     assert (finished.get("type"), finished.get("reason")) == (FlowResultType.ABORT, "mapping_saved")
+    assert finished.get("description_placeholders") == {
+        "summary": "Done and saved: 2 tests; 0 registers changed in the last scan.", "report_url": MAPPING_REPORT_URL}
 
     [stored] = await load_mappings(hass, config_entry.entry_id)
     assert stored["fitted"] == "a heat pump" and "unit_description" not in stored
@@ -194,6 +212,7 @@ async def test_the_first_scan_is_sent_in_at_once_without_scanning_again(
     sent = len(gateway.commands)
     finished = await _go(hass, found["flow_id"], "map_send")
     assert (finished.get("type"), finished.get("reason")) == (FlowResultType.ABORT, "mapping_saved")
+    assert (finished.get("description_placeholders") or {})["summary"] == "Done and saved: 0 tests."
     [stored] = await load_mappings(hass, config_entry.entry_id)
     assert stored["steps"] == [] and "final" not in stored and len(gateway.commands) == sent
 
@@ -212,7 +231,7 @@ async def test_a_gateway_that_answers_every_address_is_told_by_how_many_are_not_
     gateway.commands.clear()
     await _test(hass, found["flow_id"], "Nothing")
     reads = [command for command in gateway.commands if command.code in (DATAPOINT_READ, SETPOINT_READ)]
-    assert (first, len(reads)) == (10, 10)        # 300 addresses a space, 64 a request
+    assert (first, len(reads)) == (10, 20)        # 300 addresses a space, 64 a request; read before and after
 
 
 async def test_no_extra_equipment_is_needed_to_scan(
@@ -223,6 +242,86 @@ async def test_no_extra_equipment_is_needed_to_scan(
     assert found.get("step_id") == "map_found"
     [stored] = await load_mappings(hass, config_entry.entry_id)
     assert stored["fitted"] == ""
+
+
+async def test_a_test_shows_only_what_changed_between_the_reads_just_before_and_after_the_change(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    """An hour after the first scan, temperatures and counters have drifted by themselves."""
+    found = await _scanned(hass, config_entry)
+    gateway.datapoint_registers.update({(0, 28): 170, (0, 77): 3400})
+    result = await _test(hass, found["flow_id"], "Bypass closed",
+                         change=lambda: gateway.datapoint_registers.update({(0, 23): 0}))
+    assert [field["name"] for field in _schema(result)] == ["datapoint 23: 1 → 0 (Bypass damper)"]
+    await _options(hass).async_configure(result["flow_id"], {})
+    [stored] = await load_mappings(hass, config_entry.entry_id)
+    made = stored["steps"][0]
+    assert made["changes"] == [{"space": "datapoint", "number": 23, "before": 1, "after": 0, "bits": [0]}]
+    assert made["drifted"] == 2
+    assert [(each["number"], each["after"]) for each in made["drift"]] == [(28, 170), (77, 3400)]
+    assert made["before_at"] <= made["at"]
+
+
+async def test_closing_the_guide_between_the_reads_before_and_after_stores_no_test(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    found = await _scanned(hass, config_entry)
+    await _go(hass, found["flow_id"], "map_test")
+    change = await _read(hass, await _options(hass).async_configure(
+        found["flow_id"], {"suggestion": "own", "title": "Bypass"}))
+    assert change.get("step_id") == "map_change"
+    sent = len(gateway.commands)
+    _options(hass).async_abort(found["flow_id"])
+    await hass.async_block_till_done()
+    [stored] = await load_mappings(hass, config_entry.entry_id)
+    assert stored["steps"] == [] and len(gateway.commands) == sent
+
+
+@pytest.mark.parametrize(("seconds", "text"), [(0.2, "1 second"), (6.4, "6 seconds"), (59.4, "59 seconds"),
+                                                (61.0, "1 minute"), (150.0, "3 minutes")])
+async def test_the_time_the_first_scan_took_is_told_in_seconds_or_minutes(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, seconds: float, text: str
+) -> None:
+    guide = MappingGuide(hass, config_entry)
+    await guide.first_read()
+    setattr(guide, "_first_seconds", seconds)
+    assert guide.duration_text() == text
+
+
+async def test_the_last_scan_shows_its_progress_by_the_time_the_first_took(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(guide_module, "PROGRESS_EVERY", 0.01)
+    guide = MappingGuide(hass, config_entry)
+    await guide.first_read()
+    setattr(guide, "_first_seconds", 0.05)
+    told: list[float] = []
+    guide.on_progress = told.append
+    real = loaded.client.map_areas
+
+    async def slow(*, limit: int) -> Any:
+        await asyncio.sleep(0.1)
+        return await real(limit=limit)
+
+    monkeypatch.setattr(loaded.client, "map_areas", slow)
+    assert await guide.full_read() == "map_finish"
+    assert len(told) > 2 and told[0] < told[1] and max(told[:-1]) == 0.95 and told[-1] == 1.0
+    setattr(guide, "_first_seconds", 0.0)
+    told.clear()
+    await guide.full_read()
+    assert told[0] == 0.95
+
+
+async def test_the_closing_text_counts_tests_and_changes_in_the_singular_and_plural(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    found = await _scanned(hass, config_entry)
+    tested = await _options(hass).async_configure((await _test(hass, found["flow_id"], "One"))["flow_id"], {})
+    send = await _go(hass, tested["flow_id"], "map_send")
+    gateway.datapoint_registers[(0, 150)] = 1
+    finished = await _read(hass, await _options(hass).async_configure(send["flow_id"], {}))
+    assert (finished.get("description_placeholders") or {})["summary"] == (
+        "Done and saved: 1 test; 1 register changed in the last scan.")
 
 
 async def test_a_test_needs_a_name(
@@ -241,8 +340,8 @@ async def test_registers_beyond_those_given_a_field_share_one_a_line_each(
     found = await _scanned(hass, config_entry)
     changed = sorted(address for _, address in gateway.setpoint_registers)[:REGISTER_FIELDS + 2]
     registers = gateway.setpoint_registers
-    registers.update({(0, address): registers[(0, address)] + 1 for address in changed})
-    result = await _test(hass, found["flow_id"], "Many at once")
+    bumped = {(0, address): registers[(0, address)] + 1 for address in changed}
+    result = await _test(hass, found["flow_id"], "Many at once", change=lambda: registers.update(bumped))
     fields = _schema(result)
     assert len(fields) == REGISTER_FIELDS + 1 and fields[-1]["name"] == "more"
     more: str = fields[-1]["description"]["suggested_value"]
@@ -259,8 +358,8 @@ async def test_after_a_test_sending_in_scans_every_address_once_more_so_no_regis
     hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, gateway: SimulatedMicroNabtoDevice
 ) -> None:
     found = await _scanned(hass, config_entry)
-    del gateway.datapoint_registers[(0, 87)]          # gone at the test, back at the end
-    result = await _test(hass, found["flow_id"], "After-heating off")
+    result = await _test(hass, found["flow_id"], "After-heating off",     # 87 gone at the test, back at the end
+                         change=lambda: gateway.datapoint_registers.pop((0, 87)))
     tested = await _options(hass).async_configure(result["flow_id"], {})
     send = await _go(hass, tested["flow_id"], "map_send")
     gateway.datapoint_registers.update({(0, 87): 0, (0, 150): 7})   # 150 brought by the test
@@ -322,8 +421,8 @@ async def test_a_change_of_one_register_is_told_in_the_singular(
     hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, gateway: SimulatedMicroNabtoDevice
 ) -> None:
     found = await _scanned(hass, config_entry)
-    gateway.datapoint_registers[(0, 79)] = 1
-    result = await _test(hass, found["flow_id"], "Bypass")
+    result = await _test(hass, found["flow_id"], "Bypass",
+                         change=lambda: gateway.datapoint_registers.update({(0, 79): 1}))
     assert result.get("description_placeholders") == {"result": LABELS["changed_one"]}
 
 
@@ -366,8 +465,15 @@ async def test_a_scan_that_goes_unanswered_returns_to_its_form_with_the_reason(
     clock.advance(60)
     [stored] = await load_mappings(hass, config_entry.entry_id)
     assert stored["steps"] == []
-    result = await _read(hass, await _options(hass).async_configure(
+    change = await _read(hass, await _options(hass).async_configure(
         failed["flow_id"], {"suggestion": "own", "title": "Bypass"}))
+    assert change.get("step_id") == "map_change"
+    gateway.silent = True
+    after = await _read(hass, await _options(hass).async_configure(change["flow_id"], {}))
+    assert (after.get("step_id"), after.get("errors")) == ("map_change", {"base": "read_failed"})
+    gateway.silent = False
+    clock.advance(60)
+    result = await _read(hass, await _options(hass).async_configure(after["flow_id"], {}))
     tested = await _options(hass).async_configure(result["flow_id"], {})
     send = await _go(hass, tested["flow_id"], "map_send")
     gateway.silent = True
@@ -414,8 +520,8 @@ async def test_closing_the_guide_during_a_scan_stops_it_and_keeps_the_tests_made
     assert [each["title"] for each in stored["steps"]] == ["Bypass"]
 
 
-@pytest.mark.parametrize("step_id", ["map_start", "map_found", "map_test", "map_result", "map_tested",
-                                     "map_values", "map_send"])
+@pytest.mark.parametrize("step_id", ["map_start", "map_found", "map_test", "map_change", "map_result",
+                                     "map_tested", "map_values", "map_send"])
 async def test_every_step_of_a_unit_no_longer_set_up_ends_the_guide(
     hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, step_id: str
 ) -> None:
@@ -433,8 +539,8 @@ async def test_a_unit_keeps_its_latest_mappings_and_one_that_gave_way_says_so(
     hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, gateway: SimulatedMicroNabtoDevice
 ) -> None:
     oldest = await _scanned(hass, config_entry, "mapping 0")
-    gateway.datapoint_registers[(0, 79)] = 1
-    result = await _test(hass, oldest["flow_id"], "Bypass")
+    result = await _test(hass, oldest["flow_id"], "Bypass",
+                         change=lambda: gateway.datapoint_registers.update({(0, 79): 1}))
     for number in range(1, MAPPINGS_KEPT + 1):
         await _scanned(hass, config_entry, f"mapping {number}")
     stored = await load_mappings(hass, config_entry.entry_id)
@@ -523,8 +629,8 @@ async def test_the_diagnostics_show_the_stored_mappings_and_comments_without_rea
     hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, gateway: SimulatedMicroNabtoDevice
 ) -> None:
     found = await _scanned(hass, config_entry)
-    gateway.datapoint_registers[(0, 79)] = 1
-    result = await _test(hass, found["flow_id"], "Bypass")
+    result = await _test(hass, found["flow_id"], "Bypass",
+                         change=lambda: gateway.datapoint_registers.update({(0, 79): 1}))
     await _options(hass).async_configure(result["flow_id"], {"datapoint 79: 0 → 1": "motor"})
     sent = len(gateway.commands)
     diagnostics = await async_get_config_entry_diagnostics(hass, config_entry)

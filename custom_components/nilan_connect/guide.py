@@ -26,7 +26,7 @@ from nilan_connect import (
     model_points,
 )
 
-from .const import DOMAIN, MAPPING_LIMIT, REGISTER_FIELDS, STEPS_KEPT, VALUES_PER_PAGE
+from .const import DOMAIN, MAPPING_LIMIT, PROGRESS_EVERY, REGISTER_FIELDS, STEPS_KEPT, VALUES_PER_PAGE
 from .data import NilanConfigEntry
 from .mapping import Mappings, mapping, step
 
@@ -136,7 +136,15 @@ class MappingGuide:
         self._missing: set[RawAddress] = set()
         """What the scans so far found, each address as the last scan of it found it."""
         self._changes: tuple[RegisterChange, ...] = ()
+        self._before = Snapshot(dt_util.utcnow(), {}, [])
+        """The read just before the change of the test under way."""
+        self._drift: tuple[RegisterChange, ...] = ()
+        """What changed by itself between the scan before the test and its read before the change."""
         self._steps = 0
+        self._first_seconds = 0.0
+        """How long the first scan took."""
+        self.on_progress: Callable[[float], None] = lambda _: None
+        """Told how far the last scan of every address has come, from 0 to 1."""
         self._known = Known((), {}, "")
         self._labels: dict[str, str] = {}
 
@@ -247,7 +255,9 @@ class MappingGuide:
         client = self._entry.runtime_data.client
         await self._load_labels(client)
         device = self._device()
+        began = self._hass.loop.time()
         found = await client.map_areas(limit=MAPPING_LIMIT)
+        self._first_seconds = self._hass.loop.time() - began
         started = dt_util.utcnow()
         self._started_at = started.isoformat()
         await self._mappings.async_start(mapping(
@@ -258,35 +268,94 @@ class MappingGuide:
             device=device,
             areas=client.mapping_areas(limit=MAPPING_LIMIT),
             baseline=found,
+            seconds=self._first_seconds,
         ))
         self._found = found
         self._words, self._missing = dict(found.values), set(found.missing)
         self._changes, self._steps = (), 0
         return "map_found"
 
+    async def before_read(self) -> str:
+        """Read the registers the first scan found just before the user makes the change, so that
+        what drifts by itself in between scans is not taken as the change."""
+        before = await self._entry.runtime_data.client.read_mapped(self._found)
+        self._drift = difference(self._last(), before)
+        self._learn(before)
+        self._before = before
+        return "map_change"
+
     async def step_read(self) -> str:
-        """Scan again the registers the first scan found, and store what changed since the scans
-        before, as the test the user made."""
+        """Read the registers again after the change, and store what changed since the read just
+        before it, as the test the user made, with what had drifted before it."""
         again = await self._entry.runtime_data.client.read_mapped(self._found)
-        self._changes = difference(self._last(), again)
+        self._changes = difference(self._before, again)
         self._learn(again)
         suggestion = None if self.suggestion == OWN_TEST else self.suggestion
-        if not await self._mappings.async_add_step(
-                self._started_at, step(again.taken_at, self.title, suggestion, self._changes)):
+        made = step(again.taken_at, self.title, suggestion, self._changes)
+        made.update({"before_at": self._before.taken_at.isoformat(), "drifted": len(self._drift),
+                     "drift": [change.as_plain() for change in self._drift]})
+        if not await self._mappings.async_add_step(self._started_at, made):
             return "map_gone_test"
         self._steps += 1
         self.page = 0
         return "map_result"
 
     async def full_read(self) -> str:
-        """Scan every address once more, and store it and what changed since the scans before."""
-        again = await self._entry.runtime_data.client.map_areas(limit=MAPPING_LIMIT)
+        """Scan every address once more, and store it and what changed since the scans before.
+
+        How far it has come is told to `on_progress` as the share of the first scan's time gone,
+        as the library tells no progress of its own; at most 0.95 until it ends.
+        """
+        began = self._hass.loop.time()
+        ticker = self._hass.async_create_background_task(self._tick(began), "nilan_connect mapping progress")
+        try:
+            again = await self._entry.runtime_data.client.map_areas(limit=MAPPING_LIMIT)
+        finally:
+            ticker.cancel()
+        self.on_progress(1.0)
         self._changes = difference(self._last(), again)
         self._learn(again)
-        final = {**step(again.taken_at, "", None, self._changes), "snapshot": again.as_plain()}
+        final = {**step(again.taken_at, "", None, self._changes), "snapshot": again.as_plain(),
+                 "seconds": self._hass.loop.time() - began}
         if not await self._mappings.async_finish(self._started_at, final):
             return "map_gone_final"
         return "map_finish"
+
+    async def _tick(self, began: float) -> None:
+        while True:
+            elapsed = self._hass.loop.time() - began
+            self.on_progress(min(0.95, elapsed / self._first_seconds) if self._first_seconds > 0 else 0.95)
+            await asyncio.sleep(PROGRESS_EVERY)
+
+    def read_total(self) -> int:
+        """How many addresses the prepared scan reads: every address of the areas for a full
+        scan, else those the first scan found."""
+        read, _ = self._pending
+        if read == self.first_read or read == self.full_read:
+            return sum(area.count for area in self._entry.runtime_data.client.mapping_areas(limit=MAPPING_LIMIT))
+        return len(self._found.values)
+
+    def duration_text(self) -> str:
+        """How long the first scan took, in seconds under a minute, else in minutes."""
+        seconds = max(1, int(self._first_seconds + 0.5))
+        if seconds < 60:
+            return self._counted("second", seconds)
+        return self._counted("minute", int(self._first_seconds / 60 + 0.5))
+
+    def summary_text(self, scanned: bool) -> str:
+        """What the mapping holds: how many tests, and, after the last scan, how many registers
+        it changed."""
+        tests = self._counted("test", self._steps)
+        if not scanned:
+            return self._label("done").replace("{tests}", tests)
+        changed = self._counted("changed_last", len(self._changes))
+        return self._label("done_scanned").replace("{tests}", tests).replace("{changed}", changed)
+
+    def _counted(self, key: str, count: int) -> str:
+        """The label of `key` for `count`: `key`_one for 1, else `key` with the count."""
+        if count == 1:
+            return self._label(f"{key}_one")
+        return self._label(key).replace("{count}", str(count))
 
     async def write_comments(self, given: Mapping[str, Any]) -> bool:
         """Store the user's comments on the last test's changes: from the field of each register

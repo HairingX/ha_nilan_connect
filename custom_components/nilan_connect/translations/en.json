@@ -3486,7 +3486,7 @@
       },
       "map_test": {
         "title": "Test a function",
-        "description": "Change one thing on the unit (on its panel or in its app), for example the fan level, then press Scan.",
+        "description": "Choose a test and name it. When you press Scan, the unit is read as it is now; then you make the change, and it is read again, so that only what your change did is shown.",
         "data": {
           "suggestion": "Test",
           "title": "What you tested"
@@ -3494,6 +3494,11 @@
         "data_description": {
           "title": "Such as: Bypass opened, or Target temperature 23.5 °C."
         },
+        "submit": "Scan"
+      },
+      "map_change": {
+        "title": "Make the change",
+        "description": "The unit has been read. Now make the change on the unit (on its panel or in its app), wait if the test needs it, then press Scan.",
         "submit": "Scan"
       },
       "map_result": {
@@ -3526,12 +3531,12 @@
       },
       "map_send": {
         "title": "Finish and save",
-        "description": "Every test is saved. To miss no register - such as one a function you switched on brought - every address is scanned once more now; that takes as long as the first scan. Then you can send the mapping to us: download the diagnostics and attach them to a [mapping report]({report_url}).",
+        "description": "At the end we scan every address again, so that no register a test brought is missed. Last time it took {duration}.",
         "submit": "Scan and save"
       }
     },
     "progress": {
-      "reading": "Scanning the unit. The first scan can take up to a few minutes on a slow gateway; closing this stops it, and every test already made stays stored."
+      "reading": "Scanning {total} addresses. Closing this stops the scan; every test already made stays saved."
     },
     "error": {
       "read_failed": "The unit was busy or did not answer, so the scan stopped. Try again in a moment.",
@@ -3540,7 +3545,7 @@
     },
     "abort": {
       "not_loaded": "The unit is not set up right now, so it cannot be mapped. Try again once it is.",
-      "mapping_saved": "The mapping is stored. Download the diagnostics and attach them to a [mapping report]({report_url}).",
+      "mapping_saved": "{summary} Download the diagnostics if you want to send the mapping to us, and attach them to a [mapping report]({report_url}).",
       "mapping_gone_test": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the last test was not stored.",
       "mapping_gone_comments": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the comments on the last test were not stored.",
       "mapping_gone_final": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the last scan was not stored."
@@ -3560,7 +3565,17 @@
         "nothing_changed": "Nothing changed since the last scan. The function may be switched off by another setting - for example the after-heating is off. Switch it on, and test again.",
         "changed": "{count} registers changed since the last scan.",
         "found_space": "{space}: {answered} answered, {nonzero} not 0, {absent} absent",
-        "changed_one": "1 register changed since the last scan."
+        "changed_one": "1 register changed since the last scan.",
+        "second_one": "1 second",
+        "second": "{count} seconds",
+        "minute_one": "1 minute",
+        "minute": "{count} minutes",
+        "test_one": "1 test",
+        "test": "{count} tests",
+        "changed_last_one": "1 register changed in the last scan",
+        "changed_last": "{count} registers changed in the last scan",
+        "done": "Done and saved: {tests}.",
+        "done_scanned": "Done and saved: {tests}; {changed}."
       }
     },
     "mapping_suggestion": {

@@ -52,11 +52,13 @@ Devices & services > Nilan Connect > Configure > **Map the unit**. It is offered
    and the guide says per space how many answered, how many of those were not 0 - a gateway may
    answer 0 where nothing is - and how many are absent. That takes from seconds to a few minutes
    on a slow gateway. The scan is saved.
-2. **Make a test (recommended)**, or **Finish and save**. A test: change one thing on the unit,
-   on its own panel or in the manufacturer's app - pick a suggestion, such as a temperature
-   sensor, a setting, something switched on and off, a mode or an alarm, or your own - name it
-   in one line, and press **Scan**: the guide scans again, in a few seconds, only the registers
-   that answered.
+2. **Make a test (recommended)**, or **Finish and save**. A test: pick a suggestion, such as a
+   temperature sensor, a setting, something switched on and off, a mode or an alarm, or your
+   own, name it in one line, and press **Scan**: the guide reads the registers that answered, as
+   they are now. Then change one thing on the unit, on its own panel or in the manufacturer's
+   app, and press **Scan** again: the guide reads them once more, and shows only what changed
+   between the two reads, so values that drift by themselves in the meantime, such as
+   temperatures, do not hide the change. Each read takes a few seconds.
 3. Each register that changed gets a field, named by the register and its raw change, such as
    "datapoint 79: 0 → 1", with the name of the value we know at it, if any. Write what it is;
    "?" is fine, and an empty field is no comment. Beyond 20 registers, the rest share one field,
@@ -65,7 +67,8 @@ Devices & services > Nilan Connect > Configure > **Map the unit**. It is offered
 4. **Next test**, **Show all values** - every register's latest value, page by page, read from
    what the scans found - or **Finish and save**. After a test, finishing scans every address
    once more, so that no register is missed that a function switched on during the tests
-   brought.
+   brought; the guide says how long the first scan took, shows the scan's progress, and then
+   how many tests were saved and how many registers the last scan changed.
 5. The mapping is saved with the unit; nothing is sent anywhere. To send it to us, download the
    diagnostics and attach them to a
    [mapping report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml).
@@ -77,7 +80,8 @@ once when the gateway is busy or does not answer, and the guide says so. Closing
 during a scan stops it; the tests already made are kept. The latest three mappings of a unit are
 kept, each with up to 30 tests, and are deleted with the integration. The diagnostics show them
 under `mappings`: the extra equipment you named, the unit's identity and model, the first scan in
-full, and per test its name, the suggestion it followed, what changed and your comments; never
+full, and per test its name, the suggestion it followed, what changed and your comments, and how
+many registers drifted by themselves before it; never
 the email, the gateway's address or its id.
 
 ## Installation

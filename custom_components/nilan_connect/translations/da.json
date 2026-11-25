@@ -3486,7 +3486,7 @@
       },
       "map_test": {
         "title": "Test en funktion",
-        "description": "Skift én ting på anlægget (på panelet eller i appen), fx ventilatortrin, og tryk så Skan.",
+        "description": "Vælg en test, og giv den et navn. Når du trykker Skan, læses anlægget, som det er nu; så laver du ændringen, og det læses igen, så kun det, din ændring gjorde, vises.",
         "data": {
           "suggestion": "Test",
           "title": "Hvad du testede"
@@ -3494,6 +3494,11 @@
         "data_description": {
           "title": "Fx: Bypass åbnet, eller Ønsket temperatur 23,5 °C."
         },
+        "submit": "Skan"
+      },
+      "map_change": {
+        "title": "Lav ændringen",
+        "description": "Anlægget er læst. Lav nu ændringen på anlægget (på panelet eller i appen), vent, hvis testen kræver det, og tryk så Skan.",
         "submit": "Skan"
       },
       "map_result": {
@@ -3526,12 +3531,12 @@
       },
       "map_send": {
         "title": "Afslut og gem",
-        "description": "Alle test er gemt. For ikke at overse et register - fx ét, som en funktion, du slog til, har givet - skannes hver adresse én gang til nu; det tager lige så lang tid som den første skanning. Så kan du sende kortlægningen til os: hent diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url}).",
+        "description": "Til sidst skanner vi alle adresser igen, så intet register, en test har givet, overses. Sidst tog det {duration}.",
         "submit": "Skan og gem"
       }
     },
     "progress": {
-      "reading": "Skanner anlægget. Den første skanning kan tage et par minutter på en langsom gateway; lukker du her, stopper den, og alle test, der allerede er lavet, er gemt."
+      "reading": "Skanner {total} adresser. Lukker du her, stopper skanningen; alle test, der allerede er lavet, er gemt."
     },
     "error": {
       "read_failed": "Anlægget var optaget eller svarede ikke, så skanningen stoppede. Prøv igen om lidt.",
@@ -3540,7 +3545,7 @@
     },
     "abort": {
       "not_loaded": "Anlægget er ikke sat op lige nu, så det kan ikke kortlægges. Prøv igen, når det er.",
-      "mapping_saved": "Kortlægningen er gemt. Hent diagnostikken, og vedhæft den en [kortlægningsrapport]({report_url}).",
+      "mapping_saved": "{summary} Hent diagnostikken, hvis du vil sende kortlægningen til os, og vedhæft den en [kortlægningsrapport]({report_url}).",
       "mapping_gone_test": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: den sidste test blev ikke gemt.",
       "mapping_gone_comments": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: kommentarerne til den sidste test blev ikke gemt.",
       "mapping_gone_final": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: den sidste skanning blev ikke gemt."
@@ -3560,7 +3565,17 @@
         "nothing_changed": "Intet skiftede siden sidste skanning. Funktionen kan være slået fra af en anden indstilling - fx er eftervarmen slået fra. Slå den til, og test igen.",
         "changed": "{count} registre skiftede siden sidste skanning.",
         "found_space": "{space}: {answered} svarede, {nonzero} ikke 0, {absent} findes ikke",
-        "changed_one": "1 register skiftede siden sidste skanning."
+        "changed_one": "1 register skiftede siden sidste skanning.",
+        "second_one": "1 sekund",
+        "second": "{count} sekunder",
+        "minute_one": "1 minut",
+        "minute": "{count} minutter",
+        "test_one": "1 test",
+        "test": "{count} tests",
+        "changed_last_one": "1 register ændrede sig i sidste skanning",
+        "changed_last": "{count} registre ændrede sig i sidste skanning",
+        "done": "Færdig og gemt: {tests}.",
+        "done_scanned": "Færdig og gemt: {tests}, {changed}."
       }
     },
     "mapping_suggestion": {

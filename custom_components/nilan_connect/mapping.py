@@ -55,8 +55,9 @@ def mapping(
     device: dict[str, str | None],
     areas: Sequence[Area],
     baseline: Snapshot,
+    seconds: float,
 ) -> Plain:
-    """A new mapping, with its first full read and no steps yet."""
+    """A new mapping, with its first full scan and how many seconds it took, and no tests yet."""
     return {
         "started_at": started_at.isoformat(),
         "fitted": fitted,
@@ -65,6 +66,7 @@ def mapping(
         "device": device,
         "areas": [{"space": area.space, "start": area.start, "count": area.count} for area in areas],
         "baseline": baseline.as_plain(),
+        "baseline_seconds": seconds,
         "steps": [],
     }
 
