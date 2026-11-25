@@ -437,7 +437,10 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         # Progress is shown at least once: a scan that fails at once ends as it starts.
         if started or not task.done():
             return self.async_show_progress(
-                step_id="map_read", progress_action="reading", progress_task=task
+                step_id="map_read",
+                progress_action="reading",
+                progress_task=task,
+                description_placeholders={"total": str(guide.read_total())},
             )
         return self.async_show_progress_done(next_step_id=await guide.finished(task))
 
@@ -456,7 +459,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
     async def async_step_map_test(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Choose a test and name it; the user makes it, then the unit is scanned."""
+        """Choose a test and name it; the unit is then read as it is, before the change."""
         if not self._loaded():
             return self.async_abort(reason="not_loaded")
         guide = self._require_guide()
@@ -465,7 +468,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
             guide.suggestion = str(user_input.get(CONF_SUGGESTION, OWN_TEST))
             guide.title = str(user_input.get(CONF_TITLE, "")).strip()
             if guide.title:
-                return await self._read(guide.step_read, on_failure="map_test")
+                return await self._read(guide.before_read, on_failure="map_test")
             errors = {CONF_TITLE: "title_required"}
         suggestions = _SELECT(
             selector.SelectSelectorConfig(
@@ -486,6 +489,19 @@ class NilanOptionsFlow(OptionsFlowWithReload):
                 schema, {CONF_SUGGESTION: guide.suggestion, CONF_TITLE: guide.title}
             ),
             errors=errors,
+        )
+
+    async def async_step_map_change(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The unit was read before the change: the user makes it now, then the unit is read again."""
+        if not self._loaded():
+            return self.async_abort(reason="not_loaded")
+        guide = self._require_guide()
+        if user_input is not None:
+            return await self._read(guide.step_read, on_failure="map_change")
+        return self.async_show_form(
+            step_id="map_change", data_schema=probatio.Schema({}), errors=guide.take_errors()
         )
 
     async def async_step_map_result(
@@ -569,20 +585,26 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         if not guide.tested:
             return await self.async_step_map_finish()
         if user_input is not None:
+            guide.on_progress = self.async_update_progress
             return await self._read(guide.full_read, on_failure="map_send")
         return self.async_show_form(
             step_id="map_send",
             data_schema=probatio.Schema({}),
-            description_placeholders={"report_url": MAPPING_REPORT_URL},
+            description_placeholders={"duration": guide.duration_text()},
             errors=guide.take_errors(),
         )
 
     async def async_step_map_finish(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """The mapping is stored."""
+        """The mapping is stored: how many tests it holds, and what the last scan changed."""
+        guide = self._require_guide()
         return self.async_abort(
-            reason="mapping_saved", description_placeholders={"report_url": MAPPING_REPORT_URL}
+            reason="mapping_saved",
+            description_placeholders={
+                "summary": guide.summary_text(scanned=guide.tested),
+                "report_url": MAPPING_REPORT_URL,
+            },
         )
 
     async def async_step_map_gone_test(

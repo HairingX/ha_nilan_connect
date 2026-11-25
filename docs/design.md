@@ -116,8 +116,12 @@ must fix, and the debug log only logs.
   (recommended)** (`map_test`) and **Finish and save** (`map_send`): nothing is sent anywhere. A
   test is chosen from the suggestions, translated under the selector `mapping_suggestion`, or the
   user's own, and named in one required line; its **Scan** button, a step's `submit` translation,
-  then starts `map_read`, which scans
-  again only what the first scan found, `Client.read_mapped`. `map_result` gives each changed
+  starts `map_read`, which reads again only what the first scan found, `Client.read_mapped`, as
+  the unit is just before the change. `map_change` then asks the user to make the change, and its
+  **Scan** reads them once more: a test's changes are between these two reads, so what drifts by
+  itself between tests - a real unit's temperatures and counters, in the 57 minutes between a
+  first scan and a first test - does not hide the change; what drifted before the test is stored
+  beside it. `map_result` gives each changed
   register, up to `REGISTER_FIELDS` (20), a field of its own, and the rest one multiline field a
   line each, parsed back by the address at the start of each line; a line of its own belongs to
   the register above it. `map_tested` offers the next test, `map_values` - the latest state, the
@@ -125,7 +129,12 @@ must fix, and the debug log only logs.
   from what the guide holds, from the first page again after each scan - and `map_send`. After a
   test, finishing scans every address once more, with the same limit, as a test can switch on
   something whose registers answer only then, and no register may be missed; finished straight
-  after the first scan, it needs none.
+  after the first scan, it needs none. Before it, the guide says how long the first scan took,
+  measured then and stored, in seconds under a minute and in minutes above. During it, the
+  progress bar is the share of the first scan's time gone, at most 0.95 until it ends, as the
+  library tells no progress of its own, and the progress text names how many addresses are read;
+  Home Assistant does not change a progress step's text while it runs. After it, the closing
+  message says how many tests were saved and how many registers the last scan changed.
 - **Field names.** A field Home Assistant has no translation for is labelled by its name, so a
   register's field is named by the register and its raw change, "datapoint 79: 0 → 1", with the
   name of the entity of a point at it in Home Assistant's language. Values are shown raw: a
@@ -153,12 +162,14 @@ must fix, and the debug log only logs.
 - **Storage.** One `Store` per entry, `nilan_connect.mappings.<entry id>`, holds the latest
   `MAPPINGS_KEPT` (3) mappings, the oldest giving way, each with up to `STEPS_KEPT` (30) tests:
   when it started, the extra equipment the user named (`fitted`), the model, the handshake's identity, the
-  device's manufacturer, model and software version, the areas, the first scan in full, per test
-  its time, name, suggestion and changes with the user's comment on each, and the last full scan
-  in full with what it changed. Each scan is stored as soon as it ends, under a lock per entry, so
+  device's manufacturer, model and software version, the areas, the first scan in full with how
+  many seconds it took, per test its time and the time of its read before the change, name,
+  suggestion and changes with the user's comment on each, and what drifted before it (`drifted`
+  and `drift`), and the last full scan in full with what it changed and how long it took. Each scan is stored as soon as it ends, under a lock per entry, so
   two guides of one unit never store over each other; removing the entry removes the store under
   the same lock, and then the lock, and a guide closed during a scan, which
-  cancels it, keeps the tests made. The changes of a scan are against what the scans before found,
+  cancels it, keeps the tests made; closed between a test's two reads, it stores no test. The
+  drift before a test, and the last full scan's changes, are against what the scans before found,
   each address as the last scan of it found it. `async_remove_entry` removes the store.
 - **Diagnostics.** `mappings` is what the store holds, read from it: the diagnostics never read
   the unit for it. The identity holds the controller's type and model numbers, not a serial
