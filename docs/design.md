@@ -115,7 +115,8 @@ must fix, and the debug log only logs.
   nothing is, so an answer alone says little - and that the scan is saved, with **Make a test
   (recommended)** (`map_test`) and **Finish and save** (`map_send`): nothing is sent anywhere. A
   test is chosen from the suggestions, translated under the selector `mapping_suggestion`, or the
-  user's own, and named in one required line; its **Scan** button, a step's `submit` translation,
+  user's own, and named in one required line. The test's two screens are numbered, and the first
+  says not to make the change yet: its **Start test** button, a step's `submit` translation,
   starts `map_read`, which reads again only what the first scan found, `Client.read_mapped`, as
   the unit is just before the change. `map_change` then asks the user to make the change, and its
   **Scan** reads them once more: a test's changes are between these two reads, so what drifts by
@@ -130,11 +131,17 @@ must fix, and the debug log only logs.
   test, finishing scans every address once more, with the same limit, as a test can switch on
   something whose registers answer only then, and no register may be missed; finished straight
   after the first scan, it needs none. Before it, the guide says how long the first scan took,
-  measured then and stored, in seconds under a minute and in minutes above. During it, the
-  progress bar is the share of the first scan's time gone, at most 0.95 until it ends, as the
-  library tells no progress of its own, and the progress text names how many addresses are read;
+  measured then and stored: "a moment" under `ESTIMATED_FROM` (2 s), as a real CTS400's took
+  0.03 s, in seconds under a minute and in minutes above. During it, from 2 s on, the
+  progress bar is the share of the first scan's time gone; a quicker scan shows none, as it ends
+  before a bar would say anything. The bar is at most 0.95 until the scan ends, as the library
+  tells no progress of its own, and the progress text names how many addresses are read;
   Home Assistant does not change a progress step's text while it runs. After it, the closing
   message says how many tests were saved and how many registers the last scan changed.
+- **The unit named.** Every step's description names the unit mapped by its manufacturer and
+  model, and says to make changes on it, not on other devices in the house: a change made on
+  another integration's device shows nothing here. The suggestions are things a ventilation
+  unit has, each set to a value it never normally has, so that the change stands out.
 - **Field names.** A field Home Assistant has no translation for is labelled by its name, so a
   register's field is named by the register and its raw change, "datapoint 79: 0 → 1", with the
   name of the entity of a point at it in Home Assistant's language. Values are shown raw: a

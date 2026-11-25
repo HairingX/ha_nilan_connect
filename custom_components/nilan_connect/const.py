@@ -65,3 +65,7 @@ MAPPING_REPORT_URL: Final = "https://github.com/HairingX/ha_nilan_connect/issues
 
 PROGRESS_EVERY: Final = 0.5
 """Seconds between two updates of the progress of a mapping's last scan of every address."""
+
+ESTIMATED_FROM: Final = 2.0
+"""Seconds the first scan of a mapping took from which the guide tells it in seconds and shows the
+last scan's progress; a real CTS400's took 0.03 s, over before a bar would say anything."""

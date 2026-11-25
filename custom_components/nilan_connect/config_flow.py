@@ -416,15 +416,11 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         if user_input is not None:
             guide.fitted = str(user_input.get(CONF_FITTED, "")).strip()
             return await self._read(guide.first_read, on_failure="map_start")
-        model = self.config_entry.runtime_data.client.model
         schema = probatio.Schema({probatio.Optional(CONF_FITTED): str})
         return self.async_show_form(
             step_id="map_start",
             data_schema=self.add_suggested_values_to_schema(schema, {CONF_FITTED: guide.fitted}),
-            description_placeholders={
-                "model": f"{model.manufacturer} {model.name}",
-                "report_url": MAPPING_REPORT_URL,
-            },
+            description_placeholders=self._unit(report_url=MAPPING_REPORT_URL),
             errors=guide.take_errors(),
         )
 
@@ -453,7 +449,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         return self.async_show_menu(
             step_id="map_found",
             menu_options=["map_test", "map_send"],
-            description_placeholders={"found": self._require_guide().found_text()},
+            description_placeholders=self._unit(found=self._require_guide().found_text()),
         )
 
     async def async_step_map_test(
@@ -488,6 +484,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
             data_schema=self.add_suggested_values_to_schema(
                 schema, {CONF_SUGGESTION: guide.suggestion, CONF_TITLE: guide.title}
             ),
+            description_placeholders=self._unit(),
             errors=errors,
         )
 
@@ -501,7 +498,10 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         if user_input is not None:
             return await self._read(guide.step_read, on_failure="map_change")
         return self.async_show_form(
-            step_id="map_change", data_schema=probatio.Schema({}), errors=guide.take_errors()
+            step_id="map_change",
+            data_schema=probatio.Schema({}),
+            description_placeholders=self._unit(),
+            errors=guide.take_errors(),
         )
 
     async def async_step_map_result(
@@ -524,7 +524,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         return self.async_show_form(
             step_id="map_result",
             data_schema=self.add_suggested_values_to_schema(probatio.Schema(fields), suggested),
-            description_placeholders={"result": guide.result_text()},
+            description_placeholders=self._unit(result=guide.result_text()),
         )
 
     async def async_step_map_tested(
@@ -535,7 +535,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
             return self.async_abort(reason="not_loaded")
         guide = self._require_guide()
         options = ["map_test", "map_values", "map_send"] if guide.room_for_steps else ["map_values", "map_send"]
-        return self.async_show_menu(step_id="map_tested", menu_options=options)
+        return self.async_show_menu(step_id="map_tested", menu_options=options, description_placeholders=self._unit())
 
     async def async_step_map_values(
         self, user_input: dict[str, Any] | None = None
@@ -551,7 +551,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
             "map_values_back",
         ]
         return self.async_show_menu(
-            step_id="map_values", menu_options=options, description_placeholders=guide.page_placeholders()
+            step_id="map_values", menu_options=options, description_placeholders=self._unit(**guide.page_placeholders())
         )
 
     async def async_step_map_values_next(
@@ -590,7 +590,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         return self.async_show_form(
             step_id="map_send",
             data_schema=probatio.Schema({}),
-            description_placeholders={"duration": guide.duration_text()},
+            description_placeholders=self._unit(duration=guide.duration_text()),
             errors=guide.take_errors(),
         )
 
@@ -625,6 +625,11 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         """Start `read`, which gives the step to go on with, and show its progress."""
         self._require_guide().prepare(read, on_failure=on_failure)
         return await self.async_step_map_read()
+
+    def _unit(self, **placeholders: str) -> dict[str, str]:
+        """`placeholders`, with the unit the guide maps by its manufacturer and model."""
+        model = self.config_entry.runtime_data.client.model
+        return {"unit": f"{model.manufacturer} {model.name}", **placeholders}
 
     def _loaded(self) -> bool:
         """Whether the unit's entry is set up, which every read needs."""
