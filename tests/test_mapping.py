@@ -55,6 +55,11 @@ def _translations(language: str) -> dict[str, Any]:
 LABELS = _translations("en")["selector"]["mapping_label"]["options"]
 
 
+def selectors_of(language: str) -> dict[str, Any]:
+    selectors: dict[str, Any] = _translations(language)["selector"]
+    return selectors
+
+
 async def _menu(hass: HomeAssistant, entry: MockConfigEntry, option: str) -> ConfigFlowResult:
     """The options of `entry`, at `option` of their menu."""
     flow: ConfigFlowResult = await _options(hass).async_init(entry.entry_id)
@@ -113,12 +118,19 @@ def test_the_guide_is_translated_with_its_placeholders_labels_and_suggestions(la
     options = _translations(language)["options"]
     steps = options["step"]
     assert set(steps["init"]["menu_options"]) == {"settings", "map_unit"}
-    assert "{report_url}" in steps["map_start"]["description"] and "{model}" in steps["map_start"]["description"]
+    assert "{report_url}" in steps["map_start"]["description"] and "{unit}" in steps["map_start"]["description"]
     assert set(steps["map_start"]["data"]) == set(steps["map_start"]["data_description"]) == {"fitted"}
     assert "{found}" in steps["map_found"]["description"]
     assert set(steps["map_found"]["menu_options"]) == {"map_send", "map_test"}
     assert steps["map_found"]["menu_options"]["map_send"] == steps["map_tested"]["menu_options"]["map_send"]
-    assert steps["map_tested"]["description"] in steps["map_found"]["description"]
+    assert steps["map_tested"]["description"].split("\n\n")[-1] in steps["map_found"]["description"]
+    assert all("{unit}" in steps[name]["description"] for name in steps if name.startswith("map_"))
+    assert steps["map_test"]["description"].split("\n\n")[1].startswith("**1. ")
+    assert steps["map_change"]["description"].split("\n\n")[1].startswith("**2. ")
+    assert "**3. " in steps["map_change"]["description"]
+    assert steps["map_test"]["submit"] == "Start test" and steps["map_change"]["submit"] in ("Scan", "Skan")
+    suggestions = " ".join(selectors_of(language)["mapping_suggestion"]["options"].values()).lower()
+    assert "floor" not in suggestions and "gulv" not in suggestions and "17 °c" in suggestions
     assert all("submit" in steps[name] for name in ("map_start", "map_test", "map_send"))
     assert set(steps["map_test"]["data"]) == {"suggestion", "title"}
     assert "{result}" in steps["map_result"]["description"] and set(steps["map_result"]["data"]) == {"more"}
@@ -134,7 +146,8 @@ def test_the_guide_is_translated_with_its_placeholders_labels_and_suggestions(la
     assert {"read_failed", "unknown", "title_required"} <= set(options["error"]) and "reading" in options["progress"]
     selectors = _translations(language)["selector"]
     labels = selectors["mapping_label"]["options"]
-    assert set(labels) == {"unknown", "nothing_changed", "changed", "changed_one", "found_space", "second_one",
+    assert set(labels) == {"unknown", "nothing_changed", "changed", "changed_one", "found_space", "moment",
+                           "second_one",
                            "second", "minute_one", "minute", "test_one", "test", "changed_last_one",
                            "changed_last", "done", "done_scanned"}
     assert "{count}" in labels["changed"]
@@ -158,17 +171,18 @@ async def test_a_unit_is_scanned_tested_and_commented_register_by_register_and_e
     options = dict(config_entry.options)
     start = await _menu(hass, config_entry, "map_unit")
     assert (start.get("type"), start.get("step_id")) == (FlowResultType.FORM, "map_start")
-    assert start.get("description_placeholders") == {"model": "Nilan CTS 400", "report_url": MAPPING_REPORT_URL}
+    assert start.get("description_placeholders") == {"unit": "Nilan CTS 400", "report_url": MAPPING_REPORT_URL}
     assert [field["name"] for field in _schema(start)] == ["fitted"]
     found = await _read(hass, await _options(hass).async_configure(start["flow_id"], {"fitted": " a heat pump "}))
     assert (found.get("step_id"), found.get("menu_options")) == ("map_found", ["map_test", "map_send"])
-    assert found.get("description_placeholders") == {
+    assert found.get("description_placeholders") == {"unit": "Nilan CTS 400",
         "found": "- datapoint: 45 answered, 21 not 0, 255 absent\n- setpoint: 47 answered, 33 not 0, 253 absent"}
 
     result = await _test(hass, found["flow_id"], "Bypass closed", "switch",
                          lambda: gateway.datapoint_registers.update({(0, 23): 0, (0, 28): 170, (0, 79): 1}))
     assert result.get("step_id") == "map_result"
-    assert result.get("description_placeholders") == {"result": "3 registers changed since the last scan."}
+    assert result.get("description_placeholders") == {"unit": "Nilan CTS 400",
+                                                      "result": "3 registers changed since the last scan."}
     names = [field["name"] for field in _schema(result)]
     assert names == ["datapoint 23: 1 → 0 (Bypass damper)", "datapoint 28: 164 → 170 (Supply air temperature)",
                      "datapoint 79: 0 → 1"]
@@ -176,12 +190,12 @@ async def test_a_unit_is_scanned_tested_and_commented_register_by_register_and_e
     assert (tested.get("step_id"), tested.get("menu_options")) == ("map_tested", ["map_test", "map_values", "map_send"])
 
     nothing = await _test(hass, tested["flow_id"], "Nothing")
-    assert nothing.get("description_placeholders") == {"result": LABELS["nothing_changed"]}
+    assert nothing.get("description_placeholders") == {"unit": "Nilan CTS 400", "result": LABELS["nothing_changed"]}
     assert _schema(nothing) == []
     after = await _options(hass).async_configure(nothing["flow_id"], {})
     send = await _go(hass, after["flow_id"], "map_send")
     assert (send.get("step_id"), _schema(send)) == ("map_send", [])
-    assert (send.get("description_placeholders") or {})["duration"] == "1 second"
+    assert send.get("description_placeholders") == {"unit": "Nilan CTS 400", "duration": "a moment"}
     scanning = await _options(hass).async_configure(send["flow_id"], {})
     assert scanning.get("description_placeholders") == {"total": "600"}
     finished = await _read(hass, scanning)
@@ -226,7 +240,7 @@ async def test_a_gateway_that_answers_every_address_is_told_by_how_many_are_not_
     gateway.commands.clear()
     found = await _scanned(hass, config_entry)
     first = len(gateway.commands)
-    assert found.get("description_placeholders") == {
+    assert found.get("description_placeholders") == {"unit": "Nilan CTS 400",
         "found": "- datapoint: 300 answered, 21 not 0, 0 absent\n- setpoint: 300 answered, 33 not 0, 0 absent"}
     gateway.commands.clear()
     await _test(hass, found["flow_id"], "Nothing")
@@ -277,7 +291,8 @@ async def test_closing_the_guide_between_the_reads_before_and_after_stores_no_te
     assert stored["steps"] == [] and len(gateway.commands) == sent
 
 
-@pytest.mark.parametrize(("seconds", "text"), [(0.2, "1 second"), (6.4, "6 seconds"), (59.4, "59 seconds"),
+@pytest.mark.parametrize(("seconds", "text"), [(0.029, "a moment"), (1.9, "a moment"), (2.0, "2 seconds"),
+                                                (6.4, "6 seconds"), (59.4, "59 seconds"),
                                                 (61.0, "1 minute"), (150.0, "3 minutes")])
 async def test_the_time_the_first_scan_took_is_told_in_seconds_or_minutes(
     hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, seconds: float, text: str
@@ -292,6 +307,7 @@ async def test_the_last_scan_shows_its_progress_by_the_time_the_first_took(
     hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setattr(guide_module, "PROGRESS_EVERY", 0.01)
+    monkeypatch.setattr(guide_module, "ESTIMATED_FROM", 0.04)
     guide = MappingGuide(hass, config_entry)
     await guide.first_read()
     setattr(guide, "_first_seconds", 0.05)
@@ -306,10 +322,10 @@ async def test_the_last_scan_shows_its_progress_by_the_time_the_first_took(
     monkeypatch.setattr(loaded.client, "map_areas", slow)
     assert await guide.full_read() == "map_finish"
     assert len(told) > 2 and told[0] < told[1] and max(told[:-1]) == 0.95 and told[-1] == 1.0
-    setattr(guide, "_first_seconds", 0.0)
+    setattr(guide, "_first_seconds", 0.03)          # quicker than a bar would say anything
     told.clear()
     await guide.full_read()
-    assert told[0] == 0.95
+    assert told == []
 
 
 async def test_the_closing_text_counts_tests_and_changes_in_the_singular_and_plural(
@@ -322,6 +338,22 @@ async def test_the_closing_text_counts_tests_and_changes_in_the_singular_and_plu
     finished = await _read(hass, await _options(hass).async_configure(send["flow_id"], {}))
     assert (finished.get("description_placeholders") or {})["summary"] == (
         "Done and saved: 1 test; 1 register changed in the last scan.")
+
+
+async def test_every_step_of_the_guide_names_the_unit_it_maps(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry
+) -> None:
+    found = await _scanned(hass, config_entry)
+    test = await _go(hass, found["flow_id"], "map_test")
+    change = await _read(hass, await _options(hass).async_configure(test["flow_id"], {"suggestion": "own",
+                                                                                     "title": "Bypass"}))
+    result = await _read(hass, await _options(hass).async_configure(change["flow_id"], {}))
+    tested = await _options(hass).async_configure(result["flow_id"], {})
+    values = await _go(hass, tested["flow_id"], "map_values")
+    tested = await _go(hass, values["flow_id"], "map_values_back")
+    send = await _go(hass, tested["flow_id"], "map_send")
+    for shown in (found, test, change, result, tested, values, send):
+        assert (shown.get("description_placeholders") or {})["unit"] == "Nilan CTS 400", shown.get("step_id")
 
 
 async def test_a_test_needs_a_name(
@@ -423,7 +455,7 @@ async def test_a_change_of_one_register_is_told_in_the_singular(
     found = await _scanned(hass, config_entry)
     result = await _test(hass, found["flow_id"], "Bypass",
                          change=lambda: gateway.datapoint_registers.update({(0, 79): 1}))
-    assert result.get("description_placeholders") == {"result": LABELS["changed_one"]}
+    assert result.get("description_placeholders") == {"unit": "Nilan CTS 400", "result": LABELS["changed_one"]}
 
 
 async def test_guides_storing_at_once_lose_nothing_of_each_other(

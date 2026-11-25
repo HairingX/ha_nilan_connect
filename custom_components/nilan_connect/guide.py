@@ -26,7 +26,7 @@ from nilan_connect import (
     model_points,
 )
 
-from .const import DOMAIN, MAPPING_LIMIT, PROGRESS_EVERY, REGISTER_FIELDS, STEPS_KEPT, VALUES_PER_PAGE
+from .const import DOMAIN, ESTIMATED_FROM, MAPPING_LIMIT, PROGRESS_EVERY, REGISTER_FIELDS, STEPS_KEPT, VALUES_PER_PAGE
 from .data import NilanConfigEntry
 from .mapping import Mappings, mapping, step
 
@@ -304,15 +304,19 @@ class MappingGuide:
         """Scan every address once more, and store it and what changed since the scans before.
 
         How far it has come is told to `on_progress` as the share of the first scan's time gone,
-        as the library tells no progress of its own; at most 0.95 until it ends.
+        as the library tells no progress of its own; at most 0.95 until it ends. A scan quicker
+        than `ESTIMATED_FROM` seconds tells none: it ends before a bar would say anything.
         """
         began = self._hass.loop.time()
-        ticker = self._hass.async_create_background_task(self._tick(began), "nilan_connect mapping progress")
+        estimated = self._first_seconds >= ESTIMATED_FROM
+        ticker = self._hass.async_create_background_task(
+            self._tick(began) if estimated else asyncio.sleep(0), "nilan_connect mapping progress")
         try:
             again = await self._entry.runtime_data.client.map_areas(limit=MAPPING_LIMIT)
         finally:
             ticker.cancel()
-        self.on_progress(1.0)
+        if estimated:
+            self.on_progress(1.0)
         self._changes = difference(self._last(), again)
         self._learn(again)
         final = {**step(again.taken_at, "", None, self._changes), "snapshot": again.as_plain(),
@@ -324,7 +328,7 @@ class MappingGuide:
     async def _tick(self, began: float) -> None:
         while True:
             elapsed = self._hass.loop.time() - began
-            self.on_progress(min(0.95, elapsed / self._first_seconds) if self._first_seconds > 0 else 0.95)
+            self.on_progress(min(0.95, elapsed / self._first_seconds))
             await asyncio.sleep(PROGRESS_EVERY)
 
     def read_total(self) -> int:
@@ -336,8 +340,11 @@ class MappingGuide:
         return len(self._found.values)
 
     def duration_text(self) -> str:
-        """How long the first scan took, in seconds under a minute, else in minutes."""
-        seconds = max(1, int(self._first_seconds + 0.5))
+        """How long the first scan took: a moment under `ESTIMATED_FROM` seconds, in seconds under
+        a minute, else in minutes."""
+        if self._first_seconds < ESTIMATED_FROM:
+            return self._label("moment")
+        seconds = int(self._first_seconds + 0.5)
         if seconds < 60:
             return self._counted("second", seconds)
         return self._counted("minute", int(self._first_seconds / 60 + 0.5))

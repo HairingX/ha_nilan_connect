@@ -3467,7 +3467,7 @@
       },
       "map_start": {
         "title": "Map the unit",
-        "description": "Recognised: **{model}**.\n\nMapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you test functions one at a time on the unit's own panel or in the manufacturer's app, and after each the unit is scanned again, in a few seconds, and you see which registers changed. Nothing is written to the unit.\n\nWhen you finish, the mapping is saved, and in the diagnostics; to send it to us, attach them to a [mapping report]({report_url}).",
+        "description": "Recognised: **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nMapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you test functions one at a time on the unit's own panel or in the manufacturer's app, and after each the unit is scanned again, in a few seconds, and you see which registers changed. Nothing is written to the unit.\n\nWhen you finish, the mapping is saved, and in the diagnostics; to send it to us, attach them to a [mapping report]({report_url}).",
         "data": {
           "fitted": "Is any extra equipment fitted we should know about?"
         },
@@ -3478,7 +3478,7 @@
       },
       "map_found": {
         "title": "Scanned",
-        "description": "Registers found:\n\n{found}\n\nThe scan is saved. Please make a few tests: each test shows what one change on the unit does. Finish when you are done — you can send the mapping to us through the diagnostics.",
+        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nRegisters found:\n\n{found}\n\nThe scan is saved. Please make a few tests: each test shows what one change on the unit does. Finish when you are done — you can send the mapping to us through the diagnostics.",
         "menu_options": {
           "map_test": "Make a test (recommended)",
           "map_send": "Finish and save"
@@ -3486,7 +3486,7 @@
       },
       "map_test": {
         "title": "Test a function",
-        "description": "Choose a test and name it. When you press Scan, the unit is read as it is now; then you make the change, and it is read again, so that only what your change did is shown.",
+        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\n**1. Choose and name the test. Do NOT make the change yet.** When you press Start test, the unit is read as it is now; then you make the change.",
         "data": {
           "suggestion": "Test",
           "title": "What you tested"
@@ -3494,16 +3494,16 @@
         "data_description": {
           "title": "Such as: Bypass opened, or Target temperature 23.5 °C."
         },
-        "submit": "Scan"
+        "submit": "Start test"
       },
       "map_change": {
         "title": "Make the change",
-        "description": "The unit has been read. Now make the change on the unit (on its panel or in its app), wait if the test needs it, then press Scan.",
+        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\n**2. Make the change now on the {unit}** (its panel or its app). Wait if the test needs it.\n\n**3. Then press Scan.**",
         "submit": "Scan"
       },
       "map_result": {
         "title": "What changed",
-        "description": "{result}\n\nWrite what each register is, as far as you can tell; \"?\" is fine, and an empty field is no comment.",
+        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\n{result}\n\nWrite what each register is, as far as you can tell; \"?\" is fine, and an empty field is no comment.",
         "data": {
           "more": "The other registers"
         },
@@ -3518,11 +3518,11 @@
           "map_values": "Show all values",
           "map_send": "Finish and save"
         },
-        "description": "The scan is saved. Please make a few tests: each test shows what one change on the unit does. Finish when you are done — you can send the mapping to us through the diagnostics."
+        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nThe scan is saved. Please make a few tests: each test shows what one change on the unit does. Finish when you are done — you can send the mapping to us through the diagnostics."
       },
       "map_values": {
         "title": "All values, page {page} of {pages}",
-        "description": "As the scans found them; nothing is read for this.\n\n{values}",
+        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nAs the scans found them; nothing is read for this.\n\n{values}",
         "menu_options": {
           "map_values_previous": "Previous page",
           "map_values_next": "Next page",
@@ -3531,7 +3531,7 @@
       },
       "map_send": {
         "title": "Finish and save",
-        "description": "At the end we scan every address again, so that no register a test brought is missed. Last time it took {duration}.",
+        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nAt the end we scan every address again, so that no register a test brought is missed. Last time it took {duration}.",
         "submit": "Scan and save"
       }
     },
@@ -3575,15 +3575,16 @@
         "changed_last_one": "1 register changed in the last scan",
         "changed_last": "{count} registers changed in the last scan",
         "done": "Done and saved: {tests}.",
-        "done_scanned": "Done and saved: {tests}; {changed}."
+        "done_scanned": "Done and saved: {tests}; {changed}.",
+        "moment": "a moment"
       }
     },
     "mapping_suggestion": {
       "options": {
         "own": "Own test",
-        "temperature": "A temperature sensor: breathe on it, hold it to something cold or put it outside, and wait a few minutes",
-        "setting": "A setting: set it to an unusual value, such as a target of 23.5 °C",
-        "switch": "On and off: the after-heating, the bypass, boost or floor heating",
+        "temperature": "A temperature sensor of the unit: breathe on it, hold it to something cold or put it outside, and wait a few minutes",
+        "setting": "A setting: set it to a value it never normally has, such as a target of 17 °C or an unusual humidity limit",
+        "switch": "On and off: the bypass or boost",
         "mode": "A mode: the fan level from 1 to 3",
         "alarm": "An alarm: reset the filter alarm"
       }
