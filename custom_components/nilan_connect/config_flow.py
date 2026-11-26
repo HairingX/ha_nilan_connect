@@ -44,7 +44,11 @@ from .guide import (
     CONF_FITTED,
     CONF_MORE,
     CONF_SUGGESTION,
+    CONF_VALUE,
+    CONF_WHAT,
     OTHER_TEST,
+    READING_KINDS,
+    READINGS,
     SUGGESTIONS,
     MappingGuide,
 )
@@ -358,8 +362,8 @@ class NilanOptionsFlow(OptionsFlowWithReload):
     not loaded and its model is not known.
 
     Mapping scans every address of the unit once, then, after each test the user makes on the
-    unit's panel, only those that answered, and stores what changed with the user's comments; it
-    changes no option.
+    unit's panel and each value the user writes down from it, only those that answered, and stores
+    what changed with the user's comments, and each value with its read; it changes no option.
     """
 
     _started: MappingGuide | None = None
@@ -442,13 +446,48 @@ class NilanOptionsFlow(OptionsFlowWithReload):
     async def async_step_map_found(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """What the first scan found; send it in now, or test functions."""
+        """What the first scan found; write down what the panel shows, test functions, or send it
+        in now."""
         if not self._loaded():
             return self.async_abort(reason="not_loaded")
         return self.async_show_menu(
             step_id="map_found",
-            menu_options=["map_test", "map_send"],
+            menu_options=["map_reading", "map_test", "map_send"],
             description_placeholders=self._unit(found=self._require_guide().found_text()),
+        )
+
+    async def async_step_map_reading(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """One value the panel shows, and what it is; saving it reads the unit at once. Both left
+        empty end the writing down."""
+        if not self._loaded():
+            return self.async_abort(reason="not_loaded")
+        guide = self._require_guide()
+        if user_input is not None:
+            guide.what = str(user_input.get(CONF_WHAT) or "").strip()
+            guide.value = str(user_input.get(CONF_VALUE) or "").strip()
+            if guide.what or guide.value:
+                return await self._read(guide.reading_read, on_failure="map_reading")
+            return await (self.async_step_map_tested() if guide.saved_any else self.async_step_map_found())
+        if not guide.room_for_readings:
+            return await self.async_step_map_tested()
+        kinds = _SELECT(
+            selector.SelectSelectorConfig(
+                options=list(READINGS),
+                translation_key=READING_KINDS,
+                mode=selector.SelectSelectorMode.DROPDOWN,
+                custom_value=True,
+            )
+        )
+        schema = probatio.Schema({probatio.Optional(CONF_WHAT): kinds, probatio.Optional(CONF_VALUE): str})
+        # A value whose read failed is offered again, so that it need not be written anew.
+        suggested = {key: text for key, text in ((CONF_WHAT, guide.what), (CONF_VALUE, guide.value)) if text}
+        return self.async_show_form(
+            step_id="map_reading",
+            data_schema=self.add_suggested_values_to_schema(schema, suggested),
+            description_placeholders=self._unit(saved=guide.saved_text()),
+            errors=guide.take_errors(),
         )
 
     async def async_step_map_test(
@@ -531,11 +570,12 @@ class NilanOptionsFlow(OptionsFlowWithReload):
     async def async_step_map_tested(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """The next test, the values, or send it in."""
+        """Write down what the panel shows, the next test, the values, or send it in."""
         if not self._loaded():
             return self.async_abort(reason="not_loaded")
         guide = self._require_guide()
-        options = ["map_test", "map_values", "map_send"] if guide.room_for_steps else ["map_values", "map_send"]
+        options = [*(["map_reading"] if guide.room_for_readings else []),
+                   *(["map_test"] if guide.room_for_steps else []), "map_values", "map_send"]
         return self.async_show_menu(step_id="map_tested", menu_options=options, description_placeholders=self._unit())
 
     async def async_step_map_values(
@@ -613,6 +653,13 @@ class NilanOptionsFlow(OptionsFlowWithReload):
     ) -> ConfigFlowResult:
         """The mapping gave way to newer ones of the unit, and took not the last test."""
         return self.async_abort(reason="mapping_gone_test")
+
+    async def async_step_map_gone_reading(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """The mapping gave way to newer ones of the unit, and took not the last value from the
+        panel."""
+        return self.async_abort(reason="mapping_gone_reading")
 
     async def async_step_map_gone_final(
         self, user_input: dict[str, Any] | None = None

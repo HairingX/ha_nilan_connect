@@ -1,5 +1,6 @@
 """The guide that maps a unit: its scans, what each test changed, what is known of each register,
-the user's comments, and what is stored of them."""
+the user's comments, the values the user writes down from the unit's panel, and what is stored of
+them."""
 
 from __future__ import annotations
 
@@ -26,9 +27,18 @@ from nilan_connect import (
     model_points,
 )
 
-from .const import DOMAIN, ESTIMATED_FROM, MAPPING_LIMIT, PROGRESS_EVERY, REGISTER_FIELDS, STEPS_KEPT, VALUES_PER_PAGE
+from .const import (
+    DOMAIN,
+    ESTIMATED_FROM,
+    MAPPING_LIMIT,
+    PROGRESS_EVERY,
+    READINGS_KEPT,
+    REGISTER_FIELDS,
+    STEPS_KEPT,
+    VALUES_PER_PAGE,
+)
 from .data import NilanConfigEntry
-from .mapping import Mappings, mapping, step
+from .mapping import Mappings, mapping, reading, step
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -49,6 +59,21 @@ OTHER_TEST: Final = "other"
 
 SUGGESTIONS: Final = ("mode", "setting", "switch", "temperature", "alarm")
 """The tests the guide suggests, by their translation keys, in the order offered."""
+
+CONF_WHAT: Final = "what"
+"""What the value the user writes down from the panel is: one of `READINGS`, or the user's own
+words."""
+
+CONF_VALUE: Final = "value"
+"""The value as the panel shows it; may be empty where `CONF_WHAT` says it all."""
+
+READINGS: Final = ("outdoor", "supply", "extract", "exhaust", "room", "humidity", "co2", "fan_level",
+                   "bypass", "hot_water", "filter")
+"""What the guide suggests writing down from the panel, by their translation keys, in the order
+offered."""
+
+READING_KINDS: Final = "mapping_reading"
+"""The translation key of the names of `READINGS`."""
 
 LABELS: Final = "mapping_label"
 """The translation key of the words the guide puts into its texts."""
@@ -147,6 +172,14 @@ class MappingGuide:
         """The kind of test under way; None before one is chosen."""
         self.page = 0
         """The page of values shown."""
+        self.what = ""
+        self.value = ""
+        """The value being written down from the panel, and what it is, until it is stored."""
+        self._readings = 0
+        self._saved: tuple[str, str] | None = None
+        """The last value stored from the panel, and what it is; None before the first."""
+        self._kinds: dict[str, str] = {}
+        """The name of each of `READINGS`, in Home Assistant's language."""
         self._task: asyncio.Task[str] | None = None
         self._pending: tuple[Callable[[], Awaitable[str]], str] = (self.first_read, "map_start")
         self._errors: dict[str, str] = {}
@@ -193,6 +226,24 @@ class MappingGuide:
                          .replace("{nonzero}", str(sum(1 for word in words if word)))
                          .replace("{absent}", str(absent)))
         return "\n".join(lines)
+
+    @property
+    def room_for_readings(self) -> bool:
+        """Whether another value from the panel would be stored."""
+        return self._readings < READINGS_KEPT
+
+    @property
+    def saved_any(self) -> bool:
+        """Whether a test or a value from the panel has been stored."""
+        return bool(self._steps or self._readings)
+
+    def saved_text(self) -> str:
+        """The last value stored from the panel, with how many are stored so far, or that none is."""
+        if self._saved is None:
+            return self._label("reading_none")
+        what, value = self._saved
+        written = f"**{self._kinds.get(what, what)}** {value}".rstrip()
+        return self._label("reading_saved").replace("{reading}", written).replace("{count}", str(self._readings))
 
     @property
     def tested(self) -> bool:
@@ -307,6 +358,7 @@ class MappingGuide:
         self._found = found
         self._words, self._missing = dict(found.values), set(found.missing)
         self._changes, self._steps = (), 0
+        self._readings, self._saved = 0, None
         return "map_found"
 
     async def before_read(self) -> str:
@@ -332,6 +384,18 @@ class MappingGuide:
         self._steps += 1
         self.page = 0
         return "map_result"
+
+    async def reading_read(self) -> str:
+        """Read the registers the first scan found, as the user saves a value from the panel, and
+        store the value as written with that read."""
+        read = await self._entry.runtime_data.client.read_mapped(self._found)
+        self._learn(read)
+        if not await self._mappings.async_add_reading(self._started_at, reading(self.what, self.value, read)):
+            return "map_gone_reading"
+        self._readings += 1
+        self._saved = (self.what, self.value)
+        self.what = self.value = ""
+        return "map_reading"
 
     async def full_read(self) -> str:
         """Scan every address once more, and store it and what changed since the scans before.
@@ -383,9 +447,13 @@ class MappingGuide:
         return self._counted("minute", int(self._first_seconds / 60 + 0.5))
 
     def summary_text(self, scanned: bool) -> str:
-        """What the mapping holds: how many tests, and, after the last scan, how many registers
-        it changed."""
+        """What the mapping holds: how many tests, how many values from the panel if any, and,
+        after the last scan, how many registers it changed."""
         tests = self._counted("test", self._steps)
+        if self._readings:
+            readings = self._counted("reading", self._readings)
+            tests = self._label("both").replace("{tests}", tests).replace("{readings}", readings) if self._steps \
+                else readings
         if not scanned:
             return self._label("done").replace("{tests}", tests)
         changed = self._counted("changed_last", len(self._changes))
@@ -430,6 +498,8 @@ class MappingGuide:
         self._labels = {key.removeprefix(prefix): text for key, text in labels.items() if key.startswith(prefix)}
         self._spaces = self._words_for("space_")
         self._spaces_plural = self._words_for("spaces_")
+        kinds = f"component.{DOMAIN}.selector.{READING_KINDS}.options."
+        self._kinds = {key.removeprefix(kinds): text for key, text in labels.items() if key.startswith(kinds)}
         entities = await async_get_translations(self._hass, language, "entity", [DOMAIN])
         points = [point for model in MODELS if model is client.model for point in model_points(model)]
         self._known = Known(points, _entity_names(entities), self._label("unknown"))

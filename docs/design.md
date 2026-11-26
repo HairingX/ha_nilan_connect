@@ -112,8 +112,9 @@ must fix, and the debug log only logs.
   extra equipment is fitted; then `map_read` shows the progress of the first scan,
   `Client.map_areas(limit=MAPPING_LIMIT)`, and `map_found` says per space how many registers
   answered, how many of those were not 0, and how many are absent - a gateway may answer 0 where
-  nothing is, so an answer alone says little - and that the scan is saved, with **Make a test
-  (recommended)** (`map_test`) and **Finish and save** (`map_send`): nothing is sent anywhere. A
+  nothing is, so an answer alone says little - and that the scan is saved, with **Write what the
+  panel shows (easiest)** (`map_reading`), **Make a test** (`map_test`) and **Finish and save**
+  (`map_send`): nothing is sent anywhere. A
   test is chosen from the suggestions, translated under the selector `mapping_suggestion`, or the
   user's own ("Other"), with an optional line saying what the user changes, required only for
   Other; a test is named by that line, or else by the short name of the kind chosen (`short_<kind>`
@@ -129,7 +130,7 @@ must fix, and the debug log only logs.
   line each, parsed back by the address at the start of each line; a register is shown with its
   space in Home Assistant's language (`space_<kind>`, and `spaces_<kind>` in what `map_found`
   counts, under `mapping_label`), and parsed back by either word, but stored by the protocol's; a line of its own belongs to
-  the register above it. `map_tested` offers the next test, `map_values` - the latest state, the
+  the register above it. `map_tested` offers writing down what the panel shows, the next test, `map_values` - the latest state, the
   first scan with every scan after it, `VALUES_PER_PAGE` (50) registers of one space a page, read
   from what the guide holds, from the first page again after each scan - and `map_send`. After a
   test, finishing scans every address once more, with the same limit, as a test can switch on
@@ -141,7 +142,20 @@ must fix, and the debug log only logs.
   before a bar would say anything. The bar is at most 0.95 until the scan ends, as the library
   tells no progress of its own, and the progress text names how many addresses are read;
   Home Assistant does not change a progress step's text while it runs. After it, the closing
-  message says how many tests were saved and how many registers the last scan changed.
+  message says how many tests and values from the panel were saved and how many registers the
+  last scan changed.
+- **Values from the panel.** `map_reading` is for an owner who knows nothing of registers: one
+  value at a time, what it is - chosen from the suggestions, translated under the selector
+  `mapping_reading`, or the user's own words, such as "T7" or "I set level 4" - and the value as
+  the panel shows it, which may be empty. **Save** reads what the first scan found at once,
+  `Client.read_mapped`, so that the read is seconds from the user looking at the panel; a unit's
+  values change all the time, and several values written before one read would be read minutes
+  after they were seen. Nothing is matched or checked on the user's side: the panel may show a
+  value with an offset or worked out from several registers, and what it means is found from the
+  stored reads afterwards. The next form says what was saved last, and how many so far; both
+  fields left empty end it, back to `map_tested`, or to `map_found` while nothing is saved. A
+  read that fails offers the value again. It changes nothing on the unit, so finishing needs no
+  last scan for it.
 - **The unit named.** Every step's description names the unit mapped by its manufacturer and
   model, and says to make changes on it, not on other devices in the house: a change made on
   another integration's device shows nothing here. The suggestions are things a ventilation
@@ -160,7 +174,8 @@ must fix, and the debug log only logs.
 - **Failures.** A scan that fails returns to the form it came from, saying why. A progress step is
   shown at least once, as a scan that fails at once ends as it starts. Every step ends the guide
   with `not_loaded` when the entry is no longer loaded. A mapping that gave way to three newer
-  ones ends the guide saying what was lost: the last test (`mapping_gone_test`), the comments on
+  ones ends the guide saying what was lost: the last test (`mapping_gone_test`), the last value
+  from the panel (`mapping_gone_reading`), the comments on
   it (`mapping_gone_comments`), or the last scan (`mapping_gone_final`). Nothing changes the entry's
   options, so the entry does not reload.
 - **What is read.** The library reads, for each of the gateway's spaces, every address from 0 up
@@ -176,7 +191,8 @@ must fix, and the debug log only logs.
   device's manufacturer, model and software version, the areas, the first scan in full with how
   many seconds it took, per test its time and the time of its read before the change, name,
   suggestion and changes with the user's comment on each, and what drifted before it (`drifted`
-  and `drift`), and the last full scan in full with what it changed and how long it took. Each scan is stored as soon as it ends, under a lock per entry, so
+  and `drift`), up to `READINGS_KEPT` (100) values from the panel, each as written with every
+  register its read found, in full, and the last full scan in full with what it changed and how long it took. Each scan is stored as soon as it ends, under a lock per entry, so
   two guides of one unit never store over each other; removing the entry removes the store under
   the same lock, and then the lock, and a guide closed during a scan, which
   cancels it, keeps the tests made; closed between a test's two reads, it stores no test. The

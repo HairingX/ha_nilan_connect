@@ -6,7 +6,7 @@ body:
     attributes:
       value: >-
         Thank you for mapping your unit. Each step of the mapping is in the diagnostics, under
-        "mappings": the extra equipment you named, each test, and which registers changed. The email, the gateway's
+        "mappings": the extra equipment you named, each value you wrote down from the panel, each test, and which registers changed. The email, the gateway's
         address and its id are never in them. Danish is fine.
   - type: input
     id: model

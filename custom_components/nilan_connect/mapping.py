@@ -1,5 +1,6 @@
 """The mappings of a unit, kept so that its diagnostics can show them: what the user said about it,
-its identity, the first full scan, what changed at each test after it, and the user's comments."""
+its identity, the first full scan, what changed at each test after it, the user's comments, and
+each value the user wrote down from the unit's panel with the read taken as it was saved."""
 
 from __future__ import annotations
 
@@ -13,7 +14,7 @@ from homeassistant.helpers.storage import Store
 from homeassistant.util.hass_dict import HassKey
 from nilan_connect import Area, RegisterChange, Snapshot
 
-from .const import DOMAIN, MAPPINGS_KEPT, STEPS_KEPT
+from .const import DOMAIN, MAPPINGS_KEPT, READINGS_KEPT, STEPS_KEPT
 
 STORAGE_VERSION = 1
 """The version of the stored mappings' shape."""
@@ -57,7 +58,8 @@ def mapping(
     baseline: Snapshot,
     seconds: float,
 ) -> Plain:
-    """A new mapping, with its first full scan and how many seconds it took, and no tests yet."""
+    """A new mapping, with its first full scan and how many seconds it took, and no tests or
+    readings yet."""
     return {
         "started_at": started_at.isoformat(),
         "fitted": fitted,
@@ -68,6 +70,7 @@ def mapping(
         "baseline": baseline.as_plain(),
         "baseline_seconds": seconds,
         "steps": [],
+        "readings": [],
     }
 
 
@@ -76,6 +79,12 @@ def step(at: datetime, title: str, suggestion: str | None, changes: Sequence[Reg
     scan after it changed."""
     return {"at": at.isoformat(), "title": title, "suggestion": suggestion,
             "changes": [change.as_plain() for change in changes]}
+
+
+def reading(what: str, value: str, read: Snapshot) -> Plain:
+    """A value the user wrote down from the unit's panel, as written, with every register read as
+    it was saved."""
+    return {"at": read.taken_at.isoformat(), "what": what, "value": value, "read": read.as_plain()}
 
 
 class Mappings:
@@ -97,7 +106,13 @@ class Mappings:
     async def async_add_step(self, started_at: str, added: Plain) -> bool:
         """Add `added` to the mapping that started at `started_at`, unless it has the most steps
         kept; whether it was added. A mapping that gave way to newer ones takes none."""
-        return await self._update(started_at, lambda found: _append(found["steps"], added))
+        return await self._update(started_at, lambda found: _append(found["steps"], added, STEPS_KEPT))
+
+    async def async_add_reading(self, started_at: str, added: Plain) -> bool:
+        """Add `added` to the readings of the mapping that started at `started_at`, unless it has
+        the most readings kept; whether it was added. A mapping that gave way to newer ones takes
+        none."""
+        return await self._update(started_at, lambda found: _append(found["readings"], added, READINGS_KEPT))
 
     async def async_annotate(self, started_at: str, index: int, comments: Mapping[str, str]) -> bool:
         """Store the user's comment on each change of step `index` that `comments` names by its
@@ -132,8 +147,8 @@ class Mappings:
             return True
 
 
-def _append(steps: list[Plain], added: Plain) -> bool:
-    if len(steps) >= STEPS_KEPT:
+def _append(kept: list[Plain], added: Plain, most: int) -> bool:
+    if len(kept) >= most:
         return False
-    steps.append(added)
+    kept.append(added)
     return True

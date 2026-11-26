@@ -23,8 +23,9 @@ Most of these units have no official register list for the Nilan gateway, so wha
 integration shows comes from manuals and from owners who checked their own unit. You can help:
 
 - **A value or setting is missing, or looks wrong?** Run [Map the unit](#map-the-unit) on your
-  unit: change one thing at a time on its panel or app, and the guide shows which registers
-  changed. Send us the result through a
+  unit. The easiest: write down what its panel or app shows, one value at a time, such as
+  "Outdoor air 8". Or change one thing at a time on the panel, and the guide shows which
+  registers changed. Send us the result through a
   [mapping report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml),
   and we can add the value, or confirm one we have only from a manual. It only reads; nothing is
   written to your unit.
@@ -68,7 +69,18 @@ Devices & services > Nilan Connect > Configure > **Map the unit**. It is offered
    and the guide says per space how many answered, how many of those were not 0 - a gateway may
    answer 0 where nothing is - and how many are absent. That takes from seconds to a few minutes
    on a slow gateway. The scan is saved.
-2. **Make a test (recommended)**, or **Finish and save**. A test has two numbered screens. Every
+2. **Write what the panel shows (easiest)**, **Make a test**, or **Finish and save**.
+
+   **Write what the panel shows** needs no knowledge of registers. Look at the unit's own panel
+   or app, and write one thing it shows right now, or what you just did: choose what it is, such
+   as the outdoor air or the fan level, or write your own words, such as "T7" or "I set level 4",
+   and the value as the panel shows it, such as 8 or 21.5. **Save** reads the unit at once, as
+   its values change all the time, and the screen is ready for the next value; leave both fields
+   empty and press **Save** to stop. The guide checks nothing: we work out afterwards where each
+   value is, also where the panel shows it with an offset or works it out. Up to 100 values are
+   kept per mapping.
+
+   A test has two numbered screens. Every
    screen names the unit mapped, and the first screen and the test's say to make changes on this
    unit, its panel or its app, not on other devices in the house.
    - **Step 1 of 2:** choose what you will test - the fan level (e.g. from level 1 to 3), a
@@ -87,12 +99,12 @@ Devices & services > Nilan Connect > Configure > **Map the unit**. It is offered
    the rest share one field, a line each, where a line of its own belongs to the register above
    it. **Save comments** stores them. If nothing changed, the guide says so: the function may be
    switched off by another setting.
-4. **Next test**, **Show all values** - every register's latest value, page by page, read from
-   what the scans found - or **Finish and save**. After a test, finishing scans every address
-   once more, so that no register is missed that a function switched on during the tests
-   brought; the guide says how long the first scan took - "a moment" under 2 seconds - shows
-   the scan's progress where it takes that long, and then how many tests were saved and how many
-   registers the last scan changed.
+4. **Write what the panel shows**, **Make a test**, **Show all values** - every register's latest
+   value, page by page, read from what the scans found - or **Finish and save**. After a test,
+   finishing scans every address once more, so that no register is missed that a function
+   switched on during the tests brought; the guide says how long the first scan took - "a
+   moment" under 2 seconds - shows the scan's progress where it takes that long, and then how
+   many tests and values from the panel were saved and how many registers the last scan changed.
 5. The mapping is saved with the unit; nothing is sent anywhere. To send it to us, download the
    diagnostics and attach the file to a
    [mapping report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml).
@@ -104,8 +116,9 @@ once when the gateway is busy or does not answer, and the guide says so. Closing
 during a scan stops it; the tests already made are kept. The latest three mappings of a unit are
 kept, each with up to 30 tests, and are deleted with the integration. The diagnostics show them
 under `mappings`: the extra equipment you named, the unit's identity and model, the first scan in
-full, and per test its name, the suggestion it followed, what changed and your comments, and how
-many registers drifted by themselves before it; never
+full, per test its name, the suggestion it followed, what changed and your comments, and how
+many registers drifted by themselves before it, and each value from the panel as you wrote it,
+with every register read as you saved it; never
 the email, the gateway's address or its id.
 
 ## Installation

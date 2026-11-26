@@ -3467,7 +3467,7 @@
       },
       "map_start": {
         "title": "Kortlæg anlægget",
-        "description": "Genkendt: **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nKortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så laver du tests, én ad gangen: du ændrer én ting på anlæggets eget panel eller i producentens app, og guiden viser, hvilke registre der ændrede sig. En test læser anlægget lige før og lige efter ændringen, på få sekunder hver gang. Der skrives intet til anlægget.\n\nNår du afslutter, gemmes kortlægningen sammen med anlægget. Vil du sende den til os, så hent diagnostikken og vedhæft filen til en [kortlægningsrapport]({report_url}).",
+        "description": "Genkendt: **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nKortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så skriver du, hvad anlæggets eget panel eller producentens app viser, én værdi ad gangen, og anlægget læses, hver gang du gemmer en. Eller du laver tests: du ændrer én ting på panelet eller i appen, og guiden viser, hvilke registre der ændrede sig. En test læser anlægget lige før og lige efter ændringen, på få sekunder hver gang. Der skrives intet til anlægget.\n\nNår du afslutter, gemmes kortlægningen sammen med anlægget. Vil du sende den til os, så hent diagnostikken og vedhæft filen til en [kortlægningsrapport]({report_url}).",
         "data": {
           "fitted": "Er der monteret ekstraudstyr, vi bør kende til?"
         },
@@ -3478,11 +3478,25 @@
       },
       "map_found": {
         "title": "Skanning færdig",
-        "description": "Kortlægger **{unit}** (ventilation).\n\nFundne registre:\n\n{found}\n\nSkanningen er gemt. Lav gerne et par tests: hver test viser, hvad én ændring på anlægget gør. Afslut, når du er færdig – kortlægningen kan sendes til os via diagnostikken.",
+        "description": "Kortlægger **{unit}** (ventilation).\n\nFundne registre:\n\n{found}\n\nSkanningen er gemt. Nu kan du hjælpe på to måder: skriv, hvad anlæggets panel viser, værdi for værdi - det nemmeste - eller lav tests, der hver viser, hvad én ændring på anlægget gør. Afslut, når du er færdig – kortlægningen kan sendes til os via diagnostikken.",
         "menu_options": {
-          "map_test": "Lav en test (anbefalet)",
+          "map_reading": "Skriv, hvad panelet viser (nemmest)",
+          "map_test": "Lav en test",
           "map_send": "Afslut og gem"
         }
+      },
+      "map_reading": {
+        "title": "Skriv, hvad panelet viser",
+        "description": "Kortlægger **{unit}** (ventilation).\n\n{saved}\n\nSe på dette anlægs eget panel eller app, og skriv én ting, det viser lige nu, eller hvad du lige har gjort. Anlægget læses, når du trykker *Gem*, så gem med det samme.\n\nLad begge felter stå tomme og tryk *Gem* for at stoppe.",
+        "data": {
+          "what": "Hvad er det?",
+          "value": "Værdi"
+        },
+        "data_description": {
+          "what": "Vælg, eller skriv selv, fx \"T7\" eller \"Jeg satte trin 4\".",
+          "value": "Som panelet viser den, fx 8 eller 21,5. Kan stå tomt."
+        },
+        "submit": "Gem"
       },
       "map_test": {
         "title": "Ny test",
@@ -3515,11 +3529,12 @@
       "map_tested": {
         "title": "Hvad nu?",
         "menu_options": {
-          "map_test": "Næste test",
+          "map_reading": "Skriv, hvad panelet viser",
+          "map_test": "Lav en test",
           "map_values": "Vis alle værdier",
           "map_send": "Afslut og gem"
         },
-        "description": "Kortlægger **{unit}** (ventilation).\n\nTesten er gemt. Lav en test mere, se alle værdier, eller afslut."
+        "description": "Kortlægger **{unit}** (ventilation).\n\nGemt. Skriv, hvad panelet viser, lav en test, se alle værdier, eller afslut."
       },
       "map_values": {
         "title": "Alle værdier, side {page} af {pages}",
@@ -3537,7 +3552,7 @@
       }
     },
     "progress": {
-      "reading": "Skanner {total} adresser. Lukker du vinduet, stopper skanningen; alle tests, der allerede er lavet, er gemt."
+      "reading": "Skanner {total} adresser. Lukker du vinduet, stopper skanningen; det, der allerede er gemt, forbliver gemt."
     },
     "error": {
       "read_failed": "Anlægget var optaget eller svarede ikke, så skanningen stoppede. Prøv igen om lidt.",
@@ -3548,6 +3563,7 @@
       "not_loaded": "Anlægget er ikke sat op lige nu, så det kan ikke kortlægges. Prøv igen, når det er.",
       "mapping_saved": "{summary} Vil du sende kortlægningen til os, så hent diagnostikken og vedhæft filen til en [kortlægningsrapport]({report_url}).",
       "mapping_gone_test": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: den sidste test blev ikke gemt.",
+      "mapping_gone_reading": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: den sidste værdi blev ikke gemt.",
       "mapping_gone_comments": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: kommentarerne til den sidste test blev ikke gemt.",
       "mapping_gone_final": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: den sidste skanning blev ikke gemt."
     }
@@ -3587,7 +3603,12 @@
         "space_datapoint": "datapunkt",
         "space_setpoint": "setpunkt",
         "spaces_datapoint": "datapunkter",
-        "spaces_setpoint": "setpunkter"
+        "spaces_setpoint": "setpunkter",
+        "reading_none": "Der er ikke skrevet noget endnu.",
+        "reading_saved": "Gemt: {reading} ({count} indtil nu).",
+        "reading_one": "1 værdi fra panelet",
+        "reading": "{count} værdier fra panelet",
+        "both": "{tests} og {readings}"
       }
     },
     "mapping_suggestion": {
@@ -3598,6 +3619,21 @@
         "temperature": "En temperaturføler (ånd på den, eller hold den mod noget koldt)",
         "alarm": "En alarm (fx nulstil filteralarmen)",
         "other": "Andet (beskriv selv)"
+      }
+    },
+    "mapping_reading": {
+      "options": {
+        "outdoor": "Udeluft",
+        "supply": "Indblæsning",
+        "extract": "Udsugning (fra rummene)",
+        "exhaust": "Afkast (ud af huset)",
+        "room": "Rumtemperatur",
+        "humidity": "Luftfugtighed",
+        "co2": "CO2",
+        "fan_level": "Ventilatortrin",
+        "bypass": "Bypass",
+        "hot_water": "Varmtvandstemperatur",
+        "filter": "Filter (dage)"
       }
     }
   },
