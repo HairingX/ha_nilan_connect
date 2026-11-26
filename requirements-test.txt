@@ -9,6 +9,6 @@ pytest-cov==7.1.0
 pyright==1.1.414
 # The integration's requirements, as the manifest pins them.
 nilan_connect==0.9.1
-modbus_event_connect==0.11.0
+modbus_event_connect==0.11.1
 # Home Assistant's own integrations pin some packages that the requirements install; the tests
 # install Home Assistant's version of those, so they follow the Home Assistant pinned above.
