@@ -36,19 +36,19 @@ CONF_FITTED: Final = "fitted"
 """The extra equipment the user says is fitted to the unit, if any."""
 
 CONF_SUGGESTION: Final = "suggestion"
-"""The kind of test the user chose from the suggestions, or their own."""
+"""The kind of test the user chose: one of `SUGGESTIONS`, or `OTHER_TEST`."""
 
-CONF_TITLE: Final = "title"
-"""What the user tested, in one short line."""
+CONF_CHANGE: Final = "change"
+"""What the user changes in the test, in one short line; required for `OTHER_TEST`."""
 
 CONF_MORE: Final = "more"
 """The user's comments on the changed registers beyond those given a field each, a line each."""
 
-OWN_TEST: Final = "own"
-"""The suggestion of a test of the user's own."""
+OTHER_TEST: Final = "other"
+"""The choice of a test the user describes themselves."""
 
-SUGGESTIONS: Final = ("temperature", "setting", "switch", "mode", "alarm")
-"""The tests the guide suggests, by their translation keys."""
+SUGGESTIONS: Final = ("mode", "setting", "switch", "temperature", "alarm")
+"""The tests the guide suggests, by their translation keys, in the order offered."""
 
 LABELS: Final = "mapping_label"
 """The translation key of the words the guide puts into its texts."""
@@ -122,8 +122,10 @@ class MappingGuide:
         self._entry = entry
         self._mappings = Mappings(hass, entry.entry_id)
         self.fitted = ""
-        self.title = ""
-        self.suggestion = OWN_TEST
+        self.change = ""
+        """What the user said they change in the test under way; may be empty."""
+        self.suggestion: str | None = None
+        """The kind of test under way; None before one is chosen."""
         self.page = 0
         """The page of values shown."""
         self._task: asyncio.Task[str] | None = None
@@ -214,6 +216,12 @@ class MappingGuide:
                          for address in pages[self.page])
         return {"page": str(self.page + 1), "pages": str(len(pages)), "values": rows or "-"}
 
+    @property
+    def title(self) -> str:
+        """The test's title: what the user said they change, or else the short name of the kind
+        of test chosen."""
+        return self.change or self._label(f"short_{self.suggestion}")
+
     def take_errors(self) -> dict[str, str]:
         """Why the last scan failed, once; empty when it did not."""
         errors, self._errors = self._errors, {}
@@ -290,8 +298,7 @@ class MappingGuide:
         again = await self._entry.runtime_data.client.read_mapped(self._found)
         self._changes = difference(self._before, again)
         self._learn(again)
-        suggestion = None if self.suggestion == OWN_TEST else self.suggestion
-        made = step(again.taken_at, self.title, suggestion, self._changes)
+        made = step(again.taken_at, self.title, self.suggestion, self._changes)
         made.update({"before_at": self._before.taken_at.isoformat(), "drifted": len(self._drift),
                      "drift": [change.as_plain() for change in self._drift]})
         if not await self._mappings.async_add_step(self._started_at, made):

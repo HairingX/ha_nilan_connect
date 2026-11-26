@@ -3467,7 +3467,7 @@
       },
       "map_start": {
         "title": "Map the unit",
-        "description": "Recognised: **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nMapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you test functions one at a time on the unit's own panel or in the manufacturer's app, and after each the unit is scanned again, in a few seconds, and you see which registers changed. Nothing is written to the unit.\n\nWhen you finish, the mapping is saved, and in the diagnostics; to send it to us, attach them to a [mapping report]({report_url}).",
+        "description": "Recognised: **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nMapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you make tests, one at a time: you change one thing on the unit's own panel or in the manufacturer's app, and the guide shows which registers changed. A test reads the unit just before and just after the change, in a few seconds each. Nothing is written to the unit.\n\nWhen you finish, the mapping is saved, and in the diagnostics; to send it to us, attach them to a [mapping report]({report_url}).",
         "data": {
           "fitted": "Is any extra equipment fitted we should know about?"
         },
@@ -3485,20 +3485,20 @@
         }
       },
       "map_test": {
-        "title": "Test a function",
-        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\n**1. Choose and name the test. Do NOT make the change yet.** When you press Start test, the unit is read as it is now; then you make the change.",
+        "title": "New test",
+        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\n**Step 1 of 3: Choose what you will test.** Don't make the change yet - when you press *Start test*, the unit is read as it is now.",
         "data": {
-          "suggestion": "Test",
-          "title": "What you tested"
+          "suggestion": "What will you test?",
+          "change": "What do you change? (optional)"
         },
         "data_description": {
-          "title": "Such as: Bypass opened, or Target temperature 23.5 °C."
+          "change": "e.g. level 1 → 3, or target 23 → 17 °C"
         },
         "submit": "Start test"
       },
       "map_change": {
         "title": "Make the change",
-        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\n**2. Make the change now on the {unit}** (its panel or its app). Wait if the test needs it.\n\n**3. Then press Scan.**",
+        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\n**Steps 2 and 3:** Make the change now on the {unit} (its panel or its app). Wait if the test needs it. Then press *Scan*.",
         "submit": "Scan"
       },
       "map_result": {
@@ -3541,7 +3541,7 @@
     "error": {
       "read_failed": "The unit was busy or did not answer, so the scan stopped. Try again in a moment.",
       "unknown": "Unexpected error; see the log.",
-      "title_required": "Name what you tested."
+      "describe_other": "Describe the test when you choose Other."
     },
     "abort": {
       "not_loaded": "The unit is not set up right now, so it cannot be mapped. Try again once it is.",
@@ -3562,10 +3562,10 @@
     "mapping_label": {
       "options": {
         "unknown": "unknown",
-        "nothing_changed": "Nothing changed since the last scan. The function may be switched off by another setting - for example the after-heating is off. Switch it on, and test again.",
-        "changed": "{count} registers changed since the last scan.",
+        "nothing_changed": "Nothing changed during the test. The function may be switched off by another setting - for example the after-heating is off. Switch it on, and test again.",
+        "changed": "{count} registers changed during the test.",
         "found_space": "{space}: {answered} answered, {nonzero} not 0, {absent} absent",
-        "changed_one": "1 register changed since the last scan.",
+        "changed_one": "1 register changed during the test.",
         "second_one": "1 second",
         "second": "{count} seconds",
         "minute_one": "1 minute",
@@ -3576,17 +3576,23 @@
         "changed_last": "{count} registers changed in the last scan",
         "done": "Done and saved: {tests}.",
         "done_scanned": "Done and saved: {tests}; {changed}.",
-        "moment": "a moment"
+        "moment": "a moment",
+        "short_mode": "Fan level",
+        "short_setting": "A setting",
+        "short_switch": "On/off",
+        "short_temperature": "A temperature sensor",
+        "short_alarm": "An alarm",
+        "short_other": "Other"
       }
     },
     "mapping_suggestion": {
       "options": {
-        "own": "Own test",
-        "temperature": "A temperature sensor of the unit: breathe on it, hold it to something cold or put it outside, and wait a few minutes",
-        "setting": "A setting: set it to a value it never normally has, such as a target of 17 °C or an unusual humidity limit",
-        "switch": "On and off: the bypass or boost",
-        "mode": "A mode: the fan level from 1 to 3",
-        "alarm": "An alarm: reset the filter alarm"
+        "mode": "Fan level (e.g. switch from level 1 to 3)",
+        "setting": "A setting (set it to an unusual value, e.g. target temperature 17 °C)",
+        "switch": "On/off (e.g. bypass or boost)",
+        "temperature": "A temperature sensor (breathe on it, or hold it to something cold)",
+        "alarm": "An alarm (e.g. reset the filter alarm)",
+        "other": "Other (describe it yourself)"
       }
     }
   },

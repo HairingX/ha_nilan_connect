@@ -115,8 +115,10 @@ must fix, and the debug log only logs.
   nothing is, so an answer alone says little - and that the scan is saved, with **Make a test
   (recommended)** (`map_test`) and **Finish and save** (`map_send`): nothing is sent anywhere. A
   test is chosen from the suggestions, translated under the selector `mapping_suggestion`, or the
-  user's own, and named in one required line. The test's two screens are numbered, and the first
-  says not to make the change yet: its **Start test** button, a step's `submit` translation,
+  user's own ("Other"), with an optional line saying what the user changes, required only for
+  Other; a test is named by that line, or else by the short name of the kind chosen (`short_<kind>`
+  under `mapping_label`). The test's two screens are numbered as steps 1, and 2 and 3, and the
+  first says not to make the change yet: its **Start test** button, a step's `submit` translation,
   starts `map_read`, which reads again only what the first scan found, `Client.read_mapped`, as
   the unit is just before the change. `map_change` then asks the user to make the change, and its
   **Scan** reads them once more: a test's changes are between these two reads, so what drifts by
@@ -141,7 +143,7 @@ must fix, and the debug log only logs.
 - **The unit named.** Every step's description names the unit mapped by its manufacturer and
   model, and says to make changes on it, not on other devices in the house: a change made on
   another integration's device shows nothing here. The suggestions are things a ventilation
-  unit has, each set to a value it never normally has, so that the change stands out.
+  unit has, a setting set to a value it never normally has, so that the change stands out.
 - **Field names.** A field Home Assistant has no translation for is labelled by its name, so a
   register's field is named by the register and its raw change, "datapoint 79: 0 → 1", with the
   name of the entity of a point at it in Home Assistant's language. Values are shown raw: a

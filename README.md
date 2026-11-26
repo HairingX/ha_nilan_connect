@@ -55,15 +55,16 @@ Devices & services > Nilan Connect > Configure > **Map the unit**. It is offered
 2. **Make a test (recommended)**, or **Finish and save**. A test has two numbered screens, and
    every screen names the unit mapped: make changes on this unit, its panel or its app, not on
    other devices in the house.
-   - **1.** Pick a suggestion - a temperature sensor of the unit, a setting set to a value it
-     never normally has, such as a target of 17 °C, the bypass or boost switched on and off, the
-     fan level from 1 to 3, or a filter reset - or your own, name it in one line, and press
-     **Start test**. Do not make the change yet: the guide reads the registers that answered, as
-     they are now.
-   - **2.** Make the change on the unit, wait if the test needs it, and **3.** press **Scan**:
-     the guide reads them once more, and shows only what changed between the two reads, so values
-     that drift by themselves in the meantime, such as temperatures, do not hide the change.
-     Each read takes a few seconds.
+   - **Step 1 of 3:** choose what you will test - the fan level (e.g. from level 1 to 3), a
+     setting set to an unusual value (e.g. a target temperature of 17 °C), something on and off
+     (e.g. the bypass or boost), a temperature sensor, an alarm (e.g. a filter reset), or other -
+     and, if you like, say what you change, such as "level 1 → 3"; for Other that is required.
+     Do not make the change yet: **Start test** reads the registers that answered, as they are
+     now. The test is named by what you said you change, or else by the kind of test.
+   - **Steps 2 and 3:** make the change on the unit, wait if the test needs it, and press
+     **Scan**: the guide reads them once more, and shows only what changed between the two
+     reads, so values that drift by themselves in the meantime, such as temperatures, do not hide
+     the change. Each read takes a few seconds.
 3. Each register that changed gets a field, named by the register and its raw change, such as
    "datapoint 79: 0 → 1", with the name of the value we know at it, if any. Write what it is;
    "?" is fine, and an empty field is no comment. Beyond 20 registers, the rest share one field,
