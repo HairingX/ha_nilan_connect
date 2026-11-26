@@ -40,14 +40,13 @@ from .const import (
 )
 from .data import NilanConfigEntry, identity_text, new_client
 from .guide import (
-    CONF_MORE,
+    CONF_CHANGE,
     CONF_FITTED,
+    CONF_MORE,
     CONF_SUGGESTION,
-    CONF_TITLE,
-    OWN_TEST,
+    OTHER_TEST,
     SUGGESTIONS,
     MappingGuide,
-    comment_lines,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -455,35 +454,37 @@ class NilanOptionsFlow(OptionsFlowWithReload):
     async def async_step_map_test(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Choose a test and name it; the unit is then read as it is, before the change."""
+        """Choose what to test, and say what changes if wanted; the unit is then read as it is,
+        before the change."""
         if not self._loaded():
             return self.async_abort(reason="not_loaded")
         guide = self._require_guide()
         errors = guide.take_errors()
         if user_input is not None:
-            guide.suggestion = str(user_input.get(CONF_SUGGESTION, OWN_TEST))
-            guide.title = str(user_input.get(CONF_TITLE, "")).strip()
-            if guide.title:
+            guide.suggestion = str(user_input[CONF_SUGGESTION])
+            guide.change = str(user_input.get(CONF_CHANGE, "")).strip()
+            if guide.change or guide.suggestion != OTHER_TEST:
                 return await self._read(guide.before_read, on_failure="map_test")
-            errors = {CONF_TITLE: "title_required"}
+            errors = {CONF_CHANGE: "describe_other"}
         suggestions = _SELECT(
             selector.SelectSelectorConfig(
-                options=[OWN_TEST, *SUGGESTIONS],
+                options=[*SUGGESTIONS, OTHER_TEST],
                 translation_key="mapping_suggestion",
                 mode=selector.SelectSelectorMode.LIST,
             )
         )
         schema = probatio.Schema(
             {
-                probatio.Required(CONF_SUGGESTION, default=OWN_TEST): suggestions,
-                probatio.Required(CONF_TITLE): str,
+                probatio.Required(CONF_SUGGESTION): suggestions,
+                probatio.Optional(CONF_CHANGE): str,
             }
         )
+        suggested = {CONF_CHANGE: guide.change}
+        if guide.suggestion is not None:
+            suggested[CONF_SUGGESTION] = guide.suggestion
         return self.async_show_form(
             step_id="map_test",
-            data_schema=self.add_suggested_values_to_schema(
-                schema, {CONF_SUGGESTION: guide.suggestion, CONF_TITLE: guide.title}
-            ),
+            data_schema=self.add_suggested_values_to_schema(schema, suggested),
             description_placeholders=self._unit(),
             errors=errors,
         )
@@ -520,7 +521,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         suggested: dict[str, str] = {}
         if guide.more_changes:
             fields[probatio.Optional(CONF_MORE)] = _TEXT(_MULTILINE)
-            suggested[CONF_MORE] = comment_lines(guide.more_changes)
+            suggested[CONF_MORE] = guide.more_lines()
         return self.async_show_form(
             step_id="map_result",
             data_schema=self.add_suggested_values_to_schema(probatio.Schema(fields), suggested),

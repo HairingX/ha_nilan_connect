@@ -31,7 +31,14 @@ from custom_components.nilan_connect.const import (
 )
 from custom_components.nilan_connect.data import NilanData
 from custom_components.nilan_connect.diagnostics import async_get_config_entry_diagnostics
-from custom_components.nilan_connect.guide import SUGGESTIONS, MappingGuide, comment_lines, parse_comments
+from custom_components.nilan_connect.guide import (
+    SUGGESTIONS,
+    MappingGuide,
+    address_text,
+    comment_lines,
+    parse_comments,
+    space_text,
+)
 from custom_components.nilan_connect.mapping import Mappings, load_mappings, step
 
 from .conftest import EMAIL, GATEWAY_ID, HOST
@@ -84,13 +91,13 @@ async def _scanned(hass: HomeAssistant, entry: MockConfigEntry, fitted: str = "a
     return await _read(hass, await _options(hass).async_configure(start["flow_id"], {"fitted": fitted}))
 
 
-async def _test(hass: HomeAssistant, flow_id: str, title: str, suggestion: str = "own",
+async def _test(hass: HomeAssistant, flow_id: str, title: str, suggestion: str = "other",
                 change: Callable[[], object] | None = None) -> ConfigFlowResult:
     """One test from the menu: chosen and named, the unit read before the change, `change` made,
     and the unit read again; where the read before fails, the step it goes on with."""
     await _go(hass, flow_id, "map_test")
     made = await _read(hass, await _options(hass).async_configure(
-        flow_id, {"suggestion": suggestion, "title": title}))
+        flow_id, {"suggestion": suggestion, "change": title}))
     if made.get("step_id") != "map_change":
         return made
     if change is not None:
@@ -123,16 +130,28 @@ def test_the_guide_is_translated_with_its_placeholders_labels_and_suggestions(la
     assert "{found}" in steps["map_found"]["description"]
     assert set(steps["map_found"]["menu_options"]) == {"map_send", "map_test"}
     assert steps["map_found"]["menu_options"]["map_send"] == steps["map_tested"]["menu_options"]["map_send"]
-    assert steps["map_tested"]["description"].split("\n\n")[-1] in steps["map_found"]["description"]
+    assert steps["map_tested"]["description"].split("\n\n")[-1] not in steps["map_found"]["description"]
+    assert steps["map_tested"]["title"] != steps["map_found"]["title"]
     assert all("{unit}" in steps[name]["description"] for name in steps if name.startswith("map_"))
-    assert steps["map_test"]["description"].split("\n\n")[1].startswith("**1. ")
-    assert steps["map_change"]["description"].split("\n\n")[1].startswith("**2. ")
-    assert "**3. " in steps["map_change"]["description"]
+    unit_line, on_this_unit, step_one, step_two = {
+        "en": ("Mapping **{unit}** (ventilation).", "Make changes on this unit", "**Step 1 of 2:", "**Step 2 of 2:"),
+        "da": ("Kortlægger **{unit}** (ventilation).", "Lav ændringer på dette anlæg", "**Trin 1 af 2:",
+               "**Trin 2 af 2:")}[language]
+    mapping = [name for name in steps if name.startswith("map_")]
+    assert [name for name in mapping if on_this_unit in steps[name]["description"]] == ["map_start", "map_test"]
+    assert all(steps[name]["description"].startswith(unit_line + "\n\n")
+               for name in mapping if name not in ("map_start", "map_test", "map_change"))
+    assert steps["map_test"]["description"].startswith(f"{unit_line} {on_this_unit}")
+    assert steps["map_test"]["description"].split("\n\n")[1].startswith(step_one)
+    assert steps["map_change"]["description"].startswith(step_two) and "**" not in steps["map_change"]["title"]
+    assert not any(words in json.dumps(steps) for words in ("1 of 3", "1 af 3", "**2. ", "**3. "))
+    assert steps["map_result"]["submit"] in ("Save comments", "Gem kommentarer")
     assert steps["map_test"]["submit"] == "Start test" and steps["map_change"]["submit"] in ("Scan", "Skan")
     suggestions = " ".join(selectors_of(language)["mapping_suggestion"]["options"].values()).lower()
     assert "floor" not in suggestions and "gulv" not in suggestions and "17 °c" in suggestions
     assert all("submit" in steps[name] for name in ("map_start", "map_test", "map_send"))
-    assert set(steps["map_test"]["data"]) == {"suggestion", "title"}
+    assert set(steps["map_test"]["data"]) == {"suggestion", "change"}
+    assert set(steps["map_test"]["data_description"]) == {"change"}
     assert "{result}" in steps["map_result"]["description"] and set(steps["map_result"]["data"]) == {"more"}
     assert set(steps["map_tested"]["menu_options"]) == {"map_test", "map_values", "map_send"}
     assert set(steps["map_values"]["menu_options"]) == {"map_values_previous", "map_values_next", "map_values_back"}
@@ -143,16 +162,21 @@ def test_the_guide_is_translated_with_its_placeholders_labels_and_suggestions(la
     assert "data" not in steps["map_change"] and "submit" in steps["map_change"]
     assert {"not_loaded", "mapping_saved", "mapping_gone_test", "mapping_gone_comments",
             "mapping_gone_final"} <= set(options["abort"])
-    assert {"read_failed", "unknown", "title_required"} <= set(options["error"]) and "reading" in options["progress"]
+    assert {"read_failed", "unknown", "describe_other"} <= set(options["error"]) and "reading" in options["progress"]
+    assert "title_required" not in options["error"]
     selectors = _translations(language)["selector"]
     labels = selectors["mapping_label"]["options"]
     assert set(labels) == {"unknown", "nothing_changed", "changed", "changed_one", "found_space", "moment",
                            "second_one",
                            "second", "minute_one", "minute", "test_one", "test", "changed_last_one",
-                           "changed_last", "done", "done_scanned"}
+                           "changed_last", "done", "done_scanned", *(f"short_{key}" for key in (*SUGGESTIONS, "other")),
+                           *(f"{kind}_{space}" for kind in ("space", "spaces") for space in ("datapoint", "setpoint"))}
     assert "{count}" in labels["changed"]
     assert all(f"{{{key}}}" in labels["found_space"] for key in ("space", "answered", "nonzero", "absent"))
-    assert set(selectors["mapping_suggestion"]["options"]) == {"own", *SUGGESTIONS}
+    assert list(selectors["mapping_suggestion"]["options"]) == ["mode", "setting", "switch", "temperature", "alarm",
+                                                                 "other"]
+    assert all(f"short_{key}" in labels for key in (*SUGGESTIONS, "other"))
+    assert "23.5" not in json.dumps(_translations(language)) and "23,5" not in json.dumps(_translations(language))
 
 
 # ================================================================================= guide
@@ -176,13 +200,13 @@ async def test_a_unit_is_scanned_tested_and_commented_register_by_register_and_e
     found = await _read(hass, await _options(hass).async_configure(start["flow_id"], {"fitted": " a heat pump "}))
     assert (found.get("step_id"), found.get("menu_options")) == ("map_found", ["map_test", "map_send"])
     assert found.get("description_placeholders") == {"unit": "Nilan CTS 400",
-        "found": "- datapoint: 45 answered, 21 not 0, 255 absent\n- setpoint: 47 answered, 33 not 0, 253 absent"}
+        "found": "- datapoints: 45 answered, 21 not 0, 255 absent\n- setpoints: 47 answered, 33 not 0, 253 absent"}
 
     result = await _test(hass, found["flow_id"], "Bypass closed", "switch",
                          lambda: gateway.datapoint_registers.update({(0, 23): 0, (0, 28): 170, (0, 79): 1}))
     assert result.get("step_id") == "map_result"
     assert result.get("description_placeholders") == {"unit": "Nilan CTS 400",
-                                                      "result": "3 registers changed since the last scan."}
+                                                      "result": "3 registers changed during the test."}
     names = [field["name"] for field in _schema(result)]
     assert names == ["datapoint 23: 1 → 0 (Bypass damper)", "datapoint 28: 164 → 170 (Supply air temperature)",
                      "datapoint 79: 0 → 1"]
@@ -210,7 +234,7 @@ async def test_a_unit_is_scanned_tested_and_commented_register_by_register_and_e
     assert stored["areas"] == [{"space": "datapoint", "start": 0, "count": 300},
                                {"space": "setpoint", "start": 0, "count": 300}]
     assert [(each["title"], each["suggestion"]) for each in stored["steps"]] == [("Bypass closed", "switch"),
-                                                                                ("Nothing", None)]
+                                                                                ("Nothing", "other")]
     first = stored["steps"][0]["changes"]
     assert first[0] == {"space": "datapoint", "number": 23, "before": 1, "after": 0, "bits": [0],
                         "comment": "bypass closed"}
@@ -241,7 +265,7 @@ async def test_a_gateway_that_answers_every_address_is_told_by_how_many_are_not_
     found = await _scanned(hass, config_entry)
     first = len(gateway.commands)
     assert found.get("description_placeholders") == {"unit": "Nilan CTS 400",
-        "found": "- datapoint: 300 answered, 21 not 0, 0 absent\n- setpoint: 300 answered, 33 not 0, 0 absent"}
+        "found": "- datapoints: 300 answered, 21 not 0, 0 absent\n- setpoints: 300 answered, 33 not 0, 0 absent"}
     gateway.commands.clear()
     await _test(hass, found["flow_id"], "Nothing")
     reads = [command for command in gateway.commands if command.code in (DATAPOINT_READ, SETPOINT_READ)]
@@ -282,7 +306,7 @@ async def test_closing_the_guide_between_the_reads_before_and_after_stores_no_te
     found = await _scanned(hass, config_entry)
     await _go(hass, found["flow_id"], "map_test")
     change = await _read(hass, await _options(hass).async_configure(
-        found["flow_id"], {"suggestion": "own", "title": "Bypass"}))
+        found["flow_id"], {"suggestion": "other", "change": "Bypass"}))
     assert change.get("step_id") == "map_change"
     sent = len(gateway.commands)
     _options(hass).async_abort(found["flow_id"])
@@ -345,8 +369,8 @@ async def test_every_step_of_the_guide_names_the_unit_it_maps(
 ) -> None:
     found = await _scanned(hass, config_entry)
     test = await _go(hass, found["flow_id"], "map_test")
-    change = await _read(hass, await _options(hass).async_configure(test["flow_id"], {"suggestion": "own",
-                                                                                     "title": "Bypass"}))
+    change = await _read(hass, await _options(hass).async_configure(test["flow_id"], {"suggestion": "other",
+                                                                                     "change": "Bypass"}))
     result = await _read(hass, await _options(hass).async_configure(change["flow_id"], {}))
     tested = await _options(hass).async_configure(result["flow_id"], {})
     values = await _go(hass, tested["flow_id"], "map_values")
@@ -356,14 +380,34 @@ async def test_every_step_of_the_guide_names_the_unit_it_maps(
         assert (shown.get("description_placeholders") or {})["unit"] == "Nilan CTS 400", shown.get("step_id")
 
 
-async def test_a_test_needs_a_name(
+async def test_a_test_is_chosen_from_the_suggestions_and_other_needs_a_description(
     hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry
 ) -> None:
     found = await _scanned(hass, config_entry)
     form = await _go(hass, found["flow_id"], "map_test")
-    assert [field["name"] for field in _schema(form)] == ["suggestion", "title"]
-    again = await _options(hass).async_configure(form["flow_id"], {"suggestion": "alarm", "title": "  "})
-    assert (again.get("step_id"), again.get("errors")) == ("map_test", {"title": "title_required"})
+    fields = _schema(form)
+    assert [field["name"] for field in fields] == ["suggestion", "change"]
+    assert fields[0]["required"] is True and "default" not in fields[0]
+    assert fields[1].get("required") is not True
+    again = await _options(hass).async_configure(form["flow_id"], {"suggestion": "other", "change": "  "})
+    assert (again.get("step_id"), again.get("errors")) == ("map_test", {"change": "describe_other"})
+    assert _schema(again)[0]["description"]["suggested_value"] == "other"
+
+
+@pytest.mark.parametrize(("suggestion", "change", "title"), [
+    ("mode", "", "Fan level"), ("alarm", "", "An alarm"), ("mode", "level 1 → 3", "level 1 → 3"),
+    ("other", "bypass by hand", "bypass by hand")])
+async def test_a_tests_title_is_what_the_user_changes_or_else_the_kind_of_test(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, suggestion: str, change: str, title: str
+) -> None:
+    found = await _scanned(hass, config_entry)
+    await _go(hass, found["flow_id"], "map_test")
+    made = await _read(hass, await _options(hass).async_configure(
+        found["flow_id"], {"suggestion": suggestion, "change": change}))
+    assert made.get("step_id") == "map_change"
+    await _read(hass, await _options(hass).async_configure(found["flow_id"], {}))
+    [stored] = await load_mappings(hass, config_entry.entry_id)
+    assert (stored["steps"][0]["title"], stored["steps"][0]["suggestion"]) == (title, suggestion)
 
 
 async def test_registers_beyond_those_given_a_field_share_one_a_line_each(
@@ -384,6 +428,31 @@ async def test_registers_beyond_those_given_a_field_share_one_a_line_each(
     [stored] = await load_mappings(hass, config_entry.entry_id)
     comments = [change.get("comment") for change in stored["steps"][0]["changes"]]
     assert comments == [None] * REGISTER_FIELDS + ["eco mode", None]
+
+
+async def test_in_danish_the_guide_names_the_spaces_in_danish_and_stores_them_by_the_protocols_names(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    hass.config.language = "da"
+    found = await _scanned(hass, config_entry)
+    assert (found.get("description_placeholders") or {})["found"] == (
+        "- datapunkter: 45 svarede, 21 forskellige fra 0, 255 findes ikke\n"
+        "- setpunkter: 47 svarede, 33 forskellige fra 0, 253 findes ikke")
+    changed = sorted(address for _, address in gateway.setpoint_registers)[:REGISTER_FIELDS + 1]
+    registers = gateway.setpoint_registers
+    bumped = {(0, address): registers[(0, address)] + 1 for address in changed}
+    result = await _test(hass, found["flow_id"], "Mange på én gang", change=lambda: registers.update(bumped))
+    fields = _schema(result)
+    assert all(field["name"].startswith("setpunkt ") for field in fields[:-1])
+    more: str = fields[-1]["description"]["suggested_value"]
+    assert more.startswith(f"setpunkt {changed[REGISTER_FIELDS]}: ")
+    tested = await _options(hass).async_configure(result["flow_id"], {fields[0]["name"]: "trin", "more": more + "eco"})
+    [stored] = await load_mappings(hass, config_entry.entry_id)
+    made = stored["steps"][0]["changes"]
+    assert {change["space"] for change in made} == {"setpoint"}
+    assert (made[0]["comment"], made[-1]["comment"]) == ("trin", "eco")
+    values = (await _go(hass, tested["flow_id"], "map_values")).get("description_placeholders") or {}
+    assert values["values"].startswith("- datapunkt 20: 0 · ")
 
 
 async def test_after_a_test_sending_in_scans_every_address_once_more_so_no_register_a_test_brought_is_missed(
@@ -498,7 +567,7 @@ async def test_a_scan_that_goes_unanswered_returns_to_its_form_with_the_reason(
     [stored] = await load_mappings(hass, config_entry.entry_id)
     assert stored["steps"] == []
     change = await _read(hass, await _options(hass).async_configure(
-        failed["flow_id"], {"suggestion": "own", "title": "Bypass"}))
+        failed["flow_id"], {"suggestion": "other", "change": "Bypass"}))
     assert change.get("step_id") == "map_change"
     gateway.silent = True
     after = await _read(hass, await _options(hass).async_configure(change["flow_id"], {}))
@@ -543,7 +612,7 @@ async def test_closing_the_guide_during_a_scan_stops_it_and_keeps_the_tests_made
             stopped.set()
 
     monkeypatch.setattr(loaded.client, "read_mapped", hanging)
-    progress = await _options(hass).async_configure(flow_id, {"suggestion": "own", "title": "Boost"})
+    progress = await _options(hass).async_configure(flow_id, {"suggestion": "other", "change": "Boost"})
     assert progress.get("type") is FlowResultType.SHOW_PROGRESS
     await scanning.wait()
     _options(hass).async_abort(flow_id)
@@ -696,6 +765,15 @@ CHANGES = (RegisterChange(RawAddress("datapoint", 205), 0, 1, (0,)),
 
 def test_the_other_registers_are_offered_a_line_each() -> None:
     assert comment_lines(CHANGES) == "datapoint 205: 0 → 1 = \nsetpoint 40: 70 → – = "
+
+
+def test_a_space_of_another_object_keeps_its_object_in_any_language() -> None:
+    names = {"datapoint": "datapunkt"}
+    assert space_text("datapoint:1", names) == "datapunkt:1"
+    assert address_text(RawAddress("setpoint:2", 7), names) == "setpoint:2 7"
+    found = parse_comments("datapunkt:1 5: 0 → 1 = flap", [RegisterChange(RawAddress("datapoint:1", 5), 0, 1, (0,))],
+                           names)
+    assert found == {RawAddress("datapoint:1", 5): "flap"}
 
 
 @pytest.mark.parametrize(("text", "comments"), [
