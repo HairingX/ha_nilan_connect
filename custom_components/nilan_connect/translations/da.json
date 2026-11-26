@@ -3467,7 +3467,7 @@
       },
       "map_start": {
         "title": "Kortlæg anlægget",
-        "description": "Genkendt: **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nKortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så laver du tests, én ad gangen: du ændrer én ting på anlæggets eget panel eller i producentens app, og guiden viser, hvilke registre der skiftede. En test læser anlægget lige før og lige efter ændringen, på få sekunder hver gang. Der skrives intet til anlægget.\n\nNår du afslutter, gemmes kortlægningen sammen med anlægget. Vil du sende den til os, så hent diagnostikken og vedhæft filen til en [kortlægningsrapport]({report_url}).",
+        "description": "Genkendt: **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nKortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så laver du tests, én ad gangen: du ændrer én ting på anlæggets eget panel eller i producentens app, og guiden viser, hvilke registre der ændrede sig. En test læser anlægget lige før og lige efter ændringen, på få sekunder hver gang. Der skrives intet til anlægget.\n\nNår du afslutter, gemmes kortlægningen sammen med anlægget. Vil du sende den til os, så hent diagnostikken og vedhæft filen til en [kortlægningsrapport]({report_url}).",
         "data": {
           "fitted": "Er der monteret ekstraudstyr, vi bør kende til?"
         },
@@ -3537,7 +3537,7 @@
       }
     },
     "progress": {
-      "reading": "Skanner {total} adresser. Lukker du her, stopper skanningen; alle tests, der allerede er lavet, er gemt."
+      "reading": "Skanner {total} adresser. Lukker du vinduet, stopper skanningen; alle tests, der allerede er lavet, er gemt."
     },
     "error": {
       "read_failed": "Anlægget var optaget eller svarede ikke, så skanningen stoppede. Prøv igen om lidt.",
@@ -3563,18 +3563,18 @@
     "mapping_label": {
       "options": {
         "unknown": "ukendt",
-        "nothing_changed": "Intet skiftede under testen. Funktionen kan være slået fra af en anden indstilling - fx er eftervarmen slået fra. Slå den til, og test igen.",
-        "changed": "{count} registre skiftede under testen.",
+        "nothing_changed": "Intet ændrede sig under testen. Funktionen kan være slået fra af en anden indstilling - fx er eftervarmen slået fra. Slå den til, og test igen.",
+        "changed": "{count} registre ændrede sig under testen.",
         "found_space": "{space}: {answered} svarede, {nonzero} forskellige fra 0, {absent} findes ikke",
-        "changed_one": "1 register skiftede under testen.",
+        "changed_one": "1 register ændrede sig under testen.",
         "second_one": "1 sekund",
         "second": "{count} sekunder",
         "minute_one": "1 minut",
         "minute": "{count} minutter",
         "test_one": "1 test",
         "test": "{count} tests",
-        "changed_last_one": "1 register skiftede i sidste skanning",
-        "changed_last": "{count} registre skiftede i sidste skanning",
+        "changed_last_one": "1 register ændrede sig i sidste skanning",
+        "changed_last": "{count} registre ændrede sig i sidste skanning",
         "done": "Færdig og gemt: {tests}.",
         "done_scanned": "Færdig og gemt: {tests}, {changed}.",
         "moment": "et øjeblik",
