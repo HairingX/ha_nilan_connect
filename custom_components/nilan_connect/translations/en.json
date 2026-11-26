@@ -3467,7 +3467,7 @@
       },
       "map_start": {
         "title": "Map the unit",
-        "description": "Recognised: **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nMapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you make tests, one at a time: you change one thing on the unit's own panel or in the manufacturer's app, and the guide shows which registers changed. A test reads the unit just before and just after the change, in a few seconds each. Nothing is written to the unit.\n\nWhen you finish, the mapping is saved with the unit. To send it to us, download the diagnostics and attach the file to a [mapping report]({report_url}).",
+        "description": "Recognised: **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nMapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you write down what the unit's own panel or the manufacturer's app shows, one value at a time, and the unit is read each time you save one. Or you make tests: you change one thing on the panel or in the app, and the guide shows which registers changed. A test reads the unit just before and just after the change, in a few seconds each. Nothing is written to the unit.\n\nWhen you finish, the mapping is saved with the unit. To send it to us, download the diagnostics and attach the file to a [mapping report]({report_url}).",
         "data": {
           "fitted": "Is any extra equipment fitted we should know about?"
         },
@@ -3478,11 +3478,25 @@
       },
       "map_found": {
         "title": "Scan done",
-        "description": "Mapping **{unit}** (ventilation).\n\nRegisters found:\n\n{found}\n\nThe scan is saved. Please make a few tests: each test shows what one change on the unit does. Finish when you are done — you can send the mapping to us through the diagnostics.",
+        "description": "Mapping **{unit}** (ventilation).\n\nRegisters found:\n\n{found}\n\nThe scan is saved. Now you can help in two ways: write down what the unit's panel shows, value by value - the easiest - or make tests, each showing what one change on the unit does. Finish when you are done — you can send the mapping to us through the diagnostics.",
         "menu_options": {
-          "map_test": "Make a test (recommended)",
+          "map_reading": "Write what the panel shows (easiest)",
+          "map_test": "Make a test",
           "map_send": "Finish and save"
         }
+      },
+      "map_reading": {
+        "title": "Write what the panel shows",
+        "description": "Mapping **{unit}** (ventilation).\n\n{saved}\n\nLook at this unit's own panel or app, and write one thing it shows right now, or what you just did. The unit is read when you press *Save*, so save straight away.\n\nLeave both fields empty and press *Save* to stop.",
+        "data": {
+          "what": "What is it?",
+          "value": "Value"
+        },
+        "data_description": {
+          "what": "Choose, or write your own, e.g. \"T7\" or \"I set level 4\".",
+          "value": "As the panel shows it, e.g. 8 or 21.5. May be empty."
+        },
+        "submit": "Save"
       },
       "map_test": {
         "title": "New test",
@@ -3515,11 +3529,12 @@
       "map_tested": {
         "title": "What next?",
         "menu_options": {
-          "map_test": "Next test",
+          "map_reading": "Write what the panel shows",
+          "map_test": "Make a test",
           "map_values": "Show all values",
           "map_send": "Finish and save"
         },
-        "description": "Mapping **{unit}** (ventilation).\n\nThe test is saved. Make another test, look through all values, or finish."
+        "description": "Mapping **{unit}** (ventilation).\n\nSaved. Write what the panel shows, make a test, look through all values, or finish."
       },
       "map_values": {
         "title": "All values, page {page} of {pages}",
@@ -3537,7 +3552,7 @@
       }
     },
     "progress": {
-      "reading": "Scanning {total} addresses. Closing this stops the scan; every test already made stays saved."
+      "reading": "Scanning {total} addresses. Closing this stops the scan; what is already saved stays saved."
     },
     "error": {
       "read_failed": "The unit was busy or did not answer, so the scan stopped. Try again in a moment.",
@@ -3548,6 +3563,7 @@
       "not_loaded": "The unit is not set up right now, so it cannot be mapped. Try again once it is.",
       "mapping_saved": "{summary} To send the mapping to us, download the diagnostics and attach the file to a [mapping report]({report_url}).",
       "mapping_gone_test": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the last test was not stored.",
+      "mapping_gone_reading": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the last value was not stored.",
       "mapping_gone_comments": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the comments on the last test were not stored.",
       "mapping_gone_final": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the last scan was not stored."
     }
@@ -3587,7 +3603,12 @@
         "space_datapoint": "datapoint",
         "space_setpoint": "setpoint",
         "spaces_datapoint": "datapoints",
-        "spaces_setpoint": "setpoints"
+        "spaces_setpoint": "setpoints",
+        "reading_none": "Nothing is written down yet.",
+        "reading_saved": "Saved: {reading} ({count} so far).",
+        "reading_one": "1 value from the panel",
+        "reading": "{count} values from the panel",
+        "both": "{tests} and {readings}"
       }
     },
     "mapping_suggestion": {
@@ -3598,6 +3619,21 @@
         "temperature": "A temperature sensor (breathe on it, or hold it to something cold)",
         "alarm": "An alarm (e.g. reset the filter alarm)",
         "other": "Other (describe it yourself)"
+      }
+    },
+    "mapping_reading": {
+      "options": {
+        "outdoor": "Outdoor air",
+        "supply": "Supply air",
+        "extract": "Extract air (from the rooms)",
+        "exhaust": "Exhaust air (out of the house)",
+        "room": "Room temperature",
+        "humidity": "Humidity",
+        "co2": "CO2",
+        "fan_level": "Fan level",
+        "bypass": "Bypass",
+        "hot_water": "Hot water temperature",
+        "filter": "Filter (days)"
       }
     }
   },

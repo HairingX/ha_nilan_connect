@@ -53,6 +53,10 @@ MAPPINGS_KEPT: Final = 3
 STEPS_KEPT: Final = 30
 """How many steps of one mapping are stored."""
 
+READINGS_KEPT: Final = 100
+"""How many values written down from the panel one mapping stores, each with the read taken as
+it was saved."""
+
 REGISTER_FIELDS: Final = 20
 """How many of a test's changed registers get a field of their own for the user's comment; the
 rest share one field, a line each."""
