@@ -47,7 +47,6 @@ from .guide import (
     OTHER_TEST,
     SUGGESTIONS,
     MappingGuide,
-    comment_lines,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -522,7 +521,7 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         suggested: dict[str, str] = {}
         if guide.more_changes:
             fields[probatio.Optional(CONF_MORE)] = _TEXT(_MULTILINE)
-            suggested[CONF_MORE] = comment_lines(guide.more_changes)
+            suggested[CONF_MORE] = guide.more_lines()
         return self.async_show_form(
             step_id="map_result",
             data_schema=self.add_suggested_values_to_schema(probatio.Schema(fields), suggested),

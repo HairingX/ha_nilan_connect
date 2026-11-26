@@ -117,7 +117,7 @@ must fix, and the debug log only logs.
   test is chosen from the suggestions, translated under the selector `mapping_suggestion`, or the
   user's own ("Other"), with an optional line saying what the user changes, required only for
   Other; a test is named by that line, or else by the short name of the kind chosen (`short_<kind>`
-  under `mapping_label`). The test's two screens are numbered as steps 1, and 2 and 3, and the
+  under `mapping_label`). The test's two screens are numbered as steps 1 and 2 of 2, and the
   first says not to make the change yet: its **Start test** button, a step's `submit` translation,
   starts `map_read`, which reads again only what the first scan found, `Client.read_mapped`, as
   the unit is just before the change. `map_change` then asks the user to make the change, and its
@@ -126,7 +126,9 @@ must fix, and the debug log only logs.
   first scan and a first test - does not hide the change; what drifted before the test is stored
   beside it. `map_result` gives each changed
   register, up to `REGISTER_FIELDS` (20), a field of its own, and the rest one multiline field a
-  line each, parsed back by the address at the start of each line; a line of its own belongs to
+  line each, parsed back by the address at the start of each line; a register is shown with its
+  space in Home Assistant's language (`space_<kind>`, and `spaces_<kind>` in what `map_found`
+  counts, under `mapping_label`), and parsed back by either word, but stored by the protocol's; a line of its own belongs to
   the register above it. `map_tested` offers the next test, `map_values` - the latest state, the
   first scan with every scan after it, `VALUES_PER_PAGE` (50) registers of one space a page, read
   from what the guide holds, from the first page again after each scan - and `map_send`. After a

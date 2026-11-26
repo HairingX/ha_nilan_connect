@@ -61,28 +61,47 @@ def _word(word: int | None) -> str:
     return "–" if word is None else str(word)
 
 
-def change_text(change: RegisterChange) -> str:
+_PROTOCOL_NAMES: Final[Mapping[str, str]] = {}
+
+
+def space_text(space: str, names: Mapping[str, str] = _PROTOCOL_NAMES) -> str:
+    """`space` by the word `names` gives its kind, such as "datapunkt" for "datapoint", and its
+    object, if any: "datapunkt:1"; the protocol's word where `names` gives none."""
+    kind, colon, obj = space.partition(":")
+    return f"{names.get(kind, kind)}{colon}{obj}"
+
+
+def address_text(address: RawAddress, names: Mapping[str, str] = _PROTOCOL_NAMES) -> str:
+    """`address` with its space by the words of `names`: "datapunkt 79"."""
+    return f"{space_text(address.space, names)} {address.number}"
+
+
+def change_text(change: RegisterChange, names: Mapping[str, str] = _PROTOCOL_NAMES) -> str:
     """A change by its register and raw words: "datapoint 79: 0 → 1"."""
-    return f"{change.address}: {_word(change.before)} → {_word(change.after)}"
+    return f"{address_text(change.address, names)}: {_word(change.before)} → {_word(change.after)}"
 
 
-def comment_lines(changes: Iterable[RegisterChange]) -> str:
+def comment_lines(changes: Iterable[RegisterChange], names: Mapping[str, str] = _PROTOCOL_NAMES) -> str:
     """One line for each change, for the user to write its meaning after."""
-    return "\n".join(f"{change_text(change)} = " for change in changes)
+    return "\n".join(f"{change_text(change, names)} = " for change in changes)
 
 
-def parse_comments(text: str, changes: Sequence[RegisterChange]) -> dict[RawAddress, str]:
+def parse_comments(text: str, changes: Sequence[RegisterChange],
+                   names: Mapping[str, str] = _PROTOCOL_NAMES) -> dict[RawAddress, str]:
     """The comment written for each change in `text`, by its address: after the "=" of its line,
     and on the lines after it up to the next change's line, joined by line breaks. A change whose
     line is deleted, or left without text, gives none, as do lines before the first change's line
-    and those after a line of a register not among `changes`."""
+    and those after a line of a register not among `changes`. A line names its space by the words
+    of `names` or by the protocol's."""
     changed = {change.address for change in changes}
+    kinds = {word: kind for kind, word in names.items()}
     written: dict[RawAddress, list[str]] = {}
     current: RawAddress | None = None
     for line in text.splitlines():
         found = _LINE.match(line)
         if found is not None:
-            address = RawAddress(found["space"], int(found["number"]))
+            kind, colon, obj = found["space"].partition(":")
+            address = RawAddress(f"{kinds.get(kind, kind)}{colon}{obj}", int(found["number"]))
             current = address if address in changed else None
             line = found["comment"]
         if current is not None and line.strip():
@@ -149,6 +168,9 @@ class MappingGuide:
         """Told how far the last scan of every address has come, from 0 to 1."""
         self._known = Known((), {}, "")
         self._labels: dict[str, str] = {}
+        self._spaces: dict[str, str] = {}
+        """The word for each kind of space, such as "datapoint", in Home Assistant's language."""
+        self._spaces_plural: dict[str, str] = {}
 
     # ------------------------------------------------------------------------- what is shown
 
@@ -166,7 +188,7 @@ class MappingGuide:
         for space in spaces:
             words = [word for address, word in self._found.values.items() if address.space == space]
             absent = sum(1 for address in self._found.missing if address.space == space)
-            lines.append("- " + self._label("found_space").replace("{space}", space)
+            lines.append("- " + self._label("found_space").replace("{space}", space_text(space, self._spaces_plural))
                          .replace("{answered}", str(len(words)))
                          .replace("{nonzero}", str(sum(1 for word in words if word)))
                          .replace("{absent}", str(absent)))
@@ -191,13 +213,17 @@ class MappingGuide:
         fields: dict[str, RawAddress] = {}
         for change in self._changes[:REGISTER_FIELDS]:
             name = self._known.name(change.address)
-            fields[change_text(change) + (f" ({name})" if name else "")] = change.address
+            fields[change_text(change, self._spaces) + (f" ({name})" if name else "")] = change.address
         return fields
 
     @property
     def more_changes(self) -> tuple[RegisterChange, ...]:
         """The changes beyond those given a field each."""
         return self._changes[REGISTER_FIELDS:]
+
+    def more_lines(self) -> str:
+        """A line for each of `more_changes`, for the user to write its meaning after."""
+        return comment_lines(self.more_changes, self._spaces)
 
     def pages(self) -> list[list[RawAddress]]:
         """The addresses the scans found a word at, per space, `VALUES_PER_PAGE` a page."""
@@ -212,7 +238,7 @@ class MappingGuide:
         pages = self.pages() or [[]]
         # The pages change with each scan: a page past the last shows the last.
         self.page = min(self.page, len(pages) - 1)
-        rows = "\n".join(f"- {address}: {self._words[address]} · {self._known.describe(address)}"
+        rows = "\n".join(f"- {address_text(address, self._spaces)}: {self._words[address]} · {self._known.describe(address)}"
                          for address in pages[self.page])
         return {"page": str(self.page + 1), "pages": str(len(pages)), "values": rows or "-"}
 
@@ -376,7 +402,7 @@ class MappingGuide:
         that has one, and from the lines of the rest. Whether the mapping still takes them."""
         comments = {address: str(given[field]).strip() for field, address in self.register_fields().items()
                     if str(given.get(field) or "").strip()}
-        comments.update(parse_comments(str(given.get(CONF_MORE) or ""), self.more_changes))
+        comments.update(parse_comments(str(given.get(CONF_MORE) or ""), self.more_changes, self._spaces))
         if not comments:
             return True
         return await self._mappings.async_annotate(
@@ -402,9 +428,15 @@ class MappingGuide:
         labels = await async_get_translations(self._hass, language, "selector", [DOMAIN])
         prefix = f"component.{DOMAIN}.selector.{LABELS}.options."
         self._labels = {key.removeprefix(prefix): text for key, text in labels.items() if key.startswith(prefix)}
+        self._spaces = self._words_for("space_")
+        self._spaces_plural = self._words_for("spaces_")
         entities = await async_get_translations(self._hass, language, "entity", [DOMAIN])
         points = [point for model in MODELS if model is client.model for point in model_points(model)]
         self._known = Known(points, _entity_names(entities), self._label("unknown"))
+
+    def _words_for(self, prefix: str) -> dict[str, str]:
+        """The labels whose keys start with `prefix`, by the rest of their keys."""
+        return {key.removeprefix(prefix): text for key, text in self._labels.items() if key.startswith(prefix)}
 
     def _label(self, key: str) -> str:
         return self._labels.get(key, key)

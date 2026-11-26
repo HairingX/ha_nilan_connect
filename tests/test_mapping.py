@@ -31,7 +31,14 @@ from custom_components.nilan_connect.const import (
 )
 from custom_components.nilan_connect.data import NilanData
 from custom_components.nilan_connect.diagnostics import async_get_config_entry_diagnostics
-from custom_components.nilan_connect.guide import SUGGESTIONS, MappingGuide, comment_lines, parse_comments
+from custom_components.nilan_connect.guide import (
+    SUGGESTIONS,
+    MappingGuide,
+    address_text,
+    comment_lines,
+    parse_comments,
+    space_text,
+)
 from custom_components.nilan_connect.mapping import Mappings, load_mappings, step
 
 from .conftest import EMAIL, GATEWAY_ID, HOST
@@ -123,13 +130,22 @@ def test_the_guide_is_translated_with_its_placeholders_labels_and_suggestions(la
     assert "{found}" in steps["map_found"]["description"]
     assert set(steps["map_found"]["menu_options"]) == {"map_send", "map_test"}
     assert steps["map_found"]["menu_options"]["map_send"] == steps["map_tested"]["menu_options"]["map_send"]
-    assert steps["map_tested"]["description"].split("\n\n")[-1] in steps["map_found"]["description"]
+    assert steps["map_tested"]["description"].split("\n\n")[-1] not in steps["map_found"]["description"]
+    assert steps["map_tested"]["title"] != steps["map_found"]["title"]
     assert all("{unit}" in steps[name]["description"] for name in steps if name.startswith("map_"))
-    step_one, steps_two_and_three = {"en": ("**Step 1 of 3:", "**Steps 2 and 3:**"),
-                                     "da": ("**Trin 1 af 3:", "**Trin 2 og 3:**")}[language]
+    unit_line, on_this_unit, step_one, step_two = {
+        "en": ("Mapping **{unit}** (ventilation).", "Make changes on this unit", "**Step 1 of 2:", "**Step 2 of 2:"),
+        "da": ("Kortlægger **{unit}** (ventilation).", "Lav ændringer på dette anlæg", "**Trin 1 af 2:",
+               "**Trin 2 af 2:")}[language]
+    mapping = [name for name in steps if name.startswith("map_")]
+    assert [name for name in mapping if on_this_unit in steps[name]["description"]] == ["map_start", "map_test"]
+    assert all(steps[name]["description"].startswith(unit_line + "\n\n")
+               for name in mapping if name not in ("map_start", "map_test", "map_change"))
+    assert steps["map_test"]["description"].startswith(f"{unit_line} {on_this_unit}")
     assert steps["map_test"]["description"].split("\n\n")[1].startswith(step_one)
-    assert steps["map_change"]["description"].split("\n\n")[1].startswith(steps_two_and_three)
-    assert "**3. " not in steps["map_change"]["description"] and "**2. " not in steps["map_change"]["description"]
+    assert steps["map_change"]["description"].startswith(step_two) and "**" not in steps["map_change"]["title"]
+    assert not any(words in json.dumps(steps) for words in ("1 of 3", "1 af 3", "**2. ", "**3. "))
+    assert steps["map_result"]["submit"] in ("Save comments", "Gem kommentarer")
     assert steps["map_test"]["submit"] == "Start test" and steps["map_change"]["submit"] in ("Scan", "Skan")
     suggestions = " ".join(selectors_of(language)["mapping_suggestion"]["options"].values()).lower()
     assert "floor" not in suggestions and "gulv" not in suggestions and "17 °c" in suggestions
@@ -153,7 +169,8 @@ def test_the_guide_is_translated_with_its_placeholders_labels_and_suggestions(la
     assert set(labels) == {"unknown", "nothing_changed", "changed", "changed_one", "found_space", "moment",
                            "second_one",
                            "second", "minute_one", "minute", "test_one", "test", "changed_last_one",
-                           "changed_last", "done", "done_scanned", *(f"short_{key}" for key in (*SUGGESTIONS, "other"))}
+                           "changed_last", "done", "done_scanned", *(f"short_{key}" for key in (*SUGGESTIONS, "other")),
+                           *(f"{kind}_{space}" for kind in ("space", "spaces") for space in ("datapoint", "setpoint"))}
     assert "{count}" in labels["changed"]
     assert all(f"{{{key}}}" in labels["found_space"] for key in ("space", "answered", "nonzero", "absent"))
     assert list(selectors["mapping_suggestion"]["options"]) == ["mode", "setting", "switch", "temperature", "alarm",
@@ -183,7 +200,7 @@ async def test_a_unit_is_scanned_tested_and_commented_register_by_register_and_e
     found = await _read(hass, await _options(hass).async_configure(start["flow_id"], {"fitted": " a heat pump "}))
     assert (found.get("step_id"), found.get("menu_options")) == ("map_found", ["map_test", "map_send"])
     assert found.get("description_placeholders") == {"unit": "Nilan CTS 400",
-        "found": "- datapoint: 45 answered, 21 not 0, 255 absent\n- setpoint: 47 answered, 33 not 0, 253 absent"}
+        "found": "- datapoints: 45 answered, 21 not 0, 255 absent\n- setpoints: 47 answered, 33 not 0, 253 absent"}
 
     result = await _test(hass, found["flow_id"], "Bypass closed", "switch",
                          lambda: gateway.datapoint_registers.update({(0, 23): 0, (0, 28): 170, (0, 79): 1}))
@@ -248,7 +265,7 @@ async def test_a_gateway_that_answers_every_address_is_told_by_how_many_are_not_
     found = await _scanned(hass, config_entry)
     first = len(gateway.commands)
     assert found.get("description_placeholders") == {"unit": "Nilan CTS 400",
-        "found": "- datapoint: 300 answered, 21 not 0, 0 absent\n- setpoint: 300 answered, 33 not 0, 0 absent"}
+        "found": "- datapoints: 300 answered, 21 not 0, 0 absent\n- setpoints: 300 answered, 33 not 0, 0 absent"}
     gateway.commands.clear()
     await _test(hass, found["flow_id"], "Nothing")
     reads = [command for command in gateway.commands if command.code in (DATAPOINT_READ, SETPOINT_READ)]
@@ -411,6 +428,31 @@ async def test_registers_beyond_those_given_a_field_share_one_a_line_each(
     [stored] = await load_mappings(hass, config_entry.entry_id)
     comments = [change.get("comment") for change in stored["steps"][0]["changes"]]
     assert comments == [None] * REGISTER_FIELDS + ["eco mode", None]
+
+
+async def test_in_danish_the_guide_names_the_spaces_in_danish_and_stores_them_by_the_protocols_names(
+    hass: HomeAssistant, loaded: NilanData, config_entry: MockConfigEntry, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    hass.config.language = "da"
+    found = await _scanned(hass, config_entry)
+    assert (found.get("description_placeholders") or {})["found"] == (
+        "- datapunkter: 45 svarede, 21 forskellige fra 0, 255 findes ikke\n"
+        "- setpunkter: 47 svarede, 33 forskellige fra 0, 253 findes ikke")
+    changed = sorted(address for _, address in gateway.setpoint_registers)[:REGISTER_FIELDS + 1]
+    registers = gateway.setpoint_registers
+    bumped = {(0, address): registers[(0, address)] + 1 for address in changed}
+    result = await _test(hass, found["flow_id"], "Mange på én gang", change=lambda: registers.update(bumped))
+    fields = _schema(result)
+    assert all(field["name"].startswith("setpunkt ") for field in fields[:-1])
+    more: str = fields[-1]["description"]["suggested_value"]
+    assert more.startswith(f"setpunkt {changed[REGISTER_FIELDS]}: ")
+    tested = await _options(hass).async_configure(result["flow_id"], {fields[0]["name"]: "trin", "more": more + "eco"})
+    [stored] = await load_mappings(hass, config_entry.entry_id)
+    made = stored["steps"][0]["changes"]
+    assert {change["space"] for change in made} == {"setpoint"}
+    assert (made[0]["comment"], made[-1]["comment"]) == ("trin", "eco")
+    values = (await _go(hass, tested["flow_id"], "map_values")).get("description_placeholders") or {}
+    assert values["values"].startswith("- datapunkt 20: 0 · ")
 
 
 async def test_after_a_test_sending_in_scans_every_address_once_more_so_no_register_a_test_brought_is_missed(
@@ -723,6 +765,15 @@ CHANGES = (RegisterChange(RawAddress("datapoint", 205), 0, 1, (0,)),
 
 def test_the_other_registers_are_offered_a_line_each() -> None:
     assert comment_lines(CHANGES) == "datapoint 205: 0 → 1 = \nsetpoint 40: 70 → – = "
+
+
+def test_a_space_of_another_object_keeps_its_object_in_any_language() -> None:
+    names = {"datapoint": "datapunkt"}
+    assert space_text("datapoint:1", names) == "datapunkt:1"
+    assert address_text(RawAddress("setpoint:2", 7), names) == "setpoint:2 7"
+    found = parse_comments("datapunkt:1 5: 0 → 1 = flap", [RegisterChange(RawAddress("datapoint:1", 5), 0, 1, (0,))],
+                           names)
+    assert found == {RawAddress("datapoint:1", 5): "flap"}
 
 
 @pytest.mark.parametrize(("text", "comments"), [

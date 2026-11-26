@@ -52,24 +52,25 @@ Devices & services > Nilan Connect > Configure > **Map the unit**. It is offered
    and the guide says per space how many answered, how many of those were not 0 - a gateway may
    answer 0 where nothing is - and how many are absent. That takes from seconds to a few minutes
    on a slow gateway. The scan is saved.
-2. **Make a test (recommended)**, or **Finish and save**. A test has two numbered screens, and
-   every screen names the unit mapped: make changes on this unit, its panel or its app, not on
-   other devices in the house.
-   - **Step 1 of 3:** choose what you will test - the fan level (e.g. from level 1 to 3), a
+2. **Make a test (recommended)**, or **Finish and save**. A test has two numbered screens. Every
+   screen names the unit mapped, and the first screen and the test's say to make changes on this
+   unit, its panel or its app, not on other devices in the house.
+   - **Step 1 of 2:** choose what you will test - the fan level (e.g. from level 1 to 3), a
      setting set to an unusual value (e.g. a target temperature of 17 °C), something on and off
      (e.g. the bypass or boost), a temperature sensor, an alarm (e.g. a filter reset), or other -
      and, if you like, say what you change, such as "level 1 → 3"; for Other that is required.
      Do not make the change yet: **Start test** reads the registers that answered, as they are
      now. The test is named by what you said you change, or else by the kind of test.
-   - **Steps 2 and 3:** make the change on the unit, wait if the test needs it, and press
+   - **Step 2 of 2:** make the change on the unit, wait if the test needs it, and press
      **Scan**: the guide reads them once more, and shows only what changed between the two
      reads, so values that drift by themselves in the meantime, such as temperatures, do not hide
      the change. Each read takes a few seconds.
 3. Each register that changed gets a field, named by the register and its raw change, such as
-   "datapoint 79: 0 → 1", with the name of the value we know at it, if any. Write what it is;
-   "?" is fine, and an empty field is no comment. Beyond 20 registers, the rest share one field,
-   a line each, where a line of its own belongs to the register above it. If nothing changed,
-   the guide says so: the function may be switched off by another setting.
+   "datapoint 79: 0 → 1" - in Danish "datapunkt 79" - with the name of the value we know at it,
+   if any. Write what it is; "?" is fine, and an empty field is no comment. Beyond 20 registers,
+   the rest share one field, a line each, where a line of its own belongs to the register above
+   it. **Save comments** stores them. If nothing changed, the guide says so: the function may be
+   switched off by another setting.
 4. **Next test**, **Show all values** - every register's latest value, page by page, read from
    what the scans found - or **Finish and save**. After a test, finishing scans every address
    once more, so that no register is missed that a function switched on during the tests
@@ -77,7 +78,7 @@ Devices & services > Nilan Connect > Configure > **Map the unit**. It is offered
    the scan's progress where it takes that long, and then how many tests were saved and how many
    registers the last scan changed.
 5. The mapping is saved with the unit; nothing is sent anywhere. To send it to us, download the
-   diagnostics and attach them to a
+   diagnostics and attach the file to a
    [mapping report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml).
 
 Nothing is written to the unit, and nothing is read for a mapping unless the guide scans. While

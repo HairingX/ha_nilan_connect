@@ -3467,7 +3467,7 @@
       },
       "map_start": {
         "title": "Map the unit",
-        "description": "Recognised: **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nMapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you make tests, one at a time: you change one thing on the unit's own panel or in the manufacturer's app, and the guide shows which registers changed. A test reads the unit just before and just after the change, in a few seconds each. Nothing is written to the unit.\n\nWhen you finish, the mapping is saved, and in the diagnostics; to send it to us, attach them to a [mapping report]({report_url}).",
+        "description": "Recognised: **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nMapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you make tests, one at a time: you change one thing on the unit's own panel or in the manufacturer's app, and the guide shows which registers changed. A test reads the unit just before and just after the change, in a few seconds each. Nothing is written to the unit.\n\nWhen you finish, the mapping is saved with the unit. To send it to us, download the diagnostics and attach the file to a [mapping report]({report_url}).",
         "data": {
           "fitted": "Is any extra equipment fitted we should know about?"
         },
@@ -3477,8 +3477,8 @@
         "submit": "Scan"
       },
       "map_found": {
-        "title": "Scanned",
-        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nRegisters found:\n\n{found}\n\nThe scan is saved. Please make a few tests: each test shows what one change on the unit does. Finish when you are done — you can send the mapping to us through the diagnostics.",
+        "title": "Scan done",
+        "description": "Mapping **{unit}** (ventilation).\n\nRegisters found:\n\n{found}\n\nThe scan is saved. Please make a few tests: each test shows what one change on the unit does. Finish when you are done — you can send the mapping to us through the diagnostics.",
         "menu_options": {
           "map_test": "Make a test (recommended)",
           "map_send": "Finish and save"
@@ -3486,7 +3486,7 @@
       },
       "map_test": {
         "title": "New test",
-        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\n**Step 1 of 3: Choose what you will test.** Don't make the change yet - when you press *Start test*, the unit is read as it is now.",
+        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\n**Step 1 of 2: Choose what you will test.** Don't make the change yet - when you press *Start test*, the unit is read as it is now.",
         "data": {
           "suggestion": "What will you test?",
           "change": "What do you change? (optional)"
@@ -3498,31 +3498,32 @@
       },
       "map_change": {
         "title": "Make the change",
-        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\n**Steps 2 and 3:** Make the change now on the {unit} (its panel or its app). Wait if the test needs it. Then press *Scan*.",
+        "description": "**Step 2 of 2: Make the change now** on the {unit} (its panel or its app). Wait if the test needs it, then press *Scan*.",
         "submit": "Scan"
       },
       "map_result": {
         "title": "What changed",
-        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\n{result}\n\nWrite what each register is, as far as you can tell; \"?\" is fine, and an empty field is no comment.",
+        "description": "Mapping **{unit}** (ventilation).\n\n{result}\n\nWrite what each register is, as far as you can tell; \"?\" is fine, and an empty field is no comment.",
         "data": {
           "more": "The other registers"
         },
         "data_description": {
           "more": "Write after each \"=\" what the register is; a line of its own belongs to the register above it. A register whose line you leave empty or delete stores nothing."
-        }
+        },
+        "submit": "Save comments"
       },
       "map_tested": {
-        "title": "Next",
+        "title": "What next?",
         "menu_options": {
           "map_test": "Next test",
           "map_values": "Show all values",
           "map_send": "Finish and save"
         },
-        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nThe scan is saved. Please make a few tests: each test shows what one change on the unit does. Finish when you are done — you can send the mapping to us through the diagnostics."
+        "description": "Mapping **{unit}** (ventilation).\n\nThe test is saved. Make another test, look through all values, or finish."
       },
       "map_values": {
         "title": "All values, page {page} of {pages}",
-        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nAs the scans found them; nothing is read for this.\n\n{values}",
+        "description": "Mapping **{unit}** (ventilation).\n\nAs the scans found them; nothing is read for this.\n\n{values}",
         "menu_options": {
           "map_values_previous": "Previous page",
           "map_values_next": "Next page",
@@ -3531,7 +3532,7 @@
       },
       "map_send": {
         "title": "Finish and save",
-        "description": "Mapping **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nAt the end we scan every address again, so that no register a test brought is missed. Last time it took {duration}.",
+        "description": "Mapping **{unit}** (ventilation).\n\nAt the end we scan every address once more, to catch registers that only appeared during the tests. Last time it took {duration}.",
         "submit": "Scan and save"
       }
     },
@@ -3545,7 +3546,7 @@
     },
     "abort": {
       "not_loaded": "The unit is not set up right now, so it cannot be mapped. Try again once it is.",
-      "mapping_saved": "{summary} Download the diagnostics if you want to send the mapping to us, and attach them to a [mapping report]({report_url}).",
+      "mapping_saved": "{summary} To send the mapping to us, download the diagnostics and attach the file to a [mapping report]({report_url}).",
       "mapping_gone_test": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the last test was not stored.",
       "mapping_gone_comments": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the comments on the last test were not stored.",
       "mapping_gone_final": "Three newer mappings of this unit have been stored meanwhile, so this one is no longer kept: the last scan was not stored."
@@ -3582,7 +3583,11 @@
         "short_switch": "On/off",
         "short_temperature": "A temperature sensor",
         "short_alarm": "An alarm",
-        "short_other": "Other"
+        "short_other": "Other",
+        "space_datapoint": "datapoint",
+        "space_setpoint": "setpoint",
+        "spaces_datapoint": "datapoints",
+        "spaces_setpoint": "setpoints"
       }
     },
     "mapping_suggestion": {

@@ -3467,7 +3467,7 @@
       },
       "map_start": {
         "title": "Kortlæg anlægget",
-        "description": "Genkendt: **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nKortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så laver du tests, én ad gangen: du ændrer én ting på anlæggets eget panel eller i producentens app, og guiden viser, hvilke registre der skiftede. En test læser anlægget lige før og lige efter ændringen, på få sekunder hver gang. Der skrives intet til anlægget.\n\nNår du afslutter, er kortlægningen gemt og i diagnostikken; vil du sende den til os, så vedhæft den en [kortlægningsrapport]({report_url}).",
+        "description": "Genkendt: **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nKortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så laver du tests, én ad gangen: du ændrer én ting på anlæggets eget panel eller i producentens app, og guiden viser, hvilke registre der skiftede. En test læser anlægget lige før og lige efter ændringen, på få sekunder hver gang. Der skrives intet til anlægget.\n\nNår du afslutter, gemmes kortlægningen sammen med anlægget. Vil du sende den til os, så hent diagnostikken og vedhæft filen til en [kortlægningsrapport]({report_url}).",
         "data": {
           "fitted": "Er der monteret ekstraudstyr, vi bør kende til?"
         },
@@ -3477,8 +3477,8 @@
         "submit": "Skan"
       },
       "map_found": {
-        "title": "Skannet",
-        "description": "Kortlægger **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nFundne registre:\n\n{found}\n\nSkanningen er gemt. Lav gerne et par tests: hver test viser, hvad én ændring på anlægget gør. Afslut, når du er færdig – kortlægningen kan sendes til os via diagnostikken.",
+        "title": "Skanning færdig",
+        "description": "Kortlægger **{unit}** (ventilation).\n\nFundne registre:\n\n{found}\n\nSkanningen er gemt. Lav gerne et par tests: hver test viser, hvad én ændring på anlægget gør. Afslut, når du er færdig – kortlægningen kan sendes til os via diagnostikken.",
         "menu_options": {
           "map_test": "Lav en test (anbefalet)",
           "map_send": "Afslut og gem"
@@ -3486,7 +3486,7 @@
       },
       "map_test": {
         "title": "Ny test",
-        "description": "Kortlægger **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\n**Trin 1 af 3: Vælg hvad du vil teste.** Lav ikke ændringen endnu – når du trykker *Start test*, læser vi anlægget, som det er nu.",
+        "description": "Kortlægger **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\n**Trin 1 af 2: Vælg hvad du vil teste.** Lav ikke ændringen endnu – når du trykker *Start test*, læser vi anlægget, som det er nu.",
         "data": {
           "suggestion": "Hvad vil du teste?",
           "change": "Hvad ændrer du? (valgfrit)"
@@ -3498,31 +3498,32 @@
       },
       "map_change": {
         "title": "Lav ændringen",
-        "description": "Kortlægger **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\n**Trin 2 og 3:** Lav ændringen nu på {unit} (panelet eller appen). Vent, hvis testen kræver det. Tryk så *Skan*.",
+        "description": "**Trin 2 af 2: Lav ændringen nu** på {unit} (panelet eller appen). Vent, hvis testen kræver det, og tryk så *Skan*.",
         "submit": "Skan"
       },
       "map_result": {
-        "title": "Det skiftede",
-        "description": "Kortlægger **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\n{result}\n\nSkriv, hvad hvert register er, så vidt du kan se; \"?\" er fint, og et tomt felt er ingen kommentar.",
+        "title": "Det ændrede sig",
+        "description": "Kortlægger **{unit}** (ventilation).\n\n{result}\n\nSkriv, hvad hvert register er, så vidt du kan se; \"?\" er fint, og et tomt felt er ingen kommentar.",
         "data": {
           "more": "De øvrige registre"
         },
         "data_description": {
           "more": "Skriv efter hvert \"=\", hvad registeret er; en linje for sig hører til registeret over den. Et register, hvis linje du lader stå tom eller sletter, gemmer intet."
-        }
+        },
+        "submit": "Gem kommentarer"
       },
       "map_tested": {
-        "title": "Videre",
+        "title": "Hvad nu?",
         "menu_options": {
           "map_test": "Næste test",
           "map_values": "Vis alle værdier",
           "map_send": "Afslut og gem"
         },
-        "description": "Kortlægger **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nSkanningen er gemt. Lav gerne et par tests: hver test viser, hvad én ændring på anlægget gør. Afslut, når du er færdig – kortlægningen kan sendes til os via diagnostikken."
+        "description": "Kortlægger **{unit}** (ventilation).\n\nTesten er gemt. Lav en test mere, se alle værdier, eller afslut."
       },
       "map_values": {
         "title": "Alle værdier, side {page} af {pages}",
-        "description": "Kortlægger **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nSom skanningerne fandt dem; der læses intet for at vise dem.\n\n{values}",
+        "description": "Kortlægger **{unit}** (ventilation).\n\nSom skanningerne fandt dem; der læses intet for at vise dem.\n\n{values}",
         "menu_options": {
           "map_values_previous": "Forrige side",
           "map_values_next": "Næste side",
@@ -3531,7 +3532,7 @@
       },
       "map_send": {
         "title": "Afslut og gem",
-        "description": "Kortlægger **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nTil sidst skanner vi alle adresser igen, så intet register, en test har givet, overses. Sidst tog det {duration}.",
+        "description": "Kortlægger **{unit}** (ventilation).\n\nTil sidst skanner vi alle adresser én gang til, så vi også fanger registre, der først dukkede op under testene. Sidst tog det {duration}.",
         "submit": "Skan og gem"
       }
     },
@@ -3545,7 +3546,7 @@
     },
     "abort": {
       "not_loaded": "Anlægget er ikke sat op lige nu, så det kan ikke kortlægges. Prøv igen, når det er.",
-      "mapping_saved": "{summary} Hent diagnostikken, hvis du vil sende kortlægningen til os, og vedhæft den en [kortlægningsrapport]({report_url}).",
+      "mapping_saved": "{summary} Vil du sende kortlægningen til os, så hent diagnostikken og vedhæft filen til en [kortlægningsrapport]({report_url}).",
       "mapping_gone_test": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: den sidste test blev ikke gemt.",
       "mapping_gone_comments": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: kommentarerne til den sidste test blev ikke gemt.",
       "mapping_gone_final": "Der er gemt tre nyere kortlægninger af dette anlæg imens, så denne gemmes ikke længere: den sidste skanning blev ikke gemt."
@@ -3564,7 +3565,7 @@
         "unknown": "ukendt",
         "nothing_changed": "Intet skiftede under testen. Funktionen kan være slået fra af en anden indstilling - fx er eftervarmen slået fra. Slå den til, og test igen.",
         "changed": "{count} registre skiftede under testen.",
-        "found_space": "{space}: {answered} svarede, {nonzero} ikke 0, {absent} findes ikke",
+        "found_space": "{space}: {answered} svarede, {nonzero} forskellige fra 0, {absent} findes ikke",
         "changed_one": "1 register skiftede under testen.",
         "second_one": "1 sekund",
         "second": "{count} sekunder",
@@ -3582,7 +3583,11 @@
         "short_switch": "Til/fra",
         "short_temperature": "En temperaturføler",
         "short_alarm": "En alarm",
-        "short_other": "Andet"
+        "short_other": "Andet",
+        "space_datapoint": "datapunkt",
+        "space_setpoint": "setpunkt",
+        "spaces_datapoint": "datapunkter",
+        "spaces_setpoint": "setpunkter"
       }
     },
     "mapping_suggestion": {
