@@ -17,6 +17,22 @@ central heating and heat pump, its alarms and operating states - named, in Engli
 its settings. The thermostat shows the unit's fan level and target temperature, and turns it on
 and off where the unit's on/off setting is known.
 
+### Help us support more of your unit
+
+Most of these units have no official register list for the Nilan gateway, so what the
+integration shows comes from manuals and from owners who checked their own unit. You can help:
+
+- **A value or setting is missing, or looks wrong?** Run [Map the unit](#map-the-unit) on your
+  unit: change one thing at a time on its panel or app, and the guide shows which registers
+  changed. Send us the result through a
+  [mapping report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml),
+  and we can add the value, or confirm one we have only from a manual. It only reads; nothing is
+  written to your unit.
+- **Your unit is not in the list?** Open an
+  [issue](https://github.com/HairingX/ha_nilan_connect/issues/new) with its model name. The
+  integration cannot be set up on a unit it does not recognise yet; mapping such units is the
+  next step, and owners who will map theirs help us support them.
+
 ## Level of values
 
 How certain a value must be to get an entity is your choice: Settings > Devices & services >
