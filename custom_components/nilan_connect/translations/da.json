@@ -45,6 +45,16 @@
           "email": "E-mailen på den konto, gatewayen er parret med i Nilans app."
         }
       },
+      "unrecognised": {
+        "title": "Ikke genkendt endnu",
+        "description": "Gatewayen svarede, men vi kender ikke anlægget bag den endnu. Gatewayen kalder det **{identity}**.\n\nDu kan stadig tilføje det og hjælpe os med at understøtte det. Det får ingen entiteter endnu, kun guiden **Kortlæg anlægget** under *Konfigurer*, hvor du skriver, hvad panelet viser, og tester funktionerne. Når en ny version har fået din model med, dukker entiteterne op af sig selv.",
+        "data": {
+          "unit_model": "Hvad hedder dit anlæg?"
+        },
+        "data_description": {
+          "unit_model": "Som på typeskiltet eller i manualen, fx Genvex Optima 295."
+        }
+      },
       "reconfigure": {
         "title": "Skift forbindelse",
         "description": "Skift hvor gatewayen til {name} nås, eller dens e-mail. Lad værten være tom for at finde gatewayen på netværket ud fra dens id.",
@@ -70,12 +80,12 @@
     "error": {
       "cannot_connect": "Gatewayen svarede ikke.",
       "invalid_auth": "Gatewayen afviste denne e-mail, også med små bogstaver.",
-      "unsupported_device": "Dit anlægs styring understøttes ikke endnu. Opret venligst et issue, og skriv dens identifikation: {identity}",
       "invalid_host": "Indtast en vært.",
       "invalid_name": "Indtast et navn.",
       "name_in_use": "Et andet anlæg har allerede dette navn.",
       "wrong_gateway": "En anden gateway svarer på denne adresse.",
-      "unknown": "Uventet fejl; se loggen."
+      "unknown": "Uventet fejl; se loggen.",
+      "invalid_unit_model": "Skriv navnet på dit anlægs model."
     },
     "abort": {
       "already_configured": "Denne gateway er allerede sat op.",
@@ -3435,9 +3445,6 @@
     "email_refused": {
       "message": "Gatewayen til {name} afviste sin e-mail."
     },
-    "unsupported_device": {
-      "message": "Dit anlægs styring understøttes ikke endnu. Opret venligst et issue, og skriv dens identifikation: {identity}"
-    },
     "invalid_value": {
       "message": "{value} er ikke en værdi, denne indstilling kan få."
     },
@@ -3467,7 +3474,7 @@
       },
       "map_start": {
         "title": "Kortlæg anlægget",
-        "description": "Genkendt: **{unit}** (ventilation). Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nKortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så skriver du, hvad anlæggets eget panel eller producentens app viser, én værdi ad gangen, og anlægget læses, hver gang du gemmer en. Eller du laver tests: du ændrer én ting på panelet eller i appen, og guiden viser, hvilke registre der ændrede sig. En test læser anlægget lige før og lige efter ændringen, på få sekunder hver gang. Der skrives intet til anlægget.\n\nNår du afslutter, gemmes kortlægningen sammen med anlægget. Vil du sende den til os, så hent diagnostikken og vedhæft filen til en [kortlægningsrapport]({report_url}).",
+        "description": "{recognised} Lav ændringer på dette anlæg - dets panel eller app - ikke på andre enheder i huset.\n\nKortlægningen finder ud af, hvad anlæggets registre betyder, med din hjælp. Først skannes hver adresse i anlægget én gang, fra 0 til 299; det tager fra sekunder til et par minutter på en langsom gateway. Så skriver du, hvad anlæggets eget panel eller producentens app viser, én værdi ad gangen, og anlægget læses, hver gang du gemmer en. Eller du laver tests: du ændrer én ting på panelet eller i appen, og guiden viser, hvilke registre der ændrede sig. En test læser anlægget lige før og lige efter ændringen, på få sekunder hver gang. Der skrives intet til anlægget.\n\nNår du afslutter, gemmes kortlægningen sammen med anlægget. Vil du sende den til os, så hent diagnostikken og vedhæft filen til en [kortlægningsrapport]({report_url}).",
         "data": {
           "fitted": "Er der monteret ekstraudstyr, vi bør kende til?"
         },
@@ -3608,7 +3615,9 @@
         "reading_saved": "Gemt: {reading} ({count} indtil nu).",
         "reading_one": "1 værdi fra panelet",
         "reading": "{count} værdier fra panelet",
-        "both": "{tests} og {readings}"
+        "both": "{tests} og {readings}",
+        "recognised": "Genkendt: **{unit}** (ventilation).",
+        "unrecognised": "Ikke genkendt endnu: **{unit}**, som gatewayen kalder {identity}. Det viser ingen værdier, før vi har tilføjet det, og denne kortlægning er måden, du hjælper os med det."
       }
     },
     "mapping_suggestion": {
@@ -3641,6 +3650,10 @@
     "testing_points": {
       "title": "{name} tester værdier, der ikke er bekræftet på en {model}",
       "description": "{name} bruger niveauet Test: nogle af dens værdier er udledt af rækkefølgen i Nilans manual eller afprøves i stedet for andre, og de er ikke bekræftet på en {model}. [Fortæl os]({report_url}), om de passer med dit anlægs panel, og vedhæft diagnostikken, som viser dem.\n\nVælg et andet niveau i indstillingerne for Nilan Connect for at stoppe testen; så forsvinder beskeden."
+    },
+    "unrecognised_unit": {
+      "title": "{name} er ikke genkendt endnu",
+      "description": "Vi kender ikke {name} ({model}) endnu: gatewayen kalder det {identity}, så det viser ingen værdier.\n\nDu kan hjælpe os med at understøtte det: Indstillinger > Enheder og tjenester > Nilan Connect > Konfigurer > **Kortlæg anlægget**. Hent derefter diagnostikken, og vedhæft den til en [kortlægningsrapport]({report_url}). Når en ny version har fået din model med, dukker entiteterne op af sig selv, og denne besked forsvinder."
     }
   }
 }

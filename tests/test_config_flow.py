@@ -14,7 +14,7 @@ from nilan_connect import DiscoveredDevice
 from nilan_connect.testing import SimulatedMicroNabtoDevice
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.nilan_connect.const import CONF_EMAIL, CONF_GATEWAY_ID, DOMAIN
+from custom_components.nilan_connect.const import CONF_EMAIL, CONF_GATEWAY_ID, CONF_UNIT_MODEL, DOMAIN
 
 from custom_components.nilan_connect import config_flow
 
@@ -216,15 +216,31 @@ async def test_a_gateway_that_does_not_answer_is_reported(
     assert result.get("errors") == {"base": "cannot_connect"}
 
 
-async def test_a_controller_that_is_not_supported_is_reported_with_its_numbers(hass: HomeAssistant) -> None:
+async def test_a_unit_no_model_matches_is_set_up_to_be_mapped_once_its_owner_names_its_model(
+    hass: HomeAssistant
+) -> None:
     other = simulated_gateway(identity={
         "device_number": 2, "device_model": 9999, "slave_device_number": 3, "slave_device_model": 4
     })
     async with other:
         form = await start(hass, "manual")
-        result = await configure(hass, form, by_address(other))
-    assert result.get("errors") == {"base": "unsupported_device"}
-    assert result.get("description_placeholders") == {"identity": "9999/2/3/4"}
+        named = await configure(hass, form, by_address(other))
+        assert (named.get("step_id"), named.get("errors")) == ("unrecognised", {})
+        assert named.get("description_placeholders") == {"identity": "9999/2/3/4"}
+        again = await configure(hass, named, {CONF_UNIT_MODEL: "  "})
+        assert again.get("errors") == {CONF_UNIT_MODEL: "invalid_unit_model"}
+        entry = created(await configure(hass, again, {CONF_UNIT_MODEL: " Genvex Optima 295 "}))
+    assert entry.title == NAME
+    assert entry.data[CONF_UNIT_MODEL] == "Genvex Optima 295"
+    assert (entry.data[CONF_EMAIL], entry.data[CONF_HOST]) == (EMAIL, HOST)
+
+
+async def test_a_recognised_unit_is_not_asked_for_its_model(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    form = await start(hass, "manual")
+    entry = created(await configure(hass, form, by_address(gateway)))
+    assert CONF_UNIT_MODEL not in entry.data
 
 
 async def test_an_unexpected_error_is_reported(

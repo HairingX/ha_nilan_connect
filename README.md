@@ -29,10 +29,12 @@ integration shows comes from manuals and from owners who checked their own unit.
   [mapping report](https://github.com/HairingX/ha_nilan_connect/issues/new?template=mapping.yml),
   and we can add the value, or confirm one we have only from a manual. It only reads; nothing is
   written to your unit.
-- **Your unit is not in the list?** Open an
-  [issue](https://github.com/HairingX/ha_nilan_connect/issues/new) with its model name. The
-  integration cannot be set up on a unit it does not recognise yet; mapping such units is the
-  next step, and owners who will map theirs help us support them.
+- **Your unit is not in the list?** Set it up all the same. The setup says it does not
+  recognise the unit yet, shows the numbers its gateway names it by, and asks what your unit is
+  called, such as "Genvex Optima 295". It is added with no entities yet, only
+  [Map the unit](#map-the-unit), and Settings > Repairs reminds you to map it and send us the
+  result. Once a release adds your model, its entities appear by themselves after the update,
+  and the message goes away.
 
 ## Level of values
 

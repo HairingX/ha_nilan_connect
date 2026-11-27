@@ -11,7 +11,6 @@ from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT, Platform
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import (
     ConfigEntryAuthFailed,
-    ConfigEntryError,
     ConfigEntryNotReady,
 )
 from homeassistant.helpers import device_registry as dr
@@ -29,7 +28,6 @@ from nilan_connect import (
     Key,
     Level,
     PointKey,
-    UnsupportedDeviceError,
     discover,
     model_points,
 )
@@ -38,18 +36,21 @@ from .const import (
     CONF_EMAIL,
     CONF_GATEWAY_ID,
     CONF_LEVEL,
+    CONF_UNIT_MODEL,
     DEFAULT_LEVEL,
     DEFAULT_PORT,
     DOMAIN,
     SHOW_INFERRED,
+    MAPPING_REPORT_URL,
     TEST_REPORT_URL,
     TESTING_ISSUE,
+    UNRECOGNISED_ISSUE,
 )
 from .binary_sensor import BINARY_SENSORS
 from .button import BUTTONS
 from .climate import CONTROLS, THERMOSTAT
-from .data import NilanConfigEntry, NilanData, identity_text, new_client
-from .entity import NilanEntityDescription
+from .data import NilanConfigEntry, NilanData, identity_text, new_client, recognised
+from .entity import NilanEntityDescription, device_info
 from .mapping import remove_mappings
 from .number import NUMBERS
 from .select import SELECTS
@@ -173,21 +174,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: NilanConfigEntry) -> boo
             translation_key="cannot_connect",
             translation_placeholders={"name": name},
         ) from err
-    except UnsupportedDeviceError as err:
-        _LOGGER.warning("%s is not a supported Nilan controller: %s", name, err)
-        raise ConfigEntryError(
-            translation_domain=DOMAIN,
-            translation_key="unsupported_device",
-            translation_placeholders={"identity": identity_text(err.identity)},
-        ) from err
 
     try:
         await _keep_renamed_entities(hass, entry, name, client.model.name)
         await _identify_gateway(hass, entry)
-        entry.runtime_data = NilanData(client=client, name=name)
+        entry.runtime_data = NilanData(client=client, name=name, unit_model=entry.data.get(CONF_UNIT_MODEL, ""))
+        # A unit no model matches has no entity to bring its device, which the guide maps.
+        dr.async_get(hass).async_get_or_create(config_entry_id=entry.entry_id, **device_info(entry.runtime_data))
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
         _remove_lost_entities(hass, entry)
         _ask_testers_to_report(hass, entry, client)
+        _ask_to_map_an_unrecognised_unit(hass, entry, client)
     except BaseException:
         await client.disconnect()
         raise
@@ -251,6 +248,32 @@ def _ask_testers_to_report(hass: HomeAssistant, entry: NilanConfigEntry, client:
             "name": entry.title,
             "model": client.model.name,
             "report_url": TEST_REPORT_URL,
+        },
+    )
+
+
+@callback
+def _ask_to_map_an_unrecognised_unit(hass: HomeAssistant, entry: NilanConfigEntry, client: Client) -> None:
+    """For a unit no model matches, raise an issue asking its owner to map it; for any other,
+    remove it, so that it goes once a release adds the unit's model."""
+    issue_id = f"{UNRECOGNISED_ISSUE}_{entry.entry_id}"
+    if recognised(client):
+        ir.async_delete_issue(hass, DOMAIN, issue_id)
+        return
+    ir.async_create_issue(
+        hass,
+        DOMAIN,
+        issue_id,
+        config_entry_id=entry.entry_id,
+        is_fixable=False,
+        learn_more_url=MAPPING_REPORT_URL,
+        severity=ir.IssueSeverity.WARNING,
+        translation_key=UNRECOGNISED_ISSUE,
+        translation_placeholders={
+            "name": entry.title,
+            "model": entry.runtime_data.unit_model,
+            "identity": identity_text(client.identity),
+            "report_url": MAPPING_REPORT_URL,
         },
     )
 

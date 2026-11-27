@@ -15,6 +15,9 @@ CONF_GATEWAY_ID: Final = "gateway_id"
 CONF_LEVEL: Final = "level"
 """Which of the unit's points get an entity: a `Level`, stored by its text."""
 
+CONF_UNIT_MODEL: Final = "unit_model"
+"""The model a unit no model of the library matches is, as its owner names it."""
+
 DEFAULT_LEVEL: Final = Level.DOCUMENTED
 """The level of an entry whose user has not chosen one."""
 
@@ -30,6 +33,9 @@ TEST_CANDIDATE: Final = "test-candidate"
 
 TESTING_ISSUE: Final = "testing_points"
 """The Repairs issue asking a user at the Test level to report what the unit shows."""
+
+UNRECOGNISED_ISSUE: Final = "unrecognised_unit"
+"""The issue that asks the owner of a unit no model matches to map it."""
 
 TEST_REPORT_URL: Final = "https://github.com/HairingX/ha_nilan_connect/issues/new?template=test-report.yml"
 """Where a user reports whether the points tried match the unit's panel."""

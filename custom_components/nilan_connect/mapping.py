@@ -51,6 +51,7 @@ def mapping(
     *,
     started_at: datetime,
     fitted: str,
+    named: str,
     model: str,
     identity: dict[str, Any],
     device: dict[str, str | None],
@@ -59,10 +60,11 @@ def mapping(
     seconds: float,
 ) -> Plain:
     """A new mapping, with its first full scan and how many seconds it took, and no tests or
-    readings yet."""
+    readings yet; `named` is the model the owner named a unit no model matches."""
     return {
         "started_at": started_at.isoformat(),
         "fitted": fitted,
+        "named": named,
         "model": model,
         "identity": identity,
         "device": device,

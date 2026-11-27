@@ -115,17 +115,18 @@ def simulated_network(
         port: int = PORT,
         level: Level = Level.DOCUMENTED,
         read_only: bool = False,
+        unrecognised: bool = False,
         clock: Clock | None = None,
     ) -> Client:
         if (host, port) == gateway.address or (host is None and device_id == gateway.device_id):
             client = client_for(
                 gateway, email=email, timeout=0.2, retries=1, clock=clock or fake, level=level,
-                read_only=read_only,
+                read_only=read_only, unrecognised=unrecognised,
             )
         else:
             client = create_client(
                 email=email, host=host, device_id=device_id, port=port, level=level,
-                read_only=read_only, clock=clock or fake,
+                read_only=read_only, unrecognised=unrecognised, clock=clock or fake,
             )
         made.append(client)
         return client
