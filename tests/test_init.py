@@ -11,7 +11,9 @@ import pytest
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import issue_registry as ir
 from nilan_connect import Client, DiscoveredDevice, Key, Status
 from nilan_connect.testing import FakeClock, SimulatedMicroNabtoDevice
 from pytest_homeassistant.common import MockConfigEntry
@@ -21,12 +23,14 @@ from custom_components.nilan_connect.const import (
     CONF_EMAIL,
     CONF_GATEWAY_ID,
     CONF_LEVEL,
+    CONF_UNIT_MODEL,
     DEFAULT_PORT,
     DOMAIN,
+    MAPPING_REPORT_URL,
 )
 from custom_components.nilan_connect.data import NilanData
 
-from .conftest import EMAIL, GATEWAY_ID, HOST, NAME, entry_data, simulated_gateway
+from .conftest import CTS400 as CTS400_IDENTITY, EMAIL, GATEWAY_ID, HOST, NAME, entry_data, simulated_gateway
 
 LIBRARIES = ("custom_components.nilan_connect", "nilan_connect", "modbus_event_connect", "event_connect")
 """The loggers of the integration and of the libraries it runs."""
@@ -88,14 +92,47 @@ async def test_a_refused_email_asks_the_user_for_the_email(
     ] == ["reauth"]
 
 
-async def test_a_controller_that_is_not_supported_is_not_set_up(hass: HomeAssistant) -> None:
-    other = simulated_gateway(identity={
-        "device_number": 1, "device_model": 9999, "slave_device_number": 1, "slave_device_model": 1
-    })
-    async with other:
-        entry = MockConfigEntry(domain=DOMAIN, data=entry_data(other), version=2)
+UNKNOWN = {"device_number": 1, "device_model": 9999, "slave_device_number": 1, "slave_device_model": 1}
+
+
+async def test_a_unit_no_model_matches_has_its_device_and_no_entities_and_is_asked_to_be_mapped(
+    hass: HomeAssistant
+) -> None:
+    async with simulated_gateway(identity=UNKNOWN) as other:
+        entry = MockConfigEntry(domain=DOMAIN, title=NAME,
+                                data=entry_data(other, **{CONF_UNIT_MODEL: "Genvex Optima 295"}), version=2)
         await set_up(hass, entry)
-    assert entry.state is ConfigEntryState.SETUP_ERROR
+        assert entry.state is ConfigEntryState.LOADED
+        [device] = dr.async_entries_for_config_entry(dr.async_get(hass), entry.entry_id)
+        assert (device.name, device.manufacturer, device.model, device.model_id) == (
+            NAME, "Nilan", "Genvex Optima 295", "9999/1/1/1")
+        assert er.async_entries_for_config_entry(er.async_get(hass), entry.entry_id) == []
+        issue = ir.async_get(hass).async_get_issue(DOMAIN, f"unrecognised_unit_{entry.entry_id}")
+        assert issue is not None and issue.translation_key == "unrecognised_unit"
+        assert issue.translation_placeholders == {"name": NAME, "model": "Genvex Optima 295",
+                                                  "identity": "9999/1/1/1", "report_url": MAPPING_REPORT_URL}
+        await unload(hass, entry)
+        assert not other.received(0x2B)
+
+
+async def test_a_unit_whose_model_a_release_adds_gets_its_entities_and_the_request_to_map_it_goes(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    gateway.identity = dict(UNKNOWN)
+    entry = MockConfigEntry(domain=DOMAIN, title=NAME, data=entry_data(gateway, **{CONF_UNIT_MODEL: "CTS 400?"}),
+                            version=2)
+    await set_up(hass, entry)
+    issue_id = f"unrecognised_unit_{entry.entry_id}"
+    assert ir.async_get(hass).async_get_issue(DOMAIN, issue_id) is not None
+    await unload(hass, entry)
+    gateway.identity = dict(CTS400_IDENTITY)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    assert ir.async_get(hass).async_get_issue(DOMAIN, issue_id) is None
+    [device] = dr.async_entries_for_config_entry(dr.async_get(hass), entry.entry_id)
+    assert (device.model, device.model_id) == ("CTS 400", "1140/72280/72270/1")
+    assert er.async_entries_for_config_entry(er.async_get(hass), entry.entry_id)
+    await unload(hass, entry)
 
 
 async def test_unloading_stops_reading_and_lets_go_of_the_gateway(

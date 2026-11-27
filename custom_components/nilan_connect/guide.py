@@ -37,7 +37,7 @@ from .const import (
     STEPS_KEPT,
     VALUES_PER_PAGE,
 )
-from .data import NilanConfigEntry
+from .data import NilanConfigEntry, identity_text, recognised
 from .mapping import Mappings, mapping, reading, step
 
 _LOGGER = logging.getLogger(__name__)
@@ -335,10 +335,23 @@ class MappingGuide:
             self._errors = {"base": "unknown"}
         return on_failure
 
+    async def load_labels(self) -> None:
+        """Load the guide's words and the points' names in Home Assistant's language, once."""
+        if not self._labels:
+            await self._load_labels(self._entry.runtime_data.client)
+
+    def recognised_text(self, unit: str) -> str:
+        """What the unit was recognised as, `unit`; or that it is not recognised yet, with the
+        numbers its gateway names it by."""
+        client = self._entry.runtime_data.client
+        if recognised(client):
+            return self._label("recognised").replace("{unit}", unit)
+        return self._label("unrecognised").replace("{unit}", unit).replace("{identity}", identity_text(client.identity))
+
     async def first_read(self) -> str:
         """Scan every address of the unit once, and store the mapping with it."""
         client = self._entry.runtime_data.client
-        await self._load_labels(client)
+        await self.load_labels()
         device = self._device()
         began = self._hass.loop.time()
         found = await client.map_areas(limit=MAPPING_LIMIT)
@@ -348,6 +361,7 @@ class MappingGuide:
         await self._mappings.async_start(mapping(
             started_at=started,
             fitted=self.fitted,
+            named=self._entry.runtime_data.unit_model,
             model=client.model.name,
             identity=dict(client.identity),
             device=device,

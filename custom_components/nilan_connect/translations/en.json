@@ -45,6 +45,16 @@
           "email": "The email of the account the gateway is paired with in Nilan's app."
         }
       },
+      "unrecognised": {
+        "title": "Not recognised yet",
+        "description": "The gateway answered, but we don't recognise the unit behind it yet. Its gateway names it **{identity}**.\n\nYou can still add it and help us support it. It gets no entities yet, only the guide **Map the unit** under *Configure*, where you write down what its panel shows and test its functions. Once a release adds your model, its entities appear by themselves.",
+        "data": {
+          "unit_model": "What is your unit called?"
+        },
+        "data_description": {
+          "unit_model": "As on its type plate or in its manual, e.g. Genvex Optima 295."
+        }
+      },
       "reconfigure": {
         "title": "Change connection",
         "description": "Change where the gateway of {name} is reached, or its email. Leave the host empty to find the gateway on the network by its id.",
@@ -70,12 +80,12 @@
     "error": {
       "cannot_connect": "The gateway did not answer.",
       "invalid_auth": "The gateway refused this email, also in lower case.",
-      "unsupported_device": "Your unit's controller is not supported yet. Please open an issue and include its identification: {identity}",
       "invalid_host": "Enter a host.",
       "invalid_name": "Enter a name.",
       "name_in_use": "Another unit already has this name.",
       "wrong_gateway": "Another gateway answers at this address.",
-      "unknown": "Unexpected error; see the log."
+      "unknown": "Unexpected error; see the log.",
+      "invalid_unit_model": "Enter the name of your unit's model."
     },
     "abort": {
       "already_configured": "This gateway is already set up.",
@@ -3435,9 +3445,6 @@
     "email_refused": {
       "message": "The gateway of {name} refused its email."
     },
-    "unsupported_device": {
-      "message": "Your unit's controller is not supported yet. Please open an issue and include its identification: {identity}"
-    },
     "invalid_value": {
       "message": "{value} is not a value this setting can take."
     },
@@ -3467,7 +3474,7 @@
       },
       "map_start": {
         "title": "Map the unit",
-        "description": "Recognised: **{unit}** (ventilation). Make changes on this unit - its panel or its app - not on other devices in the house.\n\nMapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you write down what the unit's own panel or the manufacturer's app shows, one value at a time, and the unit is read each time you save one. Or you make tests: you change one thing on the panel or in the app, and the guide shows which registers changed. A test reads the unit just before and just after the change, in a few seconds each. Nothing is written to the unit.\n\nWhen you finish, the mapping is saved with the unit. To send it to us, download the diagnostics and attach the file to a [mapping report]({report_url}).",
+        "description": "{recognised} Make changes on this unit - its panel or its app - not on other devices in the house.\n\nMapping finds out what the unit's registers mean, with your help. First every address of the unit is scanned once, from 0 to 299; that takes from seconds to a few minutes on a slow gateway. Then you write down what the unit's own panel or the manufacturer's app shows, one value at a time, and the unit is read each time you save one. Or you make tests: you change one thing on the panel or in the app, and the guide shows which registers changed. A test reads the unit just before and just after the change, in a few seconds each. Nothing is written to the unit.\n\nWhen you finish, the mapping is saved with the unit. To send it to us, download the diagnostics and attach the file to a [mapping report]({report_url}).",
         "data": {
           "fitted": "Is any extra equipment fitted we should know about?"
         },
@@ -3608,7 +3615,9 @@
         "reading_saved": "Saved: {reading} ({count} so far).",
         "reading_one": "1 value from the panel",
         "reading": "{count} values from the panel",
-        "both": "{tests} and {readings}"
+        "both": "{tests} and {readings}",
+        "recognised": "Recognised: **{unit}** (ventilation).",
+        "unrecognised": "Not recognised yet: **{unit}**, which its gateway names {identity}. It shows no values until we add it, and this mapping is how you help us do that."
       }
     },
     "mapping_suggestion": {
@@ -3641,6 +3650,10 @@
     "testing_points": {
       "title": "{name} tests values not confirmed on a {model}",
       "description": "{name} uses the Test level: some of its values are inferred from the order of Nilan's manual or tried in place of others, and have not been confirmed on a {model}. Please [report]({report_url}) whether they match your unit's panel, and attach the diagnostics, which list them.\n\nTo stop testing, choose another level in the options of Nilan Connect; this message then goes away."
+    },
+    "unrecognised_unit": {
+      "title": "{name} is not recognised yet",
+      "description": "We do not recognise {name} ({model}) yet: its gateway names it {identity}, so it shows no values.\n\nYou can help us support it: Settings > Devices & services > Nilan Connect > Configure > **Map the unit**. Then download the diagnostics and attach them to a [mapping report]({report_url}). Once a release adds your model, its entities appear by themselves and this message goes away."
     }
   }
 }

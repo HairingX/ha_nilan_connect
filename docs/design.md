@@ -39,7 +39,16 @@ in the config flow and again at every setup until it answers.
 |---|---|---|
 | Nothing answers (`CannotConnectError`) | `ConfigEntryNotReady` | retried later |
 | The gateway refuses the email (`AuthenticationError`) | `ConfigEntryAuthFailed` | the user is asked for the email |
-| The controller is not supported (`UnsupportedDeviceError`) | `ConfigEntryError` | not retried |
+
+A controller no model matches is never refused. The client is made with `unrecognised=True`, so
+it connects as the library's `UNRECOGNISED`, a model with no points: the config flow then shows
+the numbers its gateway names it by and asks the owner what the unit is called (`unit_model`, in
+the entry's data), and the entry is set up with its device - named by that model, with the
+numbers as its model id, as every device has - and no entities, so that it can be mapped. A
+non-fixable issue under Repairs asks the owner to map it and send us the result. Every setup
+chooses the model afresh, so once a release adds the unit's model, its entities appear at the
+next start and the issue is removed. The guide names such a unit by the model its owner gave,
+says it is not recognised yet, and stores that model with each mapping (`named`).
 
 The gateway compares the email exactly. The config flow tries it as entered, then in lower case,
 and keeps the one the gateway takes.
@@ -108,7 +117,7 @@ flow is Home Assistant's place for how an integration behaves, and shows menus, 
 progress between steps; a button is one action without steps, Repairs is for faults the user
 must fix, and the debug log only logs.
 
-- **Steps.** `map_start` shows the model the unit was recognised as and asks, optionally, what
+- **Steps.** `map_start` shows the model the unit was recognised as, or that it is not recognised yet, and asks, optionally, what
   extra equipment is fitted; then `map_read` shows the progress of the first scan,
   `Client.map_areas(limit=MAPPING_LIMIT)`, and `map_found` says per space how many registers
   answered, how many of those were not 0, and how many are absent - a gateway may answer 0 where

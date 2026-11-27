@@ -23,7 +23,6 @@ from nilan_connect import (
     CannotConnectError,
     DiscoveredDevice,
     Level,
-    UnsupportedDeviceError,
     discover,
 )
 
@@ -31,6 +30,7 @@ from .const import (
     CONF_EMAIL,
     CONF_GATEWAY_ID,
     CONF_LEVEL,
+    CONF_UNIT_MODEL,
     DEFAULT_LEVEL,
     DEFAULT_NAME,
     DEFAULT_PORT,
@@ -38,7 +38,7 @@ from .const import (
     MAPPING_REPORT_URL,
     TEST_REPORT_URL,
 )
-from .data import NilanConfigEntry, identity_text, new_client
+from .data import NilanConfigEntry, identity_text, new_client, recognised
 from .guide import (
     CONF_CHANGE,
     CONF_FITTED,
@@ -74,8 +74,9 @@ class EmailRefusedError(Exception):
 
 async def connect_once(
     email: str, host: str | None, port: int, gateway_id: str | None
-) -> str:
-    """Connect to the gateway once, read-only, and return the email it accepted.
+) -> tuple[str, str | None]:
+    """Connect to the gateway once, read-only: the email it accepted, and, for a controller no
+    model matches, the numbers its gateway names it by; None for every other.
 
     The email is tried as entered, then in lower case: the gateway compares it exactly, and an
     app account's email is often typed with a capital letter.
@@ -83,7 +84,6 @@ async def connect_once(
     Raises:
         EmailRefusedError: the gateway refused both.
         CannotConnectError: nothing answered.
-        UnsupportedDeviceError: the controller behind the gateway is not supported.
     """
     for candidate in dict.fromkeys((email, email.lower())):
         client = new_client(candidate, host, port, gateway_id, read_only=True)
@@ -93,7 +93,7 @@ async def connect_once(
             continue
         finally:
             await client.disconnect()
-        return candidate
+        return candidate, None if recognised(client) else identity_text(client.identity)
     raise EmailRefusedError
 
 
@@ -111,8 +111,11 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
     MINOR_VERSION = 2
 
     _gateways: dict[str, DiscoveredDevice]
-    _identity: str = ""
-    """What an unsupported controller reported, shown in the error so it can be copied."""
+    _identity: str | None = None
+    """The numbers the gateway names a controller no model matches by; None for every other."""
+    _found: tuple[str, dict[str, Any]] = ("", {})
+    """The title and data of an entry of a controller no model matches, until its owner names its
+    model."""
 
     @staticmethod
     @callback
@@ -151,16 +154,13 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
                 name, user_input[CONF_EMAIL], gateway.host, gateway.port, gateway.device_id, errors
             )
             if email is not None:
-                return self.async_create_entry(
-                    title=name,
-                    data={
-                        CONF_NAME: name,
-                        CONF_EMAIL: email,
-                        CONF_HOST: gateway.host,
-                        CONF_PORT: gateway.port,
-                        CONF_GATEWAY_ID: gateway.device_id,
-                    },
-                )
+                return await self._create(name, {
+                    CONF_NAME: name,
+                    CONF_EMAIL: email,
+                    CONF_HOST: gateway.host,
+                    CONF_PORT: gateway.port,
+                    CONF_GATEWAY_ID: gateway.device_id,
+                })
         schema = probatio.Schema(
             {
                 probatio.Required(CONF_GATEWAY_ID): probatio.In(sorted(self._gateways)),
@@ -171,7 +171,6 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="discover",
             data_schema=self.add_suggested_values_to_schema(schema, user_input),
-            description_placeholders={"identity": self._identity},
             errors=errors,
         )
 
@@ -203,16 +202,13 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
                         self._abort_if_unique_id_configured(
                             updates={CONF_HOST: host, CONF_PORT: port}
                         )
-                    return self.async_create_entry(
-                        title=name,
-                        data={
-                            CONF_NAME: name,
-                            CONF_EMAIL: email,
-                            CONF_HOST: host,
-                            CONF_PORT: port,
-                            CONF_GATEWAY_ID: gateway_id,
-                        },
-                    )
+                    return await self._create(name, {
+                        CONF_NAME: name,
+                        CONF_EMAIL: email,
+                        CONF_HOST: host,
+                        CONF_PORT: port,
+                        CONF_GATEWAY_ID: gateway_id,
+                    })
         schema = probatio.Schema(
             {
                 probatio.Required(CONF_NAME, default=DEFAULT_NAME): str,
@@ -224,9 +220,34 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="manual",
             data_schema=self.add_suggested_values_to_schema(schema, user_input),
-            description_placeholders={"identity": self._identity},
             errors=errors,
         )
+
+    async def async_step_unrecognised(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """A controller no model matches: its owner names its model, and it is set up to be
+        mapped."""
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            named = str(user_input[CONF_UNIT_MODEL]).strip()
+            if named:
+                title, data = self._found
+                return self.async_create_entry(title=title, data={**data, CONF_UNIT_MODEL: named})
+            errors[CONF_UNIT_MODEL] = "invalid_unit_model"
+        return self.async_show_form(
+            step_id="unrecognised",
+            data_schema=probatio.Schema({probatio.Required(CONF_UNIT_MODEL): str}),
+            description_placeholders={"identity": str(self._identity)},
+            errors=errors,
+        )
+
+    async def _create(self, title: str, data: dict[str, Any]) -> ConfigFlowResult:
+        """The entry of a unit just connected to; one no model matches is named first."""
+        if self._identity is None:
+            return self.async_create_entry(title=title, data=data)
+        self._found = (title, data)
+        return await self.async_step_unrecognised()
 
     async def async_step_reconfigure(
         self, user_input: dict[str, Any] | None = None
@@ -275,7 +296,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
             data_schema=self.add_suggested_values_to_schema(
                 schema, user_input if user_input is not None else entry.data
             ),
-            description_placeholders={"name": entry.title, "identity": self._identity},
+            description_placeholders={"name": entry.title},
             errors=errors,
         )
 
@@ -306,7 +327,7 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="reauth_confirm",
             data_schema=probatio.Schema({probatio.Required(CONF_EMAIL): str}),
-            description_placeholders={"name": entry.title, "identity": self._identity},
+            description_placeholders={"name": entry.title},
             errors=errors,
         )
 
@@ -340,14 +361,12 @@ class NilanConnectConfigFlow(ConfigFlow, domain=DOMAIN):
     ) -> str | None:
         """The email the gateway accepted, or None with the reason put in `errors`."""
         try:
-            return await connect_once(str(email).strip(), host, port, gateway_id)
+            accepted, self._identity = await connect_once(str(email).strip(), host, port, gateway_id)
+            return accepted
         except EmailRefusedError:
             errors[CONF_EMAIL] = "invalid_auth"
         except CannotConnectError:
             errors["base"] = "cannot_connect"
-        except UnsupportedDeviceError as err:
-            errors["base"] = "unsupported_device"
-            self._identity = identity_text(err.identity)
         except Exception:
             _LOGGER.exception("Unexpected error while connecting to the gateway")
             errors["base"] = "unknown"
@@ -420,10 +439,13 @@ class NilanOptionsFlow(OptionsFlowWithReload):
             guide.fitted = str(user_input.get(CONF_FITTED, "")).strip()
             return await self._read(guide.first_read, on_failure="map_start")
         schema = probatio.Schema({probatio.Optional(CONF_FITTED): str})
+        await guide.load_labels()
+        unit = self._unit()
         return self.async_show_form(
             step_id="map_start",
             data_schema=self.add_suggested_values_to_schema(schema, {CONF_FITTED: guide.fitted}),
-            description_placeholders=self._unit(report_url=MAPPING_REPORT_URL),
+            description_placeholders={**unit, "recognised": guide.recognised_text(unit["unit"]),
+                                      "report_url": MAPPING_REPORT_URL},
             errors=guide.take_errors(),
         )
 
@@ -675,9 +697,12 @@ class NilanOptionsFlow(OptionsFlowWithReload):
         return await self.async_step_map_read()
 
     def _unit(self, **placeholders: str) -> dict[str, str]:
-        """`placeholders`, with the unit the guide maps by its manufacturer and model."""
-        model = self.config_entry.runtime_data.client.model
-        return {"unit": f"{model.manufacturer} {model.name}", **placeholders}
+        """`placeholders`, with the unit the guide maps by its manufacturer and model; one no model
+        matches by the model its owner named."""
+        data = self.config_entry.runtime_data
+        model = data.client.model
+        unit = f"{model.manufacturer} {model.name}" if recognised(data.client) else data.unit_model or model.name
+        return {"unit": unit, **placeholders}
 
     def _loaded(self) -> bool:
         """Whether the unit's entry is set up, which every read needs."""

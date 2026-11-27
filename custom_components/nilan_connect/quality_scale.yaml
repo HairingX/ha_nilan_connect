@@ -93,7 +93,8 @@ rules:
     status: done
     comment: >-
       At the Test level a unit with values under test raises a non-fixable issue asking the user
-      to report whether they match its panel.
+      to report whether they match its panel; a unit no model matches raises one asking its owner
+      to map it, which goes once a release adds its model.
   stale-devices:
     status: exempt
     comment: An entry is one unit, which is one device; it goes with the entry.

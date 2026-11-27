@@ -42,7 +42,7 @@ from custom_components.nilan_connect.guide import (
 )
 from custom_components.nilan_connect.mapping import Mappings, load_mappings, reading, step
 
-from .conftest import EMAIL, GATEWAY_ID, HOST
+from .conftest import EMAIL, GATEWAY_ID, HOST, entry_data
 
 REPOSITORY = Path(__file__).parents[1]
 TRANSLATIONS = REPOSITORY / "custom_components" / "nilan_connect" / "translations"
@@ -126,14 +126,14 @@ def test_the_guide_is_translated_with_its_placeholders_labels_and_suggestions(la
     options = _translations(language)["options"]
     steps = options["step"]
     assert set(steps["init"]["menu_options"]) == {"settings", "map_unit"}
-    assert "{report_url}" in steps["map_start"]["description"] and "{unit}" in steps["map_start"]["description"]
+    assert "{report_url}" in steps["map_start"]["description"] and "{recognised}" in steps["map_start"]["description"]
     assert set(steps["map_start"]["data"]) == set(steps["map_start"]["data_description"]) == {"fitted"}
     assert "{found}" in steps["map_found"]["description"]
     assert set(steps["map_found"]["menu_options"]) == {"map_reading", "map_send", "map_test"}
     assert steps["map_found"]["menu_options"]["map_send"] == steps["map_tested"]["menu_options"]["map_send"]
     assert steps["map_tested"]["description"].split("\n\n")[-1] not in steps["map_found"]["description"]
     assert steps["map_tested"]["title"] != steps["map_found"]["title"]
-    assert all("{unit}" in steps[name]["description"] for name in steps if name.startswith("map_"))
+    assert all("{unit}" in steps[name]["description"] for name in steps if name.startswith("map_") and name != "map_start")
     unit_line, on_this_unit, step_one, step_two = {
         "en": ("Mapping **{unit}** (ventilation).", "Make changes on this unit", "**Step 1 of 2:", "**Step 2 of 2:"),
         "da": ("Kortlægger **{unit}** (ventilation).", "Lav ændringer på dette anlæg", "**Trin 1 af 2:",
@@ -174,7 +174,8 @@ def test_the_guide_is_translated_with_its_placeholders_labels_and_suggestions(la
                            "second_one",
                            "second", "minute_one", "minute", "test_one", "test", "changed_last_one",
                            "changed_last", "done", "done_scanned", *(f"short_{key}" for key in (*SUGGESTIONS, "other")),
-                           "reading_none", "reading_saved", "reading_one", "reading", "both",
+                           "reading_none", "reading_saved", "reading_one", "reading", "both", "recognised",
+                           "unrecognised",
                            *(f"{kind}_{space}" for kind in ("space", "spaces") for space in ("datapoint", "setpoint"))}
     assert "{count}" in labels["changed"]
     assert all(f"{{{key}}}" in labels["found_space"] for key in ("space", "answered", "nonzero", "absent"))
@@ -202,7 +203,9 @@ async def test_a_unit_is_scanned_tested_and_commented_register_by_register_and_e
     options = dict(config_entry.options)
     start = await _menu(hass, config_entry, "map_unit")
     assert (start.get("type"), start.get("step_id")) == (FlowResultType.FORM, "map_start")
-    assert start.get("description_placeholders") == {"unit": "Nilan CTS 400", "report_url": MAPPING_REPORT_URL}
+    assert start.get("description_placeholders") == {
+        "unit": "Nilan CTS 400", "recognised": "Recognised: **Nilan CTS 400** (ventilation).",
+        "report_url": MAPPING_REPORT_URL}
     assert [field["name"] for field in _schema(start)] == ["fitted"]
     found = await _read(hass, await _options(hass).async_configure(start["flow_id"], {"fitted": " a heat pump "}))
     assert (found.get("step_id"), found.get("menu_options")) == ("map_found", ["map_reading", "map_test", "map_send"])
@@ -764,6 +767,35 @@ async def test_the_mappings_are_removed_with_the_entry(
     await hass.async_block_till_done()
     assert await load_mappings(hass, config_entry.entry_id) == []
     assert config_entry.entry_id not in hass.data.get(f"{DOMAIN}_mapping_locks", {})
+
+
+async def test_a_unit_no_model_matches_is_mapped_by_the_model_its_owner_named(
+    hass: HomeAssistant, gateway: SimulatedMicroNabtoDevice
+) -> None:
+    gateway.identity = {"device_number": 1, "device_model": 9999, "slave_device_number": 1, "slave_device_model": 1}
+    entry = MockConfigEntry(domain=DOMAIN, title="Nilan", unique_id=GATEWAY_ID, version=2,
+                            data={**entry_data(gateway), "unit_model": "Genvex Optima 295"})
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    start = await _menu(hass, entry, "map_unit")
+    assert start.get("description_placeholders") == {
+        "unit": "Genvex Optima 295", "report_url": MAPPING_REPORT_URL,
+        "recognised": LABELS["unrecognised"].replace("{unit}", "Genvex Optima 295").replace("{identity}", "9999/1/1/1")}
+    found = await _read(hass, await _options(hass).async_configure(start["flow_id"], {}))
+    assert (found.get("description_placeholders") or {})["unit"] == "Genvex Optima 295"
+    written = await _read(hass, await _options(hass).async_configure(
+        (await _go(hass, found["flow_id"], "map_reading"))["flow_id"], {"what": "outdoor", "value": "8"}))
+    assert (written.get("description_placeholders") or {})["saved"] == "Saved: **Outdoor air** 8 (1 so far)."
+    [stored] = await load_mappings(hass, entry.entry_id)
+    assert (stored["named"], stored["model"], stored["identity"]["device_model"]) == (
+        "Genvex Optima 295", "Unrecognised unit", 9999)
+    assert stored["areas"] == [{"space": "datapoint", "start": 0, "count": 300},
+                               {"space": "setpoint", "start": 0, "count": 300}]
+    assert stored["baseline"]["values"]["datapoint"] and len(stored["readings"]) == 1
+    assert not gateway.received(SETPOINT_WRITE)
+    await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()
 
 
 # ========================================================================= from the panel

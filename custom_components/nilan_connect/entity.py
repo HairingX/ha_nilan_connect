@@ -22,7 +22,7 @@ from nilan_connect import (
 )
 
 from .const import ATTR_CERTAINTY, DOMAIN, TEST_CANDIDATE
-from .data import NilanData, value
+from .data import NilanData, identity_text, recognised, value
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -68,14 +68,12 @@ def describe[D: NilanEntityDescription](data: NilanData, descriptions: tuple[D, 
 
 
 def device_info(data: NilanData) -> DeviceInfo:
-    """The unit, identified by its name so that a replaced unit keeps its device."""
+    """The unit, identified by its name so that a replaced unit keeps its device, with the numbers
+    its gateway names it by as its model id; one no model matches by the model its owner named."""
     model = data.client.model
-    return DeviceInfo(
-        identifiers={(DOMAIN, data.name)},
-        name=data.name,
-        manufacturer=model.manufacturer,
-        model=model.name,
-    )
+    name = model.name if recognised(data.client) else data.unit_model or model.name
+    return DeviceInfo(identifiers={(DOMAIN, data.name)}, name=data.name, manufacturer=model.manufacturer,
+                      model=name, model_id=identity_text(data.client.identity))
 
 
 def usable(current: DataValue[Any] | None) -> bool:
